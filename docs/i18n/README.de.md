@@ -41,7 +41,7 @@ Du wählst eine Richtung, Claude baut das Pack und du bekommst ein ZIP, fertig f
 
 ## 🎁 Was du bekommst
 
-| | |
+| Was | Details |
 |---|---|
 | 🎬 **Szenen** | Gleich geht's los, Bin gleich zurück, Ende, dazu deine Hauptszenen (Spiel, Just Chatting, Coding, Nachrichtenstudio…) |
 | 🔔 **Alerts** | Sub, Resub, Geschenk-Sub, Sub-Bombe, Raid und Bits, geschrieben in der Sprache und mit dem Humor deines Kanals |

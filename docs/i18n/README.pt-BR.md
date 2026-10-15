@@ -41,7 +41,7 @@ Você escolhe uma direção, o Claude monta o pack e você recebe um zip pronto 
 
 ## 🎁 O que você recebe
 
-| | |
+| O quê | Detalhes |
 |---|---|
 | 🎬 **Cenas** | Começando, Já volto, Encerramento, e as suas cenas principais (jogo, bate-papo, programação, telejornal…) |
 | 🔔 **Alertas** | Sub, resub, sub de presente, chuva de subs, raid e bits, escritos no idioma e no humor do seu canal |

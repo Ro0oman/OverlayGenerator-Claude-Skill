@@ -42,7 +42,7 @@ Vous choisissez une direction, Claude construit le pack et vous récupérez un z
 
 ## 🎁 Ce que vous obtenez
 
-| | |
+| Quoi | Détails |
 |---|---|
 | 🎬 **Scènes** | Ça commence bientôt, Je reviens, Fin, plus vos scènes principales (jeu, discussion, code, journal télévisé…) |
 | 🔔 **Alertes** | Sub, resub, sub offert, pluie de subs, raid et bits, écrites dans la langue et avec l'humour de votre chaîne |

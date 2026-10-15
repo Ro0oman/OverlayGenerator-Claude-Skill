@@ -38,7 +38,7 @@ Eliges una dirección, Claude monta el pack y te llevas un zip listo para OBS. S
 
 ## 🎁 Qué recibes
 
-| | |
+| Qué | Detalle |
 |---|---|
 | 🎬 **Escenas** | Empezando, Vuelvo enseguida, Fin, y tus escenas principales (juego, charla, programación, noticiero…) |
 | 🔔 **Alertas** | Sub, resub, sub regalada, lluvia de subs, raid y bits, escritas en el idioma y el humor de tu canal |

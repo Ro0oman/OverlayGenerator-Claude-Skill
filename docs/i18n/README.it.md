@@ -41,7 +41,7 @@ Scegli una direzione, Claude costruisce il pack e ricevi uno zip pronto per OBS.
 
 ## 🎁 Cosa ricevi
 
-| | |
+| Cosa | Dettagli |
 |---|---|
 | 🎬 **Scene** | Si comincia, Torno subito, Fine, più le tue scene principali (gioco, chiacchiere, programmazione, telegiornale…) |
 | 🔔 **Avvisi** | Sub, resub, sub regalato, pioggia di sub, raid e bits, scritti nella lingua e con l'umorismo del tuo canale |

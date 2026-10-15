@@ -38,7 +38,7 @@ You pick a direction, Claude builds the pack, and you get a zip with everything 
 
 ## 🎁 What you get
 
-| | |
+| What | Details |
 |---|---|
 | 🎬 **Scenes** | Starting soon, Be right back, Ending, plus your main scenes (game, just chatting, coding, news desk…) |
 | 🔔 **Alerts** | Sub, resub, gifted sub, sub bomb, raid and bits, each one written in your channel's language and humour |
