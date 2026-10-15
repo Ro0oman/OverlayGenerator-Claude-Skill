@@ -200,7 +200,7 @@ Cada pieza declara las acciones que admite. Ejemplos:
 
 - **Solo Twitch en la v1.** YouTube y Kick después.
 - **Propiedad intelectual:** evocar el juego sin logos, personajes, arte ni fuentes oficiales.
-- **Idiomas:** README en inglés y español. Packs en el idioma del canal.
+- **Idiomas:** README en inglés (principal) con selector de idioma y traducciones (`docs/i18n/`). Packs en el idioma del canal.
 - **Sin código para el usuario final.**
 - `build_pack.py` en Python puro, sin dependencias, para que funcione en la app de Claude.
 
@@ -210,9 +210,11 @@ Cada pieza declara las acciones que admite. Ejemplos:
 
 | Qué | Cómo |
 |---|---|
-| Atajos con un juego en pantalla completa exclusiva (y juegos con antitrampas) | Probar con un juego real; si falla, la alternativa es ventana sin bordes |
-| El aviso "panel cerrado" lo verían los espectadores | Decidir: aviso solo los primeros segundos, desactivable o solo en la vista previa |
 | macOS y Linux | Más adelante |
+
+**Decidido:**
+- **Juegos a pantalla completa exclusiva o con antitrampas:** no se prueba aparte. La guía dice que, si un atajo no responde dentro del juego, se ponga el juego en "ventana sin bordes".
+- **Aviso "Panel cerrado":** se queda como está, visible en el directo. Así el público puede avisar al streamer.
 
 ## 11. Estructura del repo
 
