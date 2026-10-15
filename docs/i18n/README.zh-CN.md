@@ -14,7 +14,7 @@
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
 ![无需代码](https://img.shields.io/badge/%E4%BB%A3%E7%A0%81-%E6%97%A0%E9%9C%80-2ea44f)
 
-[你会得到什么](#-你会得到什么) · [示例](#-不是模板) · [安装](#-安装技能) · [设置 OBS](#️-一步步设置-obs) · [常见问题](#-常见问题与故障排查) · [翻译](#-翻译)
+[你会得到什么](#-你会得到什么) · [示例](#-不是模板) · [提醒](#-动起来的提醒) · [面板](#️-控制面板) · [安装](#-安装技能) · [设置 OBS](#️-一步步设置-obs) · [常见问题](#-常见问题与故障排查) · [翻译](#-翻译)
 
 </div>
 
@@ -80,6 +80,14 @@ Claude： 我看了你最近的直播：主要是《艾尔登法环》，无伤�
 
 </details>
 
+### 🔔 动起来的提醒
+
+每套素材的提醒都有自己的动法。同一位观众、同一次订阅，六种氛围：
+
+<table><tr><td width="50%" align="center"><img src="../assets/alert-receipt.gif" alt="小卖部"><br><b>小卖部</b>: 像收银小票一样打印出来</td><td width="50%" align="center"><img src="../assets/alert-gameshow.gif" alt="电视综艺"><br><b>电视综艺</b>: 灯泡、彩带和奖品</td></tr><tr><td width="50%" align="center"><img src="../assets/alert-metro.gif" alt="地铁线路"><br><b>地铁线路</b>: 像站台指示牌一样滑入</td><td width="50%" align="center"><img src="../assets/alert-tar.gif" alt="朝圣之旅"><br><b>朝圣之旅</b>: 焦油从石缝里渗出</td></tr><tr><td width="50%" align="center"><img src="../assets/alert-nohit.gif" alt="无伤挑战"><br><b>无伤挑战</b>: 一条细横幅，不打扰战斗</td><td width="50%" align="center"><img src="../assets/event-hit.gif" alt="……以及被击中"><br><b>……以及被击中</b>: 零变红，篝火熄灭</td></tr></table>
+
+<sub>与上面相同的非官方概念稿。在你的素材包里，每个提醒都会为你的频道单独设计。</sub>
+
 ### 每套素材都遵守的设计规则
 
 - 🎯 **为你的频道而做。** 每个组件都要通过一个简单测试："放到别的频道上也说得通吗？"如果说得通，就重新设计。
@@ -88,6 +96,25 @@ Claude： 我看了你最近的直播：主要是《艾尔登法环》，无伤�
 - 🧘 **默认保持安静。** 没有无限循环的动画，只有事件发生时才会动。
 - ©️ **不用官方素材。** 可以*让人联想到*你的游戏，但绝不使用标志、角色、美术或官方字体。
 - 🌍 **用你的语言。** 素材的语言会根据你的频道判断，提醒文案读起来就像你的弹幕。
+
+## 🎛️ 控制面板
+
+每套素材都附带自己的面板，停靠在 OBS 里。Claude 只放进你的直播用得到的东西：*你的*组件对应的按钮、快捷键和聊天命令。
+
+<p align="center"><img src="../assets/panel-live.gif" alt="控制面板" width="460"></p>
+<p align="center"><sub>游戏中按 <b>F9</b>，或者房管输入 <code>!hit</code>：零变红，失误被记录。接着开始新的尝试，再击败两个 Boss。</sub></p>
+
+<table><tr><td width="33%" valign="top"><img src="../assets/panel-live.png" alt="直播"><br><b>直播</b>: 切换场景、操控每个组件。每个按钮都会显示它的快捷键和聊天命令。</td><td width="33%" valign="top"><img src="../assets/panel-alerts.png" alt="提醒"><br><b>提醒</b>: 逐个测试提醒、开关提醒，并在 Boss 战期间暂存。</td><td width="33%" valign="top"><img src="../assets/panel-chat.png" alt="聊天"><br><b>聊天</b>: 命令以及谁可以使用。非房管的命令会被忽略并记录。</td></tr></table>
+
+<details>
+<summary><b>更多：快捷键与设置</b></summary>
+<br>
+
+<table><tr><td width="50%" valign="top"><img src="../assets/panel-keys.png" alt="快捷键"><br><b>快捷键</b>: 每个按键、对应的 OBS 项目，以及最后一次按下的时间。</td><td width="50%" valign="top"><img src="../assets/panel-setup.png" alt="设置"><br><b>设置</b>: 连接、一键安装或修复、备份，以及如何更新素材包。</td></tr></table>
+
+</details>
+
+<sub>v1 面板在演示模式下运行，频道为虚构。卡片、按钮和命令会随每套素材而变化。</sub>
 
 ---
 

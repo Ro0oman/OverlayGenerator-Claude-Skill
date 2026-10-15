@@ -14,7 +14,7 @@
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
 ![No code](https://img.shields.io/badge/code%20required-none-2ea44f)
 
-[What you get](#-what-you-get) · [Examples](#-not-templates) · [Install](#-install-the-skill) · [Set up OBS](#️-set-up-obs-step-by-step) · [FAQ](#-faq--troubleshooting) · [Translate](#-translations)
+[What you get](#-what-you-get) · [Examples](#-not-templates) · [Alerts](#-alerts-in-action) · [Panel](#️-the-control-panel) · [Install](#-install-the-skill) · [Set up OBS](#️-set-up-obs-step-by-step) · [FAQ](#-faq--troubleshooting) · [Translate](#-translations)
 
 </div>
 
@@ -77,6 +77,14 @@ Every pack starts from **the idea behind your channel**, not from a style menu. 
 
 </details>
 
+### 🔔 Alerts in action
+
+Every pack animates its alerts its own way. Same viewer, same sub, six moods:
+
+<table><tr><td width="50%" align="center"><img src="docs/assets/alert-receipt.gif" alt="Corner shop"><br><b>Corner shop</b>: printed like a till receipt</td><td width="50%" align="center"><img src="docs/assets/alert-gameshow.gif" alt="Game show"><br><b>Game show</b>: marquee lights, confetti and a prize</td></tr><tr><td width="50%" align="center"><img src="docs/assets/alert-metro.gif" alt="Metro line"><br><b>Metro line</b>: slides in like a platform sign</td><td width="50%" align="center"><img src="docs/assets/alert-tar.gif" alt="Pilgrimage"><br><b>Pilgrimage</b>: tar seeps through the stone</td></tr><tr><td width="50%" align="center"><img src="docs/assets/alert-nohit.gif" alt="No-hit run"><br><b>No-hit run</b>: a thin banner that stays out of the fight</td><td width="50%" align="center"><img src="docs/assets/event-hit.gif" alt="…and the hit"><br><b>…and the hit</b>: the zero turns red and the bonfire dies</td></tr></table>
+
+<sub>Same unofficial concepts as above. In your pack, every alert is designed for your channel.</sub>
+
 ### Design rules every pack follows
 
 - 🎯 **Made for your channel.** Each piece is checked with a simple test: "would this make sense on another channel?" If yes, it gets redesigned.
@@ -85,6 +93,25 @@ Every pack starts from **the idea behind your channel**, not from a style menu. 
 - 🧘 **Calm by default.** Nothing loops forever; only events move.
 - ©️ **No official assets.** It can *evoke* your game, but never uses logos, characters, artwork or official fonts.
 - 🌍 **In your language.** The pack language is detected from your channel; the alerts sound like your chat.
+
+## 🎛️ The control panel
+
+Every pack comes with its own panel, docked inside OBS. Claude only puts in it what your stream uses: the buttons, hotkeys and chat commands of *your* pieces.
+
+<p align="center"><img src="docs/assets/panel-live.gif" alt="The control panel" width="460"></p>
+<p align="center"><sub>Press <b>F9</b> in game, or a mod types <code>!hit</code>: the zero turns red and the falls list updates. Then a new attempt, two bosses down.</sub></p>
+
+<table><tr><td width="33%" valign="top"><img src="docs/assets/panel-live.png" alt="Live"><br><b>Live</b>: Switch scenes and drive every piece. Each button shows its hotkey and chat command.</td><td width="33%" valign="top"><img src="docs/assets/panel-alerts.png" alt="Alerts"><br><b>Alerts</b>: Test each alert, switch them on or off, and hold them during boss fights.</td><td width="33%" valign="top"><img src="docs/assets/panel-chat.png" alt="Chat"><br><b>Chat</b>: Commands and who can use them. Commands from non-mods are ignored and logged.</td></tr></table>
+
+<details>
+<summary><b>More: hotkeys and setup</b></summary>
+<br>
+
+<table><tr><td width="50%" valign="top"><img src="docs/assets/panel-keys.png" alt="Hotkeys"><br><b>Hotkeys</b>: Each key, the OBS entry it uses and when it was last pressed.</td><td width="50%" valign="top"><img src="docs/assets/panel-setup.png" alt="Setup"><br><b>Setup</b>: Connection, one-click install or repair, backups and how to update the pack.</td></tr></table>
+
+</details>
+
+<sub>The v1 panel running in demo mode with a made-up channel. The cards, buttons and commands change with every pack.</sub>
 
 ---
 

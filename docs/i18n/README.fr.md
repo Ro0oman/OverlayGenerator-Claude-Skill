@@ -14,7 +14,7 @@
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
 ![Sans code](https://img.shields.io/badge/code-aucun-2ea44f)
 
-[Ce que vous obtenez](#-ce-que-vous-obtenez) · [Exemples](#-pas-de-modèles) · [Installer](#-installer-la-skill) · [Configurer OBS](#️-configurer-obs-étape-par-étape) · [FAQ](#-faq-et-dépannage) · [Traduire](#-traductions)
+[Ce que vous obtenez](#-ce-que-vous-obtenez) · [Exemples](#-pas-de-modèles) · [Alertes](#-les-alertes-en-action) · [Panneau](#️-le-panneau-de-contrôle) · [Installer](#-installer-la-skill) · [Configurer OBS](#️-configurer-obs-étape-par-étape) · [FAQ](#-faq-et-dépannage) · [Traduire](#-traductions)
 
 </div>
 
@@ -81,6 +81,14 @@ Chaque pack part de **l'idée de votre chaîne**, pas d'un menu de styles. Voici
 
 </details>
 
+### 🔔 Les alertes en action
+
+Chaque pack anime ses alertes à sa façon. Même spectateur, même sub, six ambiances :
+
+<table><tr><td width="50%" align="center"><img src="../assets/alert-receipt.gif" alt="Supérette"><br><b>Supérette</b>: imprimée comme un ticket de caisse</td><td width="50%" align="center"><img src="../assets/alert-gameshow.gif" alt="Jeu télévisé"><br><b>Jeu télévisé</b>: ampoules, confettis et lot à gagner</td></tr><tr><td width="50%" align="center"><img src="../assets/alert-metro.gif" alt="Ligne de métro"><br><b>Ligne de métro</b>: arrive comme un panneau de quai</td><td width="50%" align="center"><img src="../assets/alert-tar.gif" alt="Pèlerinage"><br><b>Pèlerinage</b>: le goudron suinte à travers la pierre</td></tr><tr><td width="50%" align="center"><img src="../assets/alert-nohit.gif" alt="Sans coup"><br><b>Sans coup</b>: un fin bandeau qui ne gêne pas le combat</td><td width="50%" align="center"><img src="../assets/event-hit.gif" alt="…et le coup"><br><b>…et le coup</b>: le zéro devient rouge et le feu s'éteint</td></tr></table>
+
+<sub>Ce sont les mêmes concepts non officiels que plus haut. Dans votre pack, chaque alerte est conçue pour votre chaîne.</sub>
+
 ### Les règles de design de chaque pack
 
 - 🎯 **Fait pour votre chaîne.** Chaque élément passe un test simple : « est-ce que ça aurait du sens sur une autre chaîne ? ». Si oui, il est repensé.
@@ -89,6 +97,25 @@ Chaque pack part de **l'idée de votre chaîne**, pas d'un menu de styles. Voici
 - 🧘 **Calme par défaut.** Rien ne tourne en boucle ; seuls les événements bougent.
 - ©️ **Rien d'officiel.** Le pack peut *évoquer* votre jeu, mais n'utilise jamais de logos, personnages, illustrations ou polices officielles.
 - 🌍 **Dans votre langue.** La langue du pack est détectée à partir de votre chaîne, et les alertes parlent comme votre chat.
+
+## 🎛️ Le panneau de contrôle
+
+Chaque pack a son propre panneau, intégré à OBS. Claude n'y met que ce que votre stream utilise : les boutons, raccourcis et commandes de chat de *vos* éléments.
+
+<p align="center"><img src="../assets/panel-live.gif" alt="Le panneau de contrôle" width="460"></p>
+<p align="center"><sub>Appuyez sur <b>F9</b> en jeu, ou un modo tape <code>!hit</code> : le zéro devient rouge et la chute est notée. Puis nouvelle tentative et deux boss vaincus.</sub></p>
+
+<table><tr><td width="33%" valign="top"><img src="../assets/panel-live.png" alt="Direct"><br><b>Direct</b>: Changez de scène et pilotez chaque élément. Chaque bouton affiche son raccourci et sa commande de chat.</td><td width="33%" valign="top"><img src="../assets/panel-alerts.png" alt="Alertes"><br><b>Alertes</b>: Testez chaque alerte, activez-les ou non et retenez-les pendant les boss.</td><td width="33%" valign="top"><img src="../assets/panel-chat.png" alt="Chat"><br><b>Chat</b>: Les commandes et qui peut les utiliser. Celles des non-modos sont ignorées et notées.</td></tr></table>
+
+<details>
+<summary><b>Plus : raccourcis et réglages</b></summary>
+<br>
+
+<table><tr><td width="50%" valign="top"><img src="../assets/panel-keys.png" alt="Raccourcis"><br><b>Raccourcis</b>: Chaque touche, l'entrée OBS qu'elle utilise et la dernière fois qu'elle a servi.</td><td width="50%" valign="top"><img src="../assets/panel-setup.png" alt="Réglages"><br><b>Réglages</b>: Connexion, installation ou réparation en un clic, sauvegardes et mise à jour du pack.</td></tr></table>
+
+</details>
+
+<sub>Le panneau de la v1 en mode démo, avec une chaîne inventée. Les cartes, boutons et commandes changent avec chaque pack.</sub>
 
 ---
 

@@ -14,7 +14,7 @@
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
 ![Niente codice](https://img.shields.io/badge/codice-nessuno-2ea44f)
 
-[Cosa ricevi](#-cosa-ricevi) · [Esempi](#-niente-template) · [Installa](#-installa-la-skill) · [Configura OBS](#️-configura-obs-passo-dopo-passo) · [FAQ](#-faq-e-problemi) · [Traduci](#-traduzioni)
+[Cosa ricevi](#-cosa-ricevi) · [Esempi](#-niente-template) · [Avvisi](#-gli-avvisi-in-azione) · [Pannello](#️-il-pannello-di-controllo) · [Installa](#-installa-la-skill) · [Configura OBS](#️-configura-obs-passo-dopo-passo) · [FAQ](#-faq-e-problemi) · [Traduci](#-traduzioni)
 
 </div>
 
@@ -80,6 +80,14 @@ Ogni pack nasce dall'**idea del tuo canale**, non da un menu di stili. Questi so
 
 </details>
 
+### 🔔 Gli avvisi in azione
+
+Ogni pack anima i suoi avvisi a modo suo. Stesso spettatore, stesso sub, sei atmosfere:
+
+<table><tr><td width="50%" align="center"><img src="../assets/alert-receipt.gif" alt="Minimarket"><br><b>Minimarket</b>: stampato come uno scontrino</td><td width="50%" align="center"><img src="../assets/alert-gameshow.gif" alt="Game show"><br><b>Game show</b>: lampadine, coriandoli e premio</td></tr><tr><td width="50%" align="center"><img src="../assets/alert-metro.gif" alt="Linea della metro"><br><b>Linea della metro</b>: entra come un cartello di banchina</td><td width="50%" align="center"><img src="../assets/alert-tar.gif" alt="Pellegrinaggio"><br><b>Pellegrinaggio</b>: il catrame filtra dalla pietra</td></tr><tr><td width="50%" align="center"><img src="../assets/alert-nohit.gif" alt="Senza colpi"><br><b>Senza colpi</b>: una fascia sottile che non disturba il combattimento</td><td width="50%" align="center"><img src="../assets/event-hit.gif" alt="…e il colpo"><br><b>…e il colpo</b>: lo zero diventa rosso e il falò si spegne</td></tr></table>
+
+<sub>Sono gli stessi concept non ufficiali di sopra. Nel tuo pack ogni avviso è progettato per il tuo canale.</sub>
+
 ### Le regole di design di ogni pack
 
 - 🎯 **Fatto per il tuo canale.** Ogni elemento supera un test semplice: "avrebbe senso su un altro canale?". Se sì, viene riprogettato.
@@ -88,6 +96,25 @@ Ogni pack nasce dall'**idea del tuo canale**, non da un menu di stili. Questi so
 - 🧘 **Calmo di default.** Niente va in loop; si muovono solo gli eventi.
 - ©️ **Niente di ufficiale.** Può *richiamare* il tuo gioco, ma non usa mai loghi, personaggi, artwork o font ufficiali.
 - 🌍 **Nella tua lingua.** La lingua del pack viene rilevata dal tuo canale, e gli avvisi parlano come la tua chat.
+
+## 🎛️ Il pannello di controllo
+
+Ogni pack ha il suo pannello, agganciato dentro OBS. Claude ci mette solo quello che usa la tua live: i pulsanti, le scorciatoie e i comandi in chat dei *tuoi* elementi.
+
+<p align="center"><img src="../assets/panel-live.gif" alt="Il pannello di controllo" width="460"></p>
+<p align="center"><sub>Premi <b>F9</b> in gioco, o un mod scrive <code>!hit</code>: lo zero diventa rosso e la caduta viene segnata. Poi nuovo tentativo e due boss sconfitti.</sub></p>
+
+<table><tr><td width="33%" valign="top"><img src="../assets/panel-live.png" alt="Diretta"><br><b>Diretta</b>: Cambia scena e gestisci ogni elemento. Ogni pulsante mostra la sua scorciatoia e il comando in chat.</td><td width="33%" valign="top"><img src="../assets/panel-alerts.png" alt="Avvisi"><br><b>Avvisi</b>: Prova ogni avviso, attivali o disattivali e trattienili durante i boss.</td><td width="33%" valign="top"><img src="../assets/panel-chat.png" alt="Chat"><br><b>Chat</b>: I comandi e chi può usarli. Quelli di chi non è mod vengono ignorati e annotati.</td></tr></table>
+
+<details>
+<summary><b>Altro: scorciatoie e impostazioni</b></summary>
+<br>
+
+<table><tr><td width="50%" valign="top"><img src="../assets/panel-keys.png" alt="Scorciatoie"><br><b>Scorciatoie</b>: Ogni tasto, la voce di OBS che usa e quando è stato premuto l'ultima volta.</td><td width="50%" valign="top"><img src="../assets/panel-setup.png" alt="Impostazioni"><br><b>Impostazioni</b>: Connessione, installazione o riparazione con un clic, backup e come aggiornare il pack.</td></tr></table>
+
+</details>
+
+<sub>Il pannello della v1 in modalità demo, con un canale inventato. Schede, pulsanti e comandi cambiano con ogni pack.</sub>
 
 ---
 

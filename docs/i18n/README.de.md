@@ -14,7 +14,7 @@
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
 ![Kein Code](https://img.shields.io/badge/Code-keiner-2ea44f)
 
-[Was du bekommst](#-was-du-bekommst) · [Beispiele](#-keine-vorlagen) · [Installieren](#-skill-installieren) · [OBS einrichten](#️-obs-einrichten-schritt-für-schritt) · [FAQ](#-faq-und-problemlösung) · [Übersetzen](#-übersetzungen)
+[Was du bekommst](#-was-du-bekommst) · [Beispiele](#-keine-vorlagen) · [Alerts](#-alerts-in-aktion) · [Panel](#️-das-steuerpanel) · [Installieren](#-skill-installieren) · [OBS einrichten](#️-obs-einrichten-schritt-für-schritt) · [FAQ](#-faq-und-problemlösung) · [Übersetzen](#-übersetzungen)
 
 </div>
 
@@ -80,6 +80,14 @@ Jedes Pack entsteht aus **der Idee hinter deinem Kanal**, nicht aus einem Stilme
 
 </details>
 
+### 🔔 Alerts in Aktion
+
+Jedes Pack animiert seine Alerts auf eigene Art. Gleicher Zuschauer, gleicher Sub, sechs Stimmungen:
+
+<table><tr><td width="50%" align="center"><img src="../assets/alert-receipt.gif" alt="Kiosk"><br><b>Kiosk</b>: wird gedruckt wie ein Kassenbon</td><td width="50%" align="center"><img src="../assets/alert-gameshow.gif" alt="Spielshow"><br><b>Spielshow</b>: Glühbirnen, Konfetti und ein Gewinn</td></tr><tr><td width="50%" align="center"><img src="../assets/alert-metro.gif" alt="U-Bahn-Linie"><br><b>U-Bahn-Linie</b>: fährt ein wie eine Bahnsteiganzeige</td><td width="50%" align="center"><img src="../assets/alert-tar.gif" alt="Pilgerreise"><br><b>Pilgerreise</b>: Teer sickert durch den Stein</td></tr><tr><td width="50%" align="center"><img src="../assets/alert-nohit.gif" alt="No-Hit"><br><b>No-Hit</b>: ein schmales Banner, das den Kampf nicht stört</td><td width="50%" align="center"><img src="../assets/event-hit.gif" alt="…und der Treffer"><br><b>…und der Treffer</b>: die Null wird rot und das Feuer geht aus</td></tr></table>
+
+<sub>Dieselben inoffiziellen Konzepte wie oben. In deinem Pack wird jeder Alert für deinen Kanal gestaltet.</sub>
+
 ### Designregeln, die jedes Pack einhält
 
 - 🎯 **Für deinen Kanal gemacht.** Jedes Element besteht einen einfachen Test: „Würde das auf einem anderen Kanal Sinn ergeben?“ Wenn ja, wird es neu gestaltet.
@@ -88,6 +96,25 @@ Jedes Pack entsteht aus **der Idee hinter deinem Kanal**, nicht aus einem Stilme
 - 🧘 **Standardmäßig ruhig.** Nichts läuft in Endlosschleife; nur Ereignisse bewegen sich.
 - ©️ **Nichts Offizielles.** Es darf an dein Spiel *erinnern*, nutzt aber nie Logos, Figuren, Artworks oder offizielle Schriften.
 - 🌍 **In deiner Sprache.** Die Sprache des Packs wird aus deinem Kanal erkannt, und die Alerts klingen wie dein Chat.
+
+## 🎛️ Das Steuerpanel
+
+Jedes Pack hat sein eigenes Panel, angedockt in OBS. Claude packt nur hinein, was dein Stream nutzt: die Buttons, Hotkeys und Chatbefehle *deiner* Elemente.
+
+<p align="center"><img src="../assets/panel-live.gif" alt="Das Steuerpanel" width="460"></p>
+<p align="center"><sub>Drück im Spiel <b>F9</b>, oder ein Mod tippt <code>!hit</code>: Die Null wird rot und der Fall wird notiert. Dann ein neuer Versuch und zwei Bosse besiegt.</sub></p>
+
+<table><tr><td width="33%" valign="top"><img src="../assets/panel-live.png" alt="Live"><br><b>Live</b>: Szenen wechseln und jedes Element steuern. Jeder Button zeigt seinen Hotkey und Chatbefehl.</td><td width="33%" valign="top"><img src="../assets/panel-alerts.png" alt="Alerts"><br><b>Alerts</b>: Jeden Alert testen, an- oder ausschalten und während Bosskämpfen zurückhalten.</td><td width="33%" valign="top"><img src="../assets/panel-chat.png" alt="Chat"><br><b>Chat</b>: Die Befehle und wer sie nutzen darf. Befehle von Nicht-Mods werden ignoriert und protokolliert.</td></tr></table>
+
+<details>
+<summary><b>Mehr: Hotkeys und Einrichtung</b></summary>
+<br>
+
+<table><tr><td width="50%" valign="top"><img src="../assets/panel-keys.png" alt="Hotkeys"><br><b>Hotkeys</b>: Jede Taste, der OBS-Eintrag dahinter und wann sie zuletzt gedrückt wurde.</td><td width="50%" valign="top"><img src="../assets/panel-setup.png" alt="Einrichtung"><br><b>Einrichtung</b>: Verbindung, Installation oder Reparatur per Klick, Backups und wie man das Pack aktualisiert.</td></tr></table>
+
+</details>
+
+<sub>Das v1-Panel im Demo-Modus mit einem erfundenen Kanal. Karten, Buttons und Befehle ändern sich mit jedem Pack.</sub>
 
 ---
 

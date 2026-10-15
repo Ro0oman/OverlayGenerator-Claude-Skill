@@ -14,7 +14,7 @@
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
 ![コード不要](https://img.shields.io/badge/%E3%82%B3%E3%83%BC%E3%83%89-%E4%B8%8D%E8%A6%81-2ea44f)
 
-[手に入るもの](#-手に入るもの) · [作例](#-テンプレートではありません) · [インストール](#-スキルをインストールする) · [OBSの設定](#️-obsの設定手順) · [FAQ](#-faqとトラブルシューティング) · [翻訳](#-翻訳)
+[手に入るもの](#-手に入るもの) · [作例](#-テンプレートではありません) · [アラート](#-動くアラート) · [パネル](#️-コントロールパネル) · [インストール](#-スキルをインストールする) · [OBSの設定](#️-obsの設定手順) · [FAQ](#-faqとトラブルシューティング) · [翻訳](#-翻訳)
 
 </div>
 
@@ -80,6 +80,14 @@ Claude: 最近の配信を見ました。ほぼエルデンリング、ノーダ
 
 </details>
 
+### 🔔 動くアラート
+
+アラートの動きもパックごとに違います。同じ視聴者、同じサブスクでも、雰囲気は6通り：
+
+<table><tr><td width="50%" align="center"><img src="../assets/alert-receipt.gif" alt="街の商店"><br><b>街の商店</b>: レシートのように印刷される</td><td width="50%" align="center"><img src="../assets/alert-gameshow.gif" alt="クイズ番組"><br><b>クイズ番組</b>: 電飾、紙吹雪、賞品</td></tr><tr><td width="50%" align="center"><img src="../assets/alert-metro.gif" alt="地下鉄の路線"><br><b>地下鉄の路線</b>: 駅の案内表示のように入ってくる</td><td width="50%" align="center"><img src="../assets/alert-tar.gif" alt="巡礼の旅"><br><b>巡礼の旅</b>: タールが石に染み出す</td></tr><tr><td width="50%" align="center"><img src="../assets/alert-nohit.gif" alt="被弾ゼロ"><br><b>被弾ゼロ</b>: 戦闘の邪魔をしない細いバナー</td><td width="50%" align="center"><img src="../assets/event-hit.gif" alt="…そして被弾"><br><b>…そして被弾</b>: ゼロが赤くなり、篝火が消える</td></tr></table>
+
+<sub>上と同じ非公式のコンセプトです。実際のパックでは、アラートもあなたのチャンネルに合わせてデザインします。</sub>
+
 ### すべてのパックが守るデザインルール
 
 - 🎯 **あなたのチャンネル専用。** 各パーツは「別のチャンネルでも通用するか？」という簡単なテストにかけ、通用してしまうならデザインし直します。
@@ -88,6 +96,25 @@ Claude: 最近の配信を見ました。ほぼエルデンリング、ノーダ
 - 🧘 **基本は静か。** 永遠にループするアニメーションはなし。動くのはイベントのときだけです。
 - ©️ **公式素材は使わない。** ゲームを*連想させる*ことはあっても、ロゴ、キャラクター、アートワーク、公式フォントは一切使いません。
 - 🌍 **あなたの言語で。** パックの言語はチャンネルから判定し、アラートもあなたのチャットらしい言葉で書きます。
+
+## 🎛️ コントロールパネル
+
+どのパックにも、OBSにドッキングする専用パネルが付いています。Claudeが入れるのは、あなたの配信で使うものだけ。*あなたの*パーツのボタン、ホットキー、チャットコマンドです。
+
+<p align="center"><img src="../assets/panel-live.gif" alt="コントロールパネル" width="460"></p>
+<p align="center"><sub>ゲーム中に <b>F9</b> を押すか、モデレーターが <code>!hit</code> と打つと、ゼロが赤くなり被弾が記録されます。続いて新しい挑戦、ボスを2体撃破。</sub></p>
+
+<table><tr><td width="33%" valign="top"><img src="../assets/panel-live.png" alt="ライブ"><br><b>ライブ</b>: シーンの切り替えと各パーツの操作。ボタンごとにホットキーとチャットコマンドを表示。</td><td width="33%" valign="top"><img src="../assets/panel-alerts.png" alt="アラート"><br><b>アラート</b>: アラートごとのテスト、オン・オフ、ボス戦中の保留。</td><td width="33%" valign="top"><img src="../assets/panel-chat.png" alt="チャット"><br><b>チャット</b>: コマンドと使える人。モデレーター以外のコマンドは無視して記録します。</td></tr></table>
+
+<details>
+<summary><b>その他：ホットキーと設定</b></summary>
+<br>
+
+<table><tr><td width="50%" valign="top"><img src="../assets/panel-keys.png" alt="ホットキー"><br><b>ホットキー</b>: 各キー、使っているOBSの項目、最後に押された時刻。</td><td width="50%" valign="top"><img src="../assets/panel-setup.png" alt="設定"><br><b>設定</b>: 接続、ワンクリックのインストール・修復、バックアップ、パックの更新方法。</td></tr></table>
+
+</details>
+
+<sub>v1パネルを架空のチャンネルでデモ表示したものです。カード、ボタン、コマンドはパックごとに変わります。</sub>
 
 ---
 

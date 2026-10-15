@@ -14,7 +14,7 @@
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
 ![Sem código](https://img.shields.io/badge/c%C3%B3digo-nenhum-2ea44f)
 
-[O que você recebe](#-o-que-você-recebe) · [Exemplos](#-nada-de-templates) · [Instalar](#-instalar-a-skill) · [Configurar o OBS](#️-configurar-o-obs-passo-a-passo) · [Dúvidas](#-dúvidas-e-problemas) · [Traduzir](#-traduções)
+[O que você recebe](#-o-que-você-recebe) · [Exemplos](#-nada-de-templates) · [Alertas](#-alertas-em-ação) · [Painel](#️-o-painel-de-controle) · [Instalar](#-instalar-a-skill) · [Configurar o OBS](#️-configurar-o-obs-passo-a-passo) · [Dúvidas](#-dúvidas-e-problemas) · [Traduzir](#-traduções)
 
 </div>
 
@@ -80,6 +80,14 @@ Cada pack nasce da **ideia do seu canal**, não de um menu de estilos. Estes sã
 
 </details>
 
+### 🔔 Alertas em ação
+
+Cada pack anima os alertas do seu jeito. Mesmo espectador, mesmo sub, seis climas:
+
+<table><tr><td width="50%" align="center"><img src="../assets/alert-receipt.gif" alt="Vendinha"><br><b>Vendinha</b>: sai impresso como cupom fiscal</td><td width="50%" align="center"><img src="../assets/alert-gameshow.gif" alt="Game show"><br><b>Game show</b>: lâmpadas, confete e prêmio</td></tr><tr><td width="50%" align="center"><img src="../assets/alert-metro.gif" alt="Linha de metrô"><br><b>Linha de metrô</b>: entra como placa de plataforma</td><td width="50%" align="center"><img src="../assets/alert-tar.gif" alt="Peregrinação"><br><b>Peregrinação</b>: o piche escorre pela pedra</td></tr><tr><td width="50%" align="center"><img src="../assets/alert-nohit.gif" alt="Sem dano"><br><b>Sem dano</b>: uma faixa fina que não atrapalha a luta</td><td width="50%" align="center"><img src="../assets/event-hit.gif" alt="…e o golpe"><br><b>…e o golpe</b>: o zero fica vermelho e a fogueira apaga</td></tr></table>
+
+<sub>São os mesmos conceitos não oficiais de cima. No seu pack, cada alerta é criado para o seu canal.</sub>
+
 ### Regras de design que todo pack segue
 
 - 🎯 **Feito para o seu canal.** Cada peça passa por um teste simples: "isso faria sentido em outro canal?". Se sim, ela é redesenhada.
@@ -88,6 +96,25 @@ Cada pack nasce da **ideia do seu canal**, não de um menu de estilos. Estes sã
 - 🧘 **Calmo por padrão.** Nada fica em loop; só os eventos se movem.
 - ©️ **Nada oficial.** Pode *lembrar* o seu jogo, mas nunca usa logos, personagens, artes ou fontes oficiais.
 - 🌍 **No seu idioma.** O idioma do pack é detectado no seu canal, e os alertas falam como o seu chat.
+
+## 🎛️ O painel de controle
+
+Todo pack vem com o próprio painel, dentro do OBS. O Claude só coloca nele o que a sua live usa: os botões, atalhos e comandos de chat das *suas* peças.
+
+<p align="center"><img src="../assets/panel-live.gif" alt="O painel de controle" width="460"></p>
+<p align="center"><sub>Aperte <b>F9</b> no jogo, ou um mod digita <code>!hit</code>: o zero fica vermelho e a queda é registrada. Depois, nova tentativa e dois chefes derrotados.</sub></p>
+
+<table><tr><td width="33%" valign="top"><img src="../assets/panel-live.png" alt="Ao vivo"><br><b>Ao vivo</b>: Troque de cena e controle cada peça. Cada botão mostra o atalho e o comando de chat.</td><td width="33%" valign="top"><img src="../assets/panel-alerts.png" alt="Alertas"><br><b>Alertas</b>: Teste cada alerta, ligue ou desligue e segure durante as lutas contra chefes.</td><td width="33%" valign="top"><img src="../assets/panel-chat.png" alt="Chat"><br><b>Chat</b>: Os comandos e quem pode usar. Comandos de quem não é mod são ignorados e registrados.</td></tr></table>
+
+<details>
+<summary><b>Mais: atalhos e configuração</b></summary>
+<br>
+
+<table><tr><td width="50%" valign="top"><img src="../assets/panel-keys.png" alt="Atalhos"><br><b>Atalhos</b>: Cada tecla, a entrada do OBS que ela usa e quando foi apertada pela última vez.</td><td width="50%" valign="top"><img src="../assets/panel-setup.png" alt="Configuração"><br><b>Configuração</b>: Conexão, instalar ou reparar com um clique, backups e como atualizar o pack.</td></tr></table>
+
+</details>
+
+<sub>O painel da v1 em modo demo, com um canal inventado. Os cartões, botões e comandos mudam em cada pack.</sub>
 
 ---
 

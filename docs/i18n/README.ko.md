@@ -14,7 +14,7 @@
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
 ![코드 불필요](https://img.shields.io/badge/%EC%BD%94%EB%93%9C-%EB%B6%88%ED%95%84%EC%9A%94-2ea44f)
 
-[받는 것](#-받는-것) · [예시](#-템플릿이-아닙니다) · [설치](#-스킬-설치하기) · [OBS 설정](#️-obs-설정-단계별-안내) · [FAQ](#-faq와-문제-해결) · [번역](#-번역)
+[받는 것](#-받는-것) · [예시](#-템플릿이-아닙니다) · [알림](#-움직이는-알림) · [패널](#️-컨트롤-패널) · [설치](#-스킬-설치하기) · [OBS 설정](#️-obs-설정-단계별-안내) · [FAQ](#-faq와-문제-해결) · [번역](#-번역)
 
 </div>
 
@@ -80,6 +80,14 @@ Claude: 최근 방송을 봤어요. 주로 엘든 링, 노히트 도전, 한국�
 
 </details>
 
+### 🔔 움직이는 알림
+
+팩마다 알림이 움직이는 방식도 다릅니다. 같은 시청자, 같은 구독, 여섯 가지 분위기:
+
+<table><tr><td width="50%" align="center"><img src="../assets/alert-receipt.gif" alt="구멍가게"><br><b>구멍가게</b>: 영수증처럼 인쇄됩니다</td><td width="50%" align="center"><img src="../assets/alert-gameshow.gif" alt="퀴즈쇼"><br><b>퀴즈쇼</b>: 전구, 꽃가루, 상품</td></tr><tr><td width="50%" align="center"><img src="../assets/alert-metro.gif" alt="지하철 노선"><br><b>지하철 노선</b>: 승강장 안내판처럼 들어옵니다</td><td width="50%" align="center"><img src="../assets/alert-tar.gif" alt="순례길"><br><b>순례길</b>: 타르가 돌 사이로 스며듭니다</td></tr><tr><td width="50%" align="center"><img src="../assets/alert-nohit.gif" alt="노히트"><br><b>노히트</b>: 전투를 방해하지 않는 얇은 배너</td><td width="50%" align="center"><img src="../assets/event-hit.gif" alt="…그리고 피격"><br><b>…그리고 피격</b>: 0이 빨갛게 변하고 화톳불이 꺼집니다</td></tr></table>
+
+<sub>위와 같은 비공식 콘셉트입니다. 실제 팩에서는 알림도 내 채널에 맞게 디자인됩니다.</sub>
+
 ### 모든 팩이 지키는 디자인 규칙
 
 - 🎯 **내 채널 전용.** 각 요소는 "다른 채널에서도 말이 될까?"라는 간단한 테스트를 거칩니다. 말이 된다면 다시 디자인합니다.
@@ -88,6 +96,25 @@ Claude: 최근 방송을 봤어요. 주로 엘든 링, 노히트 도전, 한국�
 - 🧘 **기본은 차분하게.** 끝없이 반복되는 애니메이션은 없습니다. 움직이는 건 이벤트뿐입니다.
 - ©️ **공식 자료는 쓰지 않습니다.** 게임을 *연상시킬* 수는 있지만 로고, 캐릭터, 아트워크, 공식 글꼴은 절대 쓰지 않습니다.
 - 🌍 **내 언어로.** 팩의 언어는 채널에서 감지하고, 알림 문구도 내 채팅처럼 씁니다.
+
+## 🎛️ 컨트롤 패널
+
+모든 팩에는 OBS 안에 도킹되는 전용 패널이 있습니다. Claude는 내 방송에서 쓰는 것만 넣습니다. *내* 요소들의 버튼, 단축키, 채팅 명령어요.
+
+<p align="center"><img src="../assets/panel-live.gif" alt="컨트롤 패널" width="460"></p>
+<p align="center"><sub>게임 중에 <b>F9</b>를 누르거나 모더레이터가 <code>!hit</code>을 입력하면, 0이 빨갛게 변하고 실패가 기록됩니다. 이어서 새 시도, 보스 두 마리 처치.</sub></p>
+
+<table><tr><td width="33%" valign="top"><img src="../assets/panel-live.png" alt="라이브"><br><b>라이브</b>: 장면을 바꾸고 각 요소를 조작합니다. 버튼마다 단축키와 채팅 명령어가 표시됩니다.</td><td width="33%" valign="top"><img src="../assets/panel-alerts.png" alt="알림"><br><b>알림</b>: 알림별 테스트, 켜기·끄기, 보스전 동안 대기.</td><td width="33%" valign="top"><img src="../assets/panel-chat.png" alt="채팅"><br><b>채팅</b>: 명령어와 사용할 수 있는 사람. 모더레이터가 아닌 사람의 명령어는 무시하고 기록합니다.</td></tr></table>
+
+<details>
+<summary><b>더 보기: 단축키와 설정</b></summary>
+<br>
+
+<table><tr><td width="50%" valign="top"><img src="../assets/panel-keys.png" alt="단축키"><br><b>단축키</b>: 각 키, 사용하는 OBS 항목, 마지막으로 누른 시각.</td><td width="50%" valign="top"><img src="../assets/panel-setup.png" alt="설정"><br><b>설정</b>: 연결, 클릭 한 번 설치·복구, 백업, 팩 업데이트 방법.</td></tr></table>
+
+</details>
+
+<sub>가상의 채널로 데모 모드에서 실행한 v1 패널입니다. 카드, 버튼, 명령어는 팩마다 달라집니다.</sub>
 
 ---
 
