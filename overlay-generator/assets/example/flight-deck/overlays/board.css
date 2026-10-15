@@ -1,0 +1,61 @@
+/* Flight MK-21 · shared look: an airport split-flap board.
+   Charcoal tiles, signage yellow, white characters. Only events move. */
+@font-face { font-family: 'Oswald'; font-weight: 500; src: url(../fonts/oswald-latin-500-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Oswald'; font-weight: 600; src: url(../fonts/oswald-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Oswald'; font-weight: 700; src: url(../fonts/oswald-latin-700-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Flap'; font-weight: 700; src: url(../fonts/jetbrains-mono-latin-700-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Flap'; font-weight: 800; src: url(../fonts/jetbrains-mono-latin-800-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Barlow'; font-weight: 500; src: url(../fonts/barlow-latin-500-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Barlow'; font-weight: 600; src: url(../fonts/barlow-latin-600-normal.woff2) format('woff2'); }
+
+:root {
+  --board: #101216;      /* board housing */
+  --tile: #1f2329;       /* flap tile */
+  --tile-hi: #2a2f37;    /* upper half of the tile */
+  --seam: #050607;       /* split line */
+  --sign: #ffc72c;       /* airport signage yellow */
+  --ink: #f4f3ee;        /* flap characters */
+  --go: #3fd27f;         /* boarding / on time */
+  --stop: #ff6f63;       /* turbulence / delayed */
+  --mute: #a6abb5;
+}
+* { box-sizing: border-box; margin: 0; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; }
+body { font-family: 'Barlow', sans-serif; color: var(--ink); }
+
+/* the housing every piece sits in: black metal with a yellow signage edge */
+.board { position: absolute; background: var(--board); border-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,.45), inset 0 0 0 2px #22262d; }
+.board.edge { border-top: 6px solid var(--sign); }
+.label { font: 600 24px/1 'Oswald', sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--sign); }
+.label.dim { color: var(--mute); }
+.label.go { color: var(--go); }
+.label.stop { color: var(--stop); }
+
+/* split-flap row: one tile per character */
+.flaps { display: inline-flex; gap: 4px; }
+.flaps i { position: relative; display: inline-grid; place-items: center; font: 800 var(--fs, 40px)/1 'Flap', monospace; font-style: normal;
+  width: calc(var(--fs, 40px) * .74); height: calc(var(--fs, 40px) * 1.32); color: var(--ink); border-radius: 4px;
+  background: linear-gradient(180deg, var(--tile-hi) 0 50%, var(--tile) 50% 100%); text-transform: uppercase; }
+.flaps i:after { content: ''; position: absolute; left: 0; right: 0; top: calc(50% - 1px); height: 2px; background: var(--seam); }
+.flaps.sign i { color: var(--sign); }
+.flaps.stop i { color: var(--stop); }
+.flaps.go i { color: var(--go); }
+.flaps i.flip { animation: flip .09s linear 1; }
+@keyframes flip { 0% { transform: rotateX(0); } 50% { transform: rotateX(80deg); filter: brightness(.6); } 100% { transform: rotateX(0); } }
+
+/* camera frame: a gate monitor bezel, video area stays transparent */
+.cam { position: absolute; border: 10px solid var(--board); border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.45), inset 0 0 0 2px #22262d; }
+.cam .gate { position: absolute; left: -10px; right: -10px; top: 100%; margin-top: 0; background: var(--board); border-radius: 0 0 8px 8px; padding: 8px 14px 10px; display: flex; justify-content: space-between; align-items: center; }
+.cam .gate b { font: 700 26px/1 'Oswald', sans-serif; letter-spacing: .08em; color: var(--ink); }
+
+/* HUD zones (checker only, invisible in OBS) */
+[data-hud] { position: absolute; }
+
+/* alert board */
+.alert { position: absolute; opacity: 0; pointer-events: none; }
+.alert.show { opacity: 1; }
+.alert.out { opacity: 0; transition: opacity .5s; }
+.alert .head { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px 8px; }
+.alert .row { padding: 4px 18px; }
+.alert .info { padding: 6px 18px 14px; font: 600 28px/1.2 'Barlow', sans-serif; color: var(--ink); display: flex; justify-content: space-between; gap: 20px; }
+.alert .info .plus { color: var(--sign); }

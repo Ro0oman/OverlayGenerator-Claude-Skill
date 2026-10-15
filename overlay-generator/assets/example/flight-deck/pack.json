@@ -1,0 +1,111 @@
+{
+  "engine": "1.0.0",
+  "version": "1.0.0",
+  "id": "mika-flight-deck",
+  "name": "Flight MK-21",
+  "short": "MK-21",
+  "logo": "✈",
+  "channel": "mika_aloft",
+  "lang": "en",
+  "concept": "Every stream is a flight. Chat are passengers, subs are boarding passes, deaths are turbulence and the subathon is fuel. Everything speaks the language of an airport split-flap board.",
+  "theme": { "accent": "#ffc72c", "accent2": "#ffe08a", "onAccent": "#1a1400" },
+  "credit": { "enabled": false, "command": "!overlay" },
+
+  "scenes": [
+    { "id": "boarding", "label": "Boarding", "icon": "🛫", "file": "overlays/boarding.html", "format": "talk",
+      "backdrop": "radial-gradient(circle at 30% 30%,#3a4a63,#121722)" },
+    { "id": "flight", "label": "In flight", "icon": "🎮", "file": "overlays/flight.html", "format": "game", "events": ["turbulence"],
+      "backdrop": "linear-gradient(160deg,#4b6b5a 0%,#2b3b46 55%,#1a1f2b 100%)" },
+    { "id": "lounge", "label": "Lounge", "icon": "💬", "file": "overlays/lounge.html", "format": "talk",
+      "backdrop": "radial-gradient(circle at 40% 45%,#6b5a4a,#1e1a17)" },
+    { "id": "delayed", "label": "Delayed", "icon": "⏸", "file": "overlays/delayed.html", "format": "talk",
+      "backdrop": "linear-gradient(135deg,#2a2d38,#14151a)" },
+    { "id": "landed", "label": "Landed", "icon": "🛬", "file": "overlays/landed.html", "format": "talk", "alerts": false,
+      "backdrop": "radial-gradient(circle at 70% 30%,#5a4a6b,#16131c)" }
+  ],
+
+  "state": {
+    "flight": "MK-21",
+    "turbulence": 0,
+    "approach": false,
+    "fuel": { "left": 10800, "running": true, "at": 0 },
+    "seats": 3,
+    "seatsTarget": 5,
+    "stops": ["Patch notes", "Run of the day", "Your clips", "Q&A"],
+    "stop": 0,
+    "stopSince": 0,
+    "manifest": [],
+    "boardingIn": { "left": 300, "running": true, "at": 0 }
+  },
+
+  "actions": {
+    "turbulence": { "label": "+1 turbulence", "key": "F9", "cmd": "!turb", "perm": "mods", "primary": true,
+      "do": [ { "op": "add", "key": "turbulence", "value": 1 }, { "op": "event", "name": "turbulence" } ] },
+    "calm": { "label": "Undo", "key": "F12", "perm": "me",
+      "do": [ { "op": "add", "key": "turbulence", "value": -1, "min": 0 } ] },
+    "approach": { "label": "Final approach on/off", "key": "F10", "cmd": "!approach", "perm": "mods",
+      "do": [ { "op": "toggle", "key": "approach" } ] },
+    "refuel": { "label": "+5:00 fuel", "cmd": "!refuel", "perm": "me",
+      "do": [ { "op": "timer.add", "key": "fuel", "value": 300 } ] },
+    "drain": { "label": "−5:00 fuel", "perm": "me",
+      "do": [ { "op": "timer.add", "key": "fuel", "value": -300 } ] },
+    "fuelpause": { "label": "Pause / resume", "perm": "me",
+      "do": [ { "op": "timer.toggle", "key": "fuel" } ] },
+    "nextstop": { "label": "Next stop", "key": "F8", "cmd": "!next", "perm": "mods", "primary": true,
+      "do": [ { "op": "next", "key": "stop", "list": "stops" }, { "op": "stamp", "key": "stopSince" } ] },
+    "prevstop": { "label": "◀ Previous", "perm": "me",
+      "do": [ { "op": "prev", "key": "stop", "list": "stops" }, { "op": "stamp", "key": "stopSince" } ] },
+    "seat": { "label": "+1 seat", "perm": "me", "do": [ { "op": "add", "key": "seats", "value": 1 } ] },
+    "unseat": { "label": "−1 seat", "perm": "me", "do": [ { "op": "add", "key": "seats", "value": -1, "min": 0 } ] },
+    "board": { "label": "Restart boarding clock", "perm": "me",
+      "do": [ { "op": "timer.set", "key": "boardingIn", "value": 300 }, { "op": "timer.start", "key": "boardingIn" } ] },
+    "goflight": { "label": "Take off", "perm": "me", "do": [ { "op": "scene", "id": "flight" } ] },
+    "newflight": { "label": "New flight (new stream)", "perm": "me",
+      "do": [ { "op": "reset", "key": "turbulence" }, { "op": "reset", "key": "stop" }, { "op": "stamp", "key": "stopSince" }, { "op": "reset", "key": "manifest" },
+              { "op": "reset", "key": "approach" }, { "op": "timer.set", "key": "boardingIn", "value": 300 }, { "op": "timer.start", "key": "boardingIn" } ] }
+  },
+
+  "panel": [
+    { "title": "Turbulence", "meta": "{flight}",
+      "widgets": [ { "type": "big", "key": "turbulence", "danger": { "gt": 0 },
+                     "facts": [ ["Flight", "{flight}"], ["Now", "{stops@stop}"] ] },
+                   { "type": "flag", "key": "approach", "on": "Final approach · alerts on hold", "off": "Cruising · alerts play right away" } ],
+      "buttons": ["turbulence", "approach", "calm"] },
+    { "title": "Fuel (subathon)", "meta": "sub +5:00 · 100 bits +1:00",
+      "widgets": [ { "type": "timer", "key": "fuel", "suffix": " left", "max": 43200 } ],
+      "buttons": ["refuel", "drain", "fuelpause"] },
+    { "title": "Seats filled (sub goal)",
+      "widgets": [ { "type": "progress", "key": "seats", "max": "seatsTarget", "edit": true } ],
+      "buttons": ["seat", "unseat"] },
+    { "title": "Today's stops", "meta": "lounge & boarding",
+      "widgets": [ { "type": "list", "key": "stops", "index": "stop", "since": "stopSince", "edit": true } ],
+      "buttons": ["prevstop", "nextstop"] },
+    { "title": "Boarding clock", "meta": "starting scene",
+      "widgets": [ { "type": "timer", "key": "boardingIn", "suffix": " to take-off" } ],
+      "buttons": ["board", "goflight", "newflight"] }
+  ],
+
+  "alerts": {
+    "sub":   { "icon": "🎫", "label": "Sub", "lines": ["{name}", "boarding pass issued", "+5:00 fuel"],
+               "effects": [ { "op": "timer.add", "key": "fuel", "value": 300 }, { "op": "add", "key": "seats", "value": 1 }, { "op": "push", "key": "manifest", "value": "@name", "limit": 40 } ] },
+    "resub": { "icon": "🔁", "label": "Resub", "lines": ["{name}", "frequent flyer · {months} months", "+5:00 fuel"],
+               "effects": [ { "op": "timer.add", "key": "fuel", "value": 300 }, { "op": "add", "key": "seats", "value": 1 }, { "op": "push", "key": "manifest", "value": "@name", "limit": 40 } ] },
+    "gift":  { "icon": "🎁", "label": "Gifted sub", "lines": ["{name}", "upgrades {to} to first class", "+5:00 fuel"],
+               "effects": [ { "op": "timer.add", "key": "fuel", "value": 300 }, { "op": "add", "key": "seats", "value": 1 }, { "op": "push", "key": "manifest", "value": "@name", "limit": 40 } ] },
+    "bomb":  { "icon": "💥", "label": "Sub bomb", "lines": ["{name}", "charters {count} seats", "+{count}×5:00 fuel"],
+               "effects": [ { "op": "timer.add", "key": "fuel", "value": 300, "times": "@count" }, { "op": "add", "key": "seats", "value": 1, "times": "@count" }, { "op": "push", "key": "manifest", "value": "@name", "limit": 40 } ] },
+    "raid":  { "icon": "🛬", "label": "Raid", "min": 2, "lines": ["{name}", "connecting flight · {count} passengers", "welcome aboard"] },
+    "bits":  { "icon": "🛍", "label": "Bits", "min": 100, "lines": ["{name}", "duty-free · {count} bits", "+1:00 fuel per 100"],
+               "effects": [ { "op": "timer.add", "key": "fuel", "value": 60, "times": "@count", "per": 100 } ] }
+  },
+  "alertSettings": { "duration": 7, "gap": 1.5, "volume": 70,
+    "holdWhen": { "key": "approach", "eq": true }, "holdLabel": "Hold alerts on final approach", "holdHint": "Turn on before a boss fight; they board after landing" },
+
+  "events": {
+    "turbulence": { "label": "Turbulence (death)", "state": { "turbulence": 7 } }
+  },
+  "demoState": { "turbulence": 3, "stop": 1, "manifest": ["marta_dev", "nightowl", "pixel_rain", "gate_agent", "cloudnine", "tailwind_tom"] },
+  "sample": { "name": "marta_dev", "months": 7, "to": "nightowl", "count": 5, "amount": 500, "viewers": 42 },
+  "sampleChat": [["nightowl_mod", "seatbelts on, boss incoming", true], ["marta_dev", "that dodge was clean"], ["pixel_rain", "first time flying with you o7"], ["gate_agent", "!next please"]],
+  "ui": { "panelClosed": "Panel closed: open the MK-21 panel in OBS" }
+}

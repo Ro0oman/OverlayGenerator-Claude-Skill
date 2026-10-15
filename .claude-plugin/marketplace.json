@@ -1,0 +1,12 @@
+{
+  "name": "overlay-generator",
+  "owner": { "name": "Ro0oman", "url": "https://github.com/Ro0oman" },
+  "metadata": { "description": "OBS overlay packs designed for your Twitch channel" },
+  "plugins": [
+    {
+      "name": "overlay-generator",
+      "source": "./",
+      "description": "Designs a complete OBS overlay pack for one Twitch channel, with a control panel inside OBS, hotkeys, mod commands and one-click install."
+    }
+  ]
+}

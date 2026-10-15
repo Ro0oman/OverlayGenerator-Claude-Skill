@@ -1,0 +1,11 @@
+{
+  "name": "overlay-generator",
+  "displayName": "OverlayGenerator",
+  "version": "1.0.0",
+  "description": "Designs a complete OBS overlay pack for one Twitch channel: scenes, alerts, chat, goals, a control panel inside OBS with hotkeys and mod commands, one-click install, preview and guide.",
+  "author": { "name": "Ro0oman", "url": "https://github.com/Ro0oman" },
+  "homepage": "https://github.com/Ro0oman/OverlayGenerator-Claude-Skill",
+  "repository": "https://github.com/Ro0oman/OverlayGenerator-Claude-Skill",
+  "keywords": ["obs", "twitch", "overlay", "streaming", "alerts"],
+  "skills": ["./overlay-generator"]
+}
