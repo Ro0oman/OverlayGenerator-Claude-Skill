@@ -1,4 +1,4 @@
-# OverlayGenerator · Diseño (v1.1)
+# OverlayGenerator · Diseño (v1.2)
 
 > Cimientos de la skill. v1.1 incorpora la revisión externa (`REVISION-externa.md`) y las decisiones tomadas después.
 
@@ -49,7 +49,8 @@ Una skill para Claude (la app de Claude; también funciona en Claude Code). Cual
   - guarda una copia dentro de OBS (`SetPersistentData`) para sobrevivir a "limpiar caché".
 - **El panel tiene que estar abierto durante el directo**, como dock (puede estar minimizado) o en el navegador. La guía lo dice en grande, y el overlay avisa si deja de recibir señal (§10).
 - **Overlays:**
-  - Cada uno lee el chat de Twitch por su cuenta para alertas y chat.
+  - El panel lee el chat de Twitch y decide las alertas (cola, retener, mínimos, efectos). Los overlays solo las pintan. Así hay una única fuente de verdad.
+  - Las páginas que muestran el chat lo leen por su cuenta.
   - Guardan el último estado por si el panel no está.
   - El chat siempre se pinta como texto, nunca como HTML.
 - **Requisitos para el usuario:** OBS 28 o superior, activar el WebSocket una vez y descomprimir el pack en una carpeta fija (no en Descargas, ni dentro del zip, ni en OneDrive).

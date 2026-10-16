@@ -8,7 +8,7 @@
 
 [English](../../README.md) · [Español](README.es.md) · [Português (BR)](README.pt-BR.md) · [Français](README.fr.md) · **Deutsch** · [Italiano](README.it.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [简体中文](README.zh-CN.md)
 
-![Status](https://img.shields.io/badge/status-Vorabversion-orange)
+![Version](https://img.shields.io/badge/version-1.0%20beta-blue)
 ![OBS](https://img.shields.io/badge/OBS-28%2B-302E31?logo=obsstudio&logoColor=white)
 ![Twitch](https://img.shields.io/badge/Twitch-unterst%C3%BCtzt-9146FF?logo=twitch&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
@@ -19,7 +19,7 @@
 </div>
 
 > [!IMPORTANT]
-> **Vorabversion.** Die Architektur wurde in OBS 32 unter Windows getestet: Steuerpanel, Installation in OBS mit einem Klick, Hotkeys, Chatbefehle und Speicher. Der Skill selbst entsteht gerade. Klicke auf **Watch → Custom → Releases**, um von v1 zu erfahren. Die Schritte unten beschreiben, wie v1 funktionieren wird.
+> **v1 Beta.** Der Skill, die Engine und ein komplettes Beispiel-Pack sind da. Alles wurde gegen ein simuliertes OBS getestet, der Kern (Panel, Installation per Klick, Hotkeys, Chatbefehle, Speicher) auch in einem echten OBS 32 unter Windows. Einen Fehler gefunden? [Öffne ein Issue](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/issues).
 
 > [!NOTE]
 > Dies ist eine Übersetzung der [englischen README](../../README.md) und kann etwas hinterherhinken.
@@ -102,7 +102,7 @@ Jedes Pack animiert seine Alerts auf eigene Art. Gleicher Zuschauer, gleicher Su
 Jedes Pack hat sein eigenes Panel, angedockt in OBS. Claude packt nur hinein, was dein Stream nutzt: die Buttons, Hotkeys und Chatbefehle *deiner* Elemente.
 
 <p align="center"><img src="../assets/panel-live.gif" alt="Das Steuerpanel" width="460"></p>
-<p align="center"><sub>Drück im Spiel <b>F9</b>, oder ein Mod tippt <code>!hit</code>: Die Null wird rot und der Fall wird notiert. Dann ein neuer Versuch und zwei Bosse besiegt.</sub></p>
+<p align="center"><sub>Drück im Spiel <b>F9</b>, oder ein Mod tippt <code>!turb</code>: Die Turbulenz steigt. <b>Final approach</b> hält Alerts während eines Bosskampfs zurück; <b>Undo</b> macht einen Fehler rückgängig.</sub></p>
 
 <table><tr><td width="33%" valign="top"><img src="../assets/panel-live.png" alt="Live"><br><b>Live</b>: Szenen wechseln und jedes Element steuern. Jeder Button zeigt seinen Hotkey und Chatbefehl.</td><td width="33%" valign="top"><img src="../assets/panel-alerts.png" alt="Alerts"><br><b>Alerts</b>: Jeden Alert testen, an- oder ausschalten und während Bosskämpfen zurückhalten.</td><td width="33%" valign="top"><img src="../assets/panel-chat.png" alt="Chat"><br><b>Chat</b>: Die Befehle und wer sie nutzen darf. Befehle von Nicht-Mods werden ignoriert und protokolliert.</td></tr></table>
 
@@ -150,7 +150,7 @@ flowchart LR
 ## 📥 Skill installieren
 
 > [!NOTE]
-> Der Download steht unter [Releases](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases) bereit, sobald v1 erscheint.
+> Lade `overlay-generator.zip` aus dem [neuesten Release](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases/latest) herunter.
 
 ### In der Claude-App (Web oder Desktop)
 
@@ -169,6 +169,12 @@ Skills, die in deinem Claude-Konto aktiviert sind, erscheinen automatisch in Cla
 
 ```bash
 unzip overlay-generator.zip -d ~/.claude/skills/
+```
+
+Oder installiere ihn als Plugin, direkt aus diesem Repository:
+
+```text
+/plugin install overlay-generator --marketplace Ro0oman/OverlayGenerator-Claude-Skill
 ```
 
 ## 🚀 Dein Pack erstellen
@@ -320,7 +326,7 @@ Szenen, Panel und Elemente funktionieren überall, wo OBS läuft. Alerts und Cha
 
 - [x] Architektur in OBS 32 getestet: Panel über WebSocket, Installation mit einem Klick, Hotkeys, Mod-Befehle, Speicher übersteht geleerten Cache und Neustarts
 - [x] Designmethode an echten Kanälen getestet, mit automatischen Prüfungen auf HUD-Überlappung, Bildfläche, Schriftgröße und Kontrast
-- [ ] **v1**: der Skill, die Engine, der Pack-Builder und der Validator
+- [x] **v1**: der Skill, die Engine, der Pack-Builder und der Validator
 - [ ] YouTube und Kick
 - [ ] Alerts für Follows, Spenden und Kanalpunkte
 - [ ] Tests unter macOS und Linux

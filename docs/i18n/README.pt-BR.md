@@ -8,7 +8,7 @@
 
 [English](../../README.md) · [Español](README.es.md) · **Português (BR)** · [Français](README.fr.md) · [Deutsch](README.de.md) · [Italiano](README.it.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [简体中文](README.zh-CN.md)
 
-![Status](https://img.shields.io/badge/status-pr%C3%A9--lan%C3%A7amento-orange)
+![Version](https://img.shields.io/badge/version-1.0%20beta-blue)
 ![OBS](https://img.shields.io/badge/OBS-28%2B-302E31?logo=obsstudio&logoColor=white)
 ![Twitch](https://img.shields.io/badge/Twitch-compat%C3%ADvel-9146FF?logo=twitch&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
@@ -19,7 +19,7 @@
 </div>
 
 > [!IMPORTANT]
-> **Pré-lançamento.** A arquitetura já foi testada no OBS 32 no Windows: painel de controle, instalação no OBS com um clique, atalhos de teclado, comandos de chat e memória. A skill em si está sendo construída. Clique em **Watch → Custom → Releases** para saber quando a v1 sair. Os passos abaixo descrevem como a v1 vai funcionar.
+> **v1 beta.** A skill, o motor e um pack de exemplo completo estão aqui. Tudo foi testado contra um OBS simulado, e o essencial (painel, instalação com um clique, atalhos, comandos de chat e memória) num OBS 32 real no Windows. Achou um bug? [Abra uma issue](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/issues).
 
 > [!NOTE]
 > Esta é uma tradução do [README em inglês](../../README.md) e pode estar um pouco desatualizada.
@@ -102,7 +102,7 @@ Cada pack anima os alertas do seu jeito. Mesmo espectador, mesmo sub, seis clima
 Todo pack vem com o próprio painel, dentro do OBS. O Claude só coloca nele o que a sua live usa: os botões, atalhos e comandos de chat das *suas* peças.
 
 <p align="center"><img src="../assets/panel-live.gif" alt="O painel de controle" width="460"></p>
-<p align="center"><sub>Aperte <b>F9</b> no jogo, ou um mod digita <code>!hit</code>: o zero fica vermelho e a queda é registrada. Depois, nova tentativa e dois chefes derrotados.</sub></p>
+<p align="center"><sub>Aperte <b>F9</b> no jogo, ou um mod digita <code>!turb</code>: a turbulência sobe. <b>Final approach</b> segura os alertas durante um chefe; <b>Undo</b> corrige um deslize.</sub></p>
 
 <table><tr><td width="33%" valign="top"><img src="../assets/panel-live.png" alt="Ao vivo"><br><b>Ao vivo</b>: Troque de cena e controle cada peça. Cada botão mostra o atalho e o comando de chat.</td><td width="33%" valign="top"><img src="../assets/panel-alerts.png" alt="Alertas"><br><b>Alertas</b>: Teste cada alerta, ligue ou desligue e segure durante as lutas contra chefes.</td><td width="33%" valign="top"><img src="../assets/panel-chat.png" alt="Chat"><br><b>Chat</b>: Os comandos e quem pode usar. Comandos de quem não é mod são ignorados e registrados.</td></tr></table>
 
@@ -150,7 +150,7 @@ flowchart LR
 ## 📥 Instalar a skill
 
 > [!NOTE]
-> O download vai estar em [Releases](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases) quando a v1 for publicada.
+> Baixe o `overlay-generator.zip` da [versão mais recente](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases/latest).
 
 ### No app do Claude (web ou desktop)
 
@@ -169,6 +169,12 @@ As skills ativadas na sua conta do Claude aparecem sozinhas no Claude Code (conf
 
 ```bash
 unzip overlay-generator.zip -d ~/.claude/skills/
+```
+
+Ou instale como plugin, direto deste repositório:
+
+```text
+/plugin install overlay-generator --marketplace Ro0oman/OverlayGenerator-Claude-Skill
 ```
 
 ## 🚀 Crie o seu pack
@@ -320,7 +326,7 @@ As cenas, o painel e as peças funcionam em qualquer lugar onde o OBS funciona. 
 
 - [x] Arquitetura testada no OBS 32: painel via WebSocket, instalação com um clique, atalhos, comandos para mods e memória que sobrevive a limpar o cache e reiniciar
 - [x] Método de design testado com canais reais, com verificações automáticas de sobreposição com o HUD, espaço na tela, tamanho de texto e contraste
-- [ ] **v1**: a skill, o motor, o gerador de packs e o validador
+- [x] **v1**: a skill, o motor, o gerador de packs e o validador
 - [ ] YouTube e Kick
 - [ ] Alertas de follows, doações e pontos do canal
 - [ ] Testes no macOS e no Linux

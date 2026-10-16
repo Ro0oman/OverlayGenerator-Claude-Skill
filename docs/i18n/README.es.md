@@ -8,7 +8,7 @@
 
 [English](../../README.md) · **Español** · [Português (BR)](README.pt-BR.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Italiano](README.it.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [简体中文](README.zh-CN.md)
 
-![Estado](https://img.shields.io/badge/estado-pre--lanzamiento-orange)
+![Version](https://img.shields.io/badge/version-1.0%20beta-blue)
 ![OBS](https://img.shields.io/badge/OBS-28%2B-302E31?logo=obsstudio&logoColor=white)
 ![Twitch](https://img.shields.io/badge/Twitch-compatible-9146FF?logo=twitch&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
@@ -19,7 +19,7 @@
 </div>
 
 > [!IMPORTANT]
-> **Pre-lanzamiento.** La arquitectura ya está probada en OBS 32 con Windows: panel de control, instalación en OBS con un clic, atajos de teclado, comandos de chat y memoria. La skill en sí está en construcción. Pulsa **Watch → Custom → Releases** para enterarte cuando salga la v1. Los pasos de abajo explican cómo funcionará la v1.
+> **v1 beta.** Aquí están la skill, el motor y un pack de ejemplo completo. Todo está probado contra un OBS simulado, y lo esencial (panel, instalación con un clic, atajos, comandos de chat y memoria) en un OBS 32 real con Windows. ¿Has encontrado un fallo? [Abre una issue](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/issues).
 
 ---
 
@@ -99,7 +99,7 @@ Cada pack anima sus alertas a su manera. Mismo espectador, mismo sub, seis ambie
 Cada pack trae su propio panel, metido dentro de OBS. Claude solo pone en él lo que usa tu directo: los botones, atajos y comandos de chat de *tus* piezas.
 
 <p align="center"><img src="../assets/panel-live.gif" alt="El panel de control" width="460"></p>
-<p align="center"><sub>Pulsas <b>F9</b> jugando, o un mod escribe <code>!hit</code>: el cero se pone rojo y se apunta la caída. Luego, intento nuevo y dos jefes abajo.</sub></p>
+<p align="center"><sub>Pulsas <b>F9</b> jugando, o un mod escribe <code>!turb</code>: suben las turbulencias. <b>Final approach</b> retiene las alertas durante un jefe; <b>Undo</b> corrige un despiste.</sub></p>
 
 <table><tr><td width="33%" valign="top"><img src="../assets/panel-live.png" alt="En directo"><br><b>En directo</b>: Cambia de escena y maneja cada pieza. Cada botón enseña su atajo y su comando de chat.</td><td width="33%" valign="top"><img src="../assets/panel-alerts.png" alt="Alertas"><br><b>Alertas</b>: Prueba cada alerta, actívalas o desactívalas y retenlas durante los jefes.</td><td width="33%" valign="top"><img src="../assets/panel-chat.png" alt="Chat"><br><b>Chat</b>: Los comandos y quién puede usarlos. Los de quien no es mod se ignoran y quedan apuntados.</td></tr></table>
 
@@ -147,7 +147,7 @@ flowchart LR
 ## 📥 Instalar la skill
 
 > [!NOTE]
-> La descarga estará en [Releases](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases) cuando se publique la v1.
+> Descarga `overlay-generator.zip` de la [última versión](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases/latest).
 
 ### En la app de Claude (web o escritorio)
 
@@ -166,6 +166,12 @@ Las skills activadas en tu cuenta de Claude aparecen solas en Claude Code (compr
 
 ```bash
 unzip overlay-generator.zip -d ~/.claude/skills/
+```
+
+O instálala como plugin, directamente desde este repositorio:
+
+```text
+/plugin install overlay-generator --marketplace Ro0oman/OverlayGenerator-Claude-Skill
 ```
 
 ## 🚀 Crea tu pack
@@ -315,7 +321,7 @@ Las escenas, el panel y las piezas funcionan en cualquier sitio donde funcione O
 
 - [x] Arquitectura probada en OBS 32: panel por WebSocket, instalación con un clic, atajos, comandos para mods y memoria que sobrevive a limpiar la caché y a reiniciar
 - [x] Método de diseño probado con canales reales, con comprobaciones automáticas de solapes con el HUD, espacio en pantalla, tamaño de texto y contraste
-- [ ] **v1**: la skill, el motor, el generador de packs y el validador
+- [x] **v1**: la skill, el motor, el generador de packs y el validador
 - [ ] YouTube y Kick
 - [ ] Alertas de follows, donaciones y puntos del canal
 - [ ] Pruebas en macOS y Linux

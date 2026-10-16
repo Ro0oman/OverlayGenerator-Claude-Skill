@@ -8,7 +8,7 @@
 
 **English** · [Español](docs/i18n/README.es.md) · [Português (BR)](docs/i18n/README.pt-BR.md) · [Français](docs/i18n/README.fr.md) · [Deutsch](docs/i18n/README.de.md) · [Italiano](docs/i18n/README.it.md) · [日本語](docs/i18n/README.ja.md) · [한국어](docs/i18n/README.ko.md) · [简体中文](docs/i18n/README.zh-CN.md)
 
-![Status](https://img.shields.io/badge/status-pre--release-orange)
+![Version](https://img.shields.io/badge/version-1.0%20beta-blue)
 ![OBS](https://img.shields.io/badge/OBS-28%2B-302E31?logo=obsstudio&logoColor=white)
 ![Twitch](https://img.shields.io/badge/Twitch-supported-9146FF?logo=twitch&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
@@ -19,7 +19,7 @@
 </div>
 
 > [!IMPORTANT]
-> **Pre-release.** The architecture (control panel, one-click OBS install, hotkeys, chat commands, memory) has been tested in OBS 32 on Windows. The skill itself is being built. **Watch → Custom → Releases** to hear when v1 is out. The steps below describe how v1 will work.
+> **v1 beta.** The skill, the engine and a complete example pack are here. Every part has been tested against a simulated OBS, and the core (panel, one-click install, hotkeys, chat commands, memory) in a real OBS 32 on Windows. Found a bug? [Open an issue](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/issues).
 
 ---
 
@@ -99,7 +99,7 @@ Every pack animates its alerts its own way. Same viewer, same sub, six moods:
 Every pack comes with its own panel, docked inside OBS. Claude only puts in it what your stream uses: the buttons, hotkeys and chat commands of *your* pieces.
 
 <p align="center"><img src="docs/assets/panel-live.gif" alt="The control panel" width="460"></p>
-<p align="center"><sub>Press <b>F9</b> in game, or a mod types <code>!hit</code>: the zero turns red and the falls list updates. Then a new attempt, two bosses down.</sub></p>
+<p align="center"><sub>Press <b>F9</b> in game, or a mod types <code>!turb</code>: turbulence goes up. <b>Final approach</b> holds alerts during a boss fight; <b>Undo</b> fixes a slip.</sub></p>
 
 <table><tr><td width="33%" valign="top"><img src="docs/assets/panel-live.png" alt="Live"><br><b>Live</b>: Switch scenes and drive every piece. Each button shows its hotkey and chat command.</td><td width="33%" valign="top"><img src="docs/assets/panel-alerts.png" alt="Alerts"><br><b>Alerts</b>: Test each alert, switch them on or off, and hold them during boss fights.</td><td width="33%" valign="top"><img src="docs/assets/panel-chat.png" alt="Chat"><br><b>Chat</b>: Commands and who can use them. Commands from non-mods are ignored and logged.</td></tr></table>
 
@@ -147,7 +147,7 @@ flowchart LR
 ## 📥 Install the skill
 
 > [!NOTE]
-> The download will be available in [Releases](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases) when v1 is published.
+> Download `overlay-generator.zip` from the [latest release](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases/latest).
 
 ### In the Claude app (web, desktop)
 
@@ -164,6 +164,12 @@ Skills enabled in your Claude account sync to Claude Code automatically (run `/s
 
 ```bash
 unzip overlay-generator.zip -d ~/.claude/skills/
+```
+
+Or install it as a plugin, straight from this repository:
+
+```text
+/plugin install overlay-generator --marketplace Ro0oman/OverlayGenerator-Claude-Skill
 ```
 
 ## 🚀 Create your pack
@@ -313,7 +319,7 @@ The scenes, panel and pieces work anywhere OBS does. Alerts and chat are Twitch-
 
 - [x] Architecture tested in OBS 32: WebSocket panel, one-click install, hotkeys, mod commands, memory across cache clears and restarts
 - [x] Design method tested on real channels, with automatic checks for HUD overlap, screen space, text size and contrast
-- [ ] **v1**: the skill, engine, pack builder and validator
+- [x] **v1**: the skill, the engine, the pack builder and the validator
 - [ ] YouTube and Kick
 - [ ] Follow, donation and channel-point alerts
 - [ ] macOS and Linux testing

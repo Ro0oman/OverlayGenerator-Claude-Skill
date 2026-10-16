@@ -8,7 +8,7 @@
 
 [English](../../README.md) · [Español](README.es.md) · [Português (BR)](README.pt-BR.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Italiano](README.it.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · **简体中文**
 
-![状态](https://img.shields.io/badge/status-%E9%A2%84%E5%8F%91%E5%B8%83-orange)
+![Version](https://img.shields.io/badge/version-1.0%20beta-blue)
 ![OBS](https://img.shields.io/badge/OBS-28%2B-302E31?logo=obsstudio&logoColor=white)
 ![Twitch](https://img.shields.io/badge/Twitch-%E6%94%AF%E6%8C%81-9146FF?logo=twitch&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
@@ -19,7 +19,7 @@
 </div>
 
 > [!IMPORTANT]
-> **预发布阶段。** 整体架构（控制面板、一键安装到 OBS、快捷键、聊天命令、状态保存）已在 Windows 版 OBS 32 中测试通过。技能本身正在开发中。点击 **Watch → Custom → Releases** 即可在 v1 发布时收到通知。下面的步骤介绍的是 v1 的使用方式。
+> **v1 测试版。** 技能本体、引擎和一个完整的示例素材包都已发布。所有部分都在模拟的 OBS 上测试过，核心功能（面板、一键安装、快捷键、聊天命令、状态保存）也在真实的 Windows 版 OBS 32 中验证过。发现问题？[提交 issue](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/issues)。
 
 > [!NOTE]
 > 本文译自[英文 README](../../README.md)，内容可能稍有滞后。
@@ -102,7 +102,7 @@ Claude： 我看了你最近的直播：主要是《艾尔登法环》，无伤�
 每套素材都附带自己的面板，停靠在 OBS 里。Claude 只放进你的直播用得到的东西：*你的*组件对应的按钮、快捷键和聊天命令。
 
 <p align="center"><img src="../assets/panel-live.gif" alt="控制面板" width="460"></p>
-<p align="center"><sub>游戏中按 <b>F9</b>，或者房管输入 <code>!hit</code>：零变红，失误被记录。接着开始新的尝试，再击败两个 Boss。</sub></p>
+<p align="center"><sub>游戏中按 <b>F9</b>，或者房管输入 <code>!turb</code>：颠簸次数增加。<b>Final approach</b> 在 Boss 战期间暂存提醒，<b>Undo</b> 撤销误按。</sub></p>
 
 <table><tr><td width="33%" valign="top"><img src="../assets/panel-live.png" alt="直播"><br><b>直播</b>: 切换场景、操控每个组件。每个按钮都会显示它的快捷键和聊天命令。</td><td width="33%" valign="top"><img src="../assets/panel-alerts.png" alt="提醒"><br><b>提醒</b>: 逐个测试提醒、开关提醒，并在 Boss 战期间暂存。</td><td width="33%" valign="top"><img src="../assets/panel-chat.png" alt="聊天"><br><b>聊天</b>: 命令以及谁可以使用。非房管的命令会被忽略并记录。</td></tr></table>
 
@@ -150,7 +150,7 @@ flowchart LR
 ## 📥 安装技能
 
 > [!NOTE]
-> v1 发布后，可在 [Releases](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases) 下载。
+> 从[最新版本](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases/latest)下载 `overlay-generator.zip`。
 
 ### 在 Claude 应用中（网页或桌面版）
 
@@ -169,6 +169,12 @@ flowchart LR
 
 ```bash
 unzip overlay-generator.zip -d ~/.claude/skills/
+```
+
+也可以直接从本仓库作为插件安装：
+
+```text
+/plugin install overlay-generator --marketplace Ro0oman/OverlayGenerator-Claude-Skill
 ```
 
 ## 🚀 生成你的素材包
@@ -320,7 +326,7 @@ Claude 会：
 
 - [x] 架构已在 OBS 32 中测试：WebSocket 面板、一键安装、快捷键、房管命令，以及在清除缓存和重启后依然保留的状态
 - [x] 设计方法已在真实频道上验证，并自动检查与 HUD 的重叠、屏幕占用、字号和对比度
-- [ ] **v1**：技能本体、引擎、素材包生成器和校验工具
+- [x] **v1**：技能本体、引擎、素材包生成器和校验工具
 - [ ] YouTube 和 Kick
 - [ ] 关注、打赏和频道积分提醒
 - [ ] macOS 和 Linux 测试

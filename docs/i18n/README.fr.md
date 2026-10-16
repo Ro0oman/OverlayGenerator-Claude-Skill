@@ -8,7 +8,7 @@
 
 [English](../../README.md) · [Español](README.es.md) · [Português (BR)](README.pt-BR.md) · **Français** · [Deutsch](README.de.md) · [Italiano](README.it.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [简体中文](README.zh-CN.md)
 
-![Statut](https://img.shields.io/badge/statut-pr%C3%A9--version-orange)
+![Version](https://img.shields.io/badge/version-1.0%20beta-blue)
 ![OBS](https://img.shields.io/badge/OBS-28%2B-302E31?logo=obsstudio&logoColor=white)
 ![Twitch](https://img.shields.io/badge/Twitch-compatible-9146FF?logo=twitch&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
@@ -19,7 +19,7 @@
 </div>
 
 > [!IMPORTANT]
-> **Pré-version.** L'architecture a été testée dans OBS 32 sous Windows : panneau de contrôle, installation dans OBS en un clic, raccourcis clavier, commandes de chat et mémoire. La skill elle-même est en cours de construction. Cliquez sur **Watch → Custom → Releases** pour être prévenu de la sortie de la v1. Les étapes ci-dessous décrivent le fonctionnement de la v1.
+> **v1 bêta.** La skill, le moteur et un pack d'exemple complet sont là. Tout a été testé contre un OBS simulé, et l'essentiel (panneau, installation en un clic, raccourcis, commandes de chat, mémoire) dans un vrai OBS 32 sous Windows. Un bug ? [Ouvrez une issue](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/issues).
 
 > [!NOTE]
 > Ceci est une traduction du [README en anglais](../../README.md). Elle peut avoir un peu de retard.
@@ -103,7 +103,7 @@ Chaque pack anime ses alertes à sa façon. Même spectateur, même sub, six amb
 Chaque pack a son propre panneau, intégré à OBS. Claude n'y met que ce que votre stream utilise : les boutons, raccourcis et commandes de chat de *vos* éléments.
 
 <p align="center"><img src="../assets/panel-live.gif" alt="Le panneau de contrôle" width="460"></p>
-<p align="center"><sub>Appuyez sur <b>F9</b> en jeu, ou un modo tape <code>!hit</code> : le zéro devient rouge et la chute est notée. Puis nouvelle tentative et deux boss vaincus.</sub></p>
+<p align="center"><sub>Appuyez sur <b>F9</b> en jeu, ou un modo tape <code>!turb</code> : la turbulence monte. <b>Final approach</b> retient les alertes pendant un boss ; <b>Undo</b> corrige une erreur.</sub></p>
 
 <table><tr><td width="33%" valign="top"><img src="../assets/panel-live.png" alt="Direct"><br><b>Direct</b>: Changez de scène et pilotez chaque élément. Chaque bouton affiche son raccourci et sa commande de chat.</td><td width="33%" valign="top"><img src="../assets/panel-alerts.png" alt="Alertes"><br><b>Alertes</b>: Testez chaque alerte, activez-les ou non et retenez-les pendant les boss.</td><td width="33%" valign="top"><img src="../assets/panel-chat.png" alt="Chat"><br><b>Chat</b>: Les commandes et qui peut les utiliser. Celles des non-modos sont ignorées et notées.</td></tr></table>
 
@@ -151,7 +151,7 @@ flowchart LR
 ## 📥 Installer la skill
 
 > [!NOTE]
-> Le téléchargement sera disponible dans les [Releases](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases) à la sortie de la v1.
+> Téléchargez `overlay-generator.zip` depuis la [dernière version](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases/latest).
 
 ### Dans l'application Claude (web ou bureau)
 
@@ -170,6 +170,12 @@ Les skills activées dans votre compte Claude apparaissent automatiquement dans 
 
 ```bash
 unzip overlay-generator.zip -d ~/.claude/skills/
+```
+
+Ou installez-la comme plugin, directement depuis ce dépôt :
+
+```text
+/plugin install overlay-generator --marketplace Ro0oman/OverlayGenerator-Claude-Skill
 ```
 
 ## 🚀 Créer votre pack
@@ -321,7 +327,7 @@ Les scènes, le panneau et les éléments fonctionnent partout où OBS fonctionn
 
 - [x] Architecture testée dans OBS 32 : panneau via WebSocket, installation en un clic, raccourcis, commandes pour les modos, mémoire qui résiste au vidage du cache et aux redémarrages
 - [x] Méthode de design testée sur de vraies chaînes, avec des vérifications automatiques du chevauchement avec le HUD, de la place à l'écran, de la taille du texte et du contraste
-- [ ] **v1** : la skill, le moteur, le générateur de packs et le validateur
+- [x] **v1** : la skill, le moteur, le générateur de packs et le validateur
 - [ ] YouTube et Kick
 - [ ] Alertes de follows, de dons et de points de chaîne
 - [ ] Tests sous macOS et Linux

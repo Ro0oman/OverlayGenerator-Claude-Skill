@@ -8,7 +8,7 @@
 
 [English](../../README.md) · [Español](README.es.md) · [Português (BR)](README.pt-BR.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Italiano](README.it.md) · **日本語** · [한국어](README.ko.md) · [简体中文](README.zh-CN.md)
 
-![ステータス](https://img.shields.io/badge/status-%E3%83%97%E3%83%AC%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B9-orange)
+![Version](https://img.shields.io/badge/version-1.0%20beta-blue)
 ![OBS](https://img.shields.io/badge/OBS-28%2B-302E31?logo=obsstudio&logoColor=white)
 ![Twitch](https://img.shields.io/badge/Twitch-%E5%AF%BE%E5%BF%9C-9146FF?logo=twitch&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
@@ -19,7 +19,7 @@
 </div>
 
 > [!IMPORTANT]
-> **プレリリース版です。** 仕組み（コントロールパネル、ワンクリックのOBSインストール、ホットキー、チャットコマンド、状態の保存）はWindows版OBS 32で動作確認済みです。スキル本体は現在開発中です。v1の公開を知りたい方は **Watch → Custom → Releases** を選んでください。以下の手順はv1での使い方です。
+> **v1 ベータ版です。** スキル本体、エンジン、完全な作例パックを公開しています。すべてシミュレートしたOBSでテスト済みで、中核部分（パネル、ワンクリックインストール、ホットキー、チャットコマンド、状態の保存）は実際のWindows版OBS 32でも確認しています。不具合は[Issue](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/issues)へどうぞ。
 
 > [!NOTE]
 > これは[英語版README](../../README.md)の翻訳です。内容が少し古い場合があります。
@@ -102,7 +102,7 @@ Claude: 最近の配信を見ました。ほぼエルデンリング、ノーダ
 どのパックにも、OBSにドッキングする専用パネルが付いています。Claudeが入れるのは、あなたの配信で使うものだけ。*あなたの*パーツのボタン、ホットキー、チャットコマンドです。
 
 <p align="center"><img src="../assets/panel-live.gif" alt="コントロールパネル" width="460"></p>
-<p align="center"><sub>ゲーム中に <b>F9</b> を押すか、モデレーターが <code>!hit</code> と打つと、ゼロが赤くなり被弾が記録されます。続いて新しい挑戦、ボスを2体撃破。</sub></p>
+<p align="center"><sub>ゲーム中に <b>F9</b> を押すか、モデレーターが <code>!turb</code> と打つとタービュランスが増えます。<b>Final approach</b> でボス戦中のアラートを保留、<b>Undo</b> で押し間違いを戻せます。</sub></p>
 
 <table><tr><td width="33%" valign="top"><img src="../assets/panel-live.png" alt="ライブ"><br><b>ライブ</b>: シーンの切り替えと各パーツの操作。ボタンごとにホットキーとチャットコマンドを表示。</td><td width="33%" valign="top"><img src="../assets/panel-alerts.png" alt="アラート"><br><b>アラート</b>: アラートごとのテスト、オン・オフ、ボス戦中の保留。</td><td width="33%" valign="top"><img src="../assets/panel-chat.png" alt="チャット"><br><b>チャット</b>: コマンドと使える人。モデレーター以外のコマンドは無視して記録します。</td></tr></table>
 
@@ -150,7 +150,7 @@ flowchart LR
 ## 📥 スキルをインストールする
 
 > [!NOTE]
-> v1が公開されると、[Releases](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases)からダウンロードできるようになります。
+> [最新リリース](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases/latest)から `overlay-generator.zip` をダウンロードしてください。
 
 ### Claudeアプリ（Web・デスクトップ）
 
@@ -169,6 +169,12 @@ Claudeアカウントで有効にしたスキルは、Claude Codeに自動で同
 
 ```bash
 unzip overlay-generator.zip -d ~/.claude/skills/
+```
+
+または、このリポジトリから直接プラグインとしてインストールできます。
+
+```text
+/plugin install overlay-generator --marketplace Ro0oman/OverlayGenerator-Claude-Skill
 ```
 
 ## 🚀 パックを作る
@@ -320,7 +326,7 @@ Claudeは次の流れで進めます。
 
 - [x] OBS 32で仕組みを確認済み：WebSocket経由のパネル、ワンクリックインストール、ホットキー、モデレーター用コマンド、キャッシュ削除や再起動後も残る状態保存
 - [x] 実在のチャンネルでデザイン手法を検証。HUDとの重なり、画面占有率、文字サイズ、コントラストを自動チェック
-- [ ] **v1**：スキル本体、エンジン、パック生成、検証ツール
+- [x] **v1**：スキル本体、エンジン、パック生成、検証ツール
 - [ ] YouTubeとKick
 - [ ] フォロー、投げ銭、チャンネルポイントのアラート
 - [ ] macOSとLinuxでの動作確認

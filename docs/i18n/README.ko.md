@@ -8,7 +8,7 @@
 
 [English](../../README.md) · [Español](README.es.md) · [Português (BR)](README.pt-BR.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Italiano](README.it.md) · [日本語](README.ja.md) · **한국어** · [简体中文](README.zh-CN.md)
 
-![상태](https://img.shields.io/badge/status-%ED%94%84%EB%A6%AC%EB%A6%B4%EB%A6%AC%EC%8A%A4-orange)
+![Version](https://img.shields.io/badge/version-1.0%20beta-blue)
 ![OBS](https://img.shields.io/badge/OBS-28%2B-302E31?logo=obsstudio&logoColor=white)
 ![Twitch](https://img.shields.io/badge/Twitch-%EC%A7%80%EC%9B%90-9146FF?logo=twitch&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
@@ -19,7 +19,7 @@
 </div>
 
 > [!IMPORTANT]
-> **프리릴리스 단계입니다.** 구조(컨트롤 패널, 클릭 한 번으로 OBS에 설치, 단축키, 채팅 명령어, 상태 저장)는 Windows용 OBS 32에서 테스트를 마쳤습니다. 스킬 자체는 현재 개발 중입니다. v1 출시 소식을 받으려면 **Watch → Custom → Releases**를 선택하세요. 아래 단계는 v1의 사용법입니다.
+> **v1 베타입니다.** 스킬, 엔진, 완성된 예시 팩이 모두 들어 있습니다. 전부 시뮬레이션한 OBS로 테스트했고, 핵심 기능(패널, 클릭 한 번 설치, 단축키, 채팅 명령어, 상태 저장)은 실제 Windows용 OBS 32에서도 확인했습니다. 버그를 찾으셨나요? [이슈를 열어 주세요](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/issues).
 
 > [!NOTE]
 > 이 문서는 [영어 README](../../README.md)의 번역본이며, 내용이 조금 늦게 반영될 수 있습니다.
@@ -102,7 +102,7 @@ Claude: 최근 방송을 봤어요. 주로 엘든 링, 노히트 도전, 한국�
 모든 팩에는 OBS 안에 도킹되는 전용 패널이 있습니다. Claude는 내 방송에서 쓰는 것만 넣습니다. *내* 요소들의 버튼, 단축키, 채팅 명령어요.
 
 <p align="center"><img src="../assets/panel-live.gif" alt="컨트롤 패널" width="460"></p>
-<p align="center"><sub>게임 중에 <b>F9</b>를 누르거나 모더레이터가 <code>!hit</code>을 입력하면, 0이 빨갛게 변하고 실패가 기록됩니다. 이어서 새 시도, 보스 두 마리 처치.</sub></p>
+<p align="center"><sub>게임 중에 <b>F9</b>를 누르거나 모더레이터가 <code>!turb</code>를 입력하면 난기류가 올라갑니다. <b>Final approach</b>는 보스전 동안 알림을 대기시키고, <b>Undo</b>는 실수를 되돌립니다.</sub></p>
 
 <table><tr><td width="33%" valign="top"><img src="../assets/panel-live.png" alt="라이브"><br><b>라이브</b>: 장면을 바꾸고 각 요소를 조작합니다. 버튼마다 단축키와 채팅 명령어가 표시됩니다.</td><td width="33%" valign="top"><img src="../assets/panel-alerts.png" alt="알림"><br><b>알림</b>: 알림별 테스트, 켜기·끄기, 보스전 동안 대기.</td><td width="33%" valign="top"><img src="../assets/panel-chat.png" alt="채팅"><br><b>채팅</b>: 명령어와 사용할 수 있는 사람. 모더레이터가 아닌 사람의 명령어는 무시하고 기록합니다.</td></tr></table>
 
@@ -150,7 +150,7 @@ flowchart LR
 ## 📥 스킬 설치하기
 
 > [!NOTE]
-> v1이 공개되면 [Releases](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases)에서 내려받을 수 있습니다.
+> [최신 릴리스](https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases/latest)에서 `overlay-generator.zip`을 내려받으세요.
 
 ### Claude 앱(웹, 데스크톱)
 
@@ -169,6 +169,12 @@ Claude 계정에서 켠 스킬은 Claude Code에 자동으로 동기화됩니다
 
 ```bash
 unzip overlay-generator.zip -d ~/.claude/skills/
+```
+
+또는 이 저장소에서 바로 플러그인으로 설치할 수 있습니다.
+
+```text
+/plugin install overlay-generator --marketplace Ro0oman/OverlayGenerator-Claude-Skill
 ```
 
 ## 🚀 팩 만들기
@@ -320,7 +326,7 @@ Claude는 이렇게 진행합니다.
 
 - [x] OBS 32에서 구조 테스트 완료: WebSocket 패널, 클릭 한 번 설치, 단축키, 모더레이터 명령어, 캐시 삭제와 재시작 후에도 남는 상태 저장
 - [x] 실제 채널로 디자인 방법론 검증. HUD 겹침, 화면 점유, 글자 크기, 대비를 자동 검사
-- [ ] **v1**: 스킬, 엔진, 팩 빌더, 검증 도구
+- [x] **v1**: 스킬, 엔진, 팩 빌더, 검증 도구
 - [ ] YouTube와 Kick
 - [ ] 팔로우, 후원, 채널 포인트 알림
 - [ ] macOS와 Linux 테스트
