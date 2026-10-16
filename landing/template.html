@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="{{htmlLang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{metaTitle}}</title>
+<meta name="description" content="{{metaDesc}}">
+<meta name="robots" content="index, follow, max-image-preview:large">
+{{HEAD}}
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#9146ff">
+<link rel="preload" as="image" href="/media/hero.webp" type="image/webp" fetchpriority="high">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="logo" href="{{home}}"><span></span>OverlayGenerator</a>
+  <ul>
+    <li><a href="#que">{{nav1}}</a></li>
+    <li><a href="#ejemplos">{{nav2}}</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#start">{{nav3}}</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <div class="nav-r">
+    <select id="lang" aria-label="Language">{{LANGOPTS}}</select>
+    <a class="btn btn-ghost btn-sm" href="https://github.com/Ro0oman/OverlayGenerator-Claude-Skill" target="_blank" rel="noopener">★ GitHub</a>
+  </div>
+</div></nav>
+
+<main>
+<header class="hero">
+  <video class="hero-bg" src="/media/hero-bg.mp4" poster="/media/hero-bg.webp" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
+  <div class="wrap">
+  <div class="badge">{{badge}}</div>
+  <h1>{{h1}}</h1>
+  <p class="lead">{{lead}}</p>
+  <div class="ctas">
+    <a class="btn btn-primary" href="#start">{{ctaStart}}</a>
+    <a class="btn btn-ghost" href="https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases/latest" target="_blank" rel="noopener">{{ctaDl}}</a>
+  </div>
+  <div class="stats" id="stats" hidden>
+    <a href="https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/stargazers" target="_blank" rel="noopener">★ <b id="st-stars">–</b></a>
+    <a href="https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases" target="_blank" rel="noopener">⬇ <b id="st-dl">–</b></a>
+  </div>
+  <div class="hero-img"><img src="/media/hero.webp" width="1600" height="842" alt="{{metaTitle}}" fetchpriority="high"></div>
+</div></header>
+
+<section id="que" style="padding-top:40px"><div class="wrap">
+  <div class="chat">
+    <p><span class="u">{{you}}</span> {{chatQ}}</p>
+    <p><span class="c">Claude:</span> {{chatA}}</p>
+  </div>
+
+  <div style="margin-top:80px">
+    <div class="eyebrow">{{getEy}}</div>
+    <h2>{{getT}}</h2>
+    <p class="lead">{{getL}}</p>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="ic" aria-hidden="true">🎬</div><h3>{{c1t}}</h3><p>{{c1p}}</p></div>
+    <div class="card"><div class="ic" aria-hidden="true">🔔</div><h3>{{c2t}}</h3><p>{{c2p}}</p></div>
+    <div class="card"><div class="ic" aria-hidden="true">💬</div><h3>{{c3t}}</h3><p>{{c3p}}</p></div>
+    <div class="card"><div class="ic" aria-hidden="true">🧩</div><h3>{{c4t}}</h3><p>{{c4p}}</p></div>
+    <div class="card"><div class="ic" aria-hidden="true">🎛️</div><h3>{{c5t}}</h3><p>{{c5p}}</p></div>
+    <div class="card"><div class="ic" aria-hidden="true">⚙️</div><h3>{{c6t}}</h3><p>{{c6p}}</p></div>
+  </div>
+</div></section>
+
+<section id="ejemplos" class="alt"><div class="wrap">
+  <div class="eyebrow">{{exEy}}</div>
+  <h2>{{exT}}</h2>
+  <p class="lead">{{exL}}</p>
+  <div class="gallery">
+    {{GALLERY}}
+  </div>
+</div></section>
+
+<section id="demo"><div class="wrap">
+  <div class="eyebrow">{{demoEy}}</div>
+  <h2>{{demoT}}</h2>
+  <p class="lead">{{demoL}}</p>
+  <div class="demo-frame">
+    <iframe data-src="/demo/" title="{{demoT}}" loading="lazy"></iframe>
+    <a class="demo-poster" href="/demo/" target="_blank" rel="noopener"><img src="/media/demo.webp" width="1120" height="560" alt="{{demoT}}" loading="lazy"></a>
+  </div>
+  <div class="ctas" style="justify-content:flex-start;margin-top:18px">
+    <a class="btn btn-ghost" href="/demo/" target="_blank" rel="noopener">{{demoBtn}}</a>
+  </div>
+</div></section>
+
+<section id="start" class="alt"><div class="wrap">
+  <div class="eyebrow">{{stEy}}</div>
+  <h2>{{stT}}</h2>
+  <p class="lead">{{stL}}</p>
+  <div class="req">
+    <span>✅ OBS Studio 28+</span>
+    <span>{{req2}}</span>
+    <span>{{req3}}</span>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-t="app">{{tab1}}</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="code">Claude Code</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="plugin">{{tab3}}</button>
+  </div>
+
+  <div class="panel on" id="p-app">
+    <ol class="steps">
+      <li><b>{{a1t}}</b><p>{{a1p}}</p></li>
+      <li><b>{{a2t}}</b><p>{{a2p}}</p></li>
+      <li><b>{{a3t}}</b><p>{{a3p}}</p></li>
+    </ol>
+    <div class="note">{{aNote}}</div>
+  </div>
+
+  <div class="panel" id="p-code">
+    <ol class="steps">
+      <li><b>{{k1t}}</b><p>{{k1p}}</p></li>
+      <li><b>{{k2t}}</b><p>{{k2p}}</p>
+        <div class="code">unzip overlay-generator.zip -d ~/.claude/skills/<button class="copy">{{copy}}</button></div></li>
+    </ol>
+  </div>
+
+  <div class="panel" id="p-plugin">
+    <ol class="steps">
+      <li><b>{{p1t}}</b><p>{{p1p}}</p>
+        <div class="code">/plugin install overlay-generator --marketplace Ro0oman/OverlayGenerator-Claude-Skill<button class="copy">{{copy}}</button></div></li>
+    </ol>
+  </div>
+
+  <div style="margin-top:64px">
+    <div class="eyebrow">{{useEy}}</div>
+    <h3 style="font-size:26px;margin-bottom:8px">{{useT}}</h3>
+    <p class="lead">{{useL}}</p>
+  </div>
+  <div class="prompts">
+    <div class="prompt"><small>{{pr1s}}</small>{{pr1}}</div>
+    <div class="prompt"><small>{{pr2s}}</small>{{pr2}}</div>
+  </div>
+  <div class="flow">
+    <div><span class="e" aria-hidden="true">🗣️</span>{{f1}}</div>
+    <div><span class="e" aria-hidden="true">📸</span>{{f2}}</div>
+    <div><span class="e" aria-hidden="true">🔎</span>{{f3}}</div>
+    <div><span class="e" aria-hidden="true">🎨</span>{{f4}}</div>
+    <div><span class="e" aria-hidden="true">📦</span>{{f5}}</div>
+  </div>
+  <div class="note">{{tip}}</div>
+</div></section>
+
+<section id="obs"><div class="wrap">
+  <div class="eyebrow">{{obsEy}}</div>
+  <h2>{{obsT}}</h2>
+  <p class="lead">{{obsL}}</p>
+  <ol class="steps" style="margin-top:32px">
+    <li><b>{{o1t}}</b><p>{{o1p}}</p></li>
+    <li><b>{{o2t}}</b><p>{{o2p}}</p></li>
+    <li><b>{{o3t}}</b><p>{{o3p}}</p></li>
+    <li><b>{{o4t}}</b><p>{{o4p}}</p></li>
+    <li><b>{{o5t}}</b><p>{{o5p}}</p></li>
+    <li><b>{{o6t}}</b><p>{{o6p}}</p></li>
+    <li><b>{{o7t}}</b><p>{{o7p}}</p></li>
+  </ol>
+  <div class="note warn">{{obsWarn}}</div>
+  <div class="hero-img" style="margin-top:32px"><img loading="lazy" src="/media/obs-dock.webp" width="1600" height="870" alt="{{o4t}} · OBS"></div>
+
+  <div style="margin-top:56px" class="card">
+    <h3 style="margin-bottom:6px">{{updT}}</h3>
+    <p>{{updP}}</p>
+  </div>
+</div></section>
+
+<section id="faq" class="alt"><div class="wrap">
+  <div class="eyebrow">FAQ</div>
+  <h2>{{faqT}}</h2>
+  <details><summary>{{q1}}</summary><ul>{{a1}}</ul></details>
+  <details><summary>{{q2}}</summary><p>{{a2}}</p></details>
+  <details><summary>{{q3}}</summary><p>{{a3}}</p></details>
+  <details><summary>{{q4}}</summary><p>{{a4}}</p></details>
+  <details><summary>{{q5}}</summary><p>{{a5}}</p></details>
+  <details><summary>{{q6}}</summary><p>{{a6}}</p></details>
+</div></section>
+
+<section class="final"><div class="wrap">
+  <h2>{{finT}}</h2>
+  <p class="lead" style="margin:0 auto 28px">{{finL}}</p>
+  <div class="ctas">
+    <a class="btn btn-primary" href="https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases/latest" target="_blank" rel="noopener">{{finDl}}</a>
+    <a class="btn btn-ghost" href="https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/issues" target="_blank" rel="noopener">{{finBug}}</a>
+  </div>
+</div></section>
+</main>
+
+<footer>{{foot}}<nav class="foot-langs" aria-label="Languages">{{LANGLINKS}}</nav></footer>
+
+<script>window.OVG={copy:"{{copyJs}}",copied:"{{copiedJs}}"};</script>
+<script src="/app.js" defer></script>
+</body>
+</html>

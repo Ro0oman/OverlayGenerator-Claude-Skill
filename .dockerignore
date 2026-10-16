@@ -1,0 +1,5 @@
+# Only the landing page and the live demo are needed to build the site image.
+*
+!landing
+!demo
+landing/dist
