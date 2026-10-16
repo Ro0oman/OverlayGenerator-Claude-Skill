@@ -517,3 +517,48 @@ zh: {
   foot:'由 '+GH+' 与 Claude 共同制作。与 OBS Project、Twitch 或 Anthropic 无关。'
 }
 };
+
+// SEO metadata, demo section and 404 page.
+const EXTRA = {
+es: { metaTitle:'OverlayGenerator · Overlays de OBS para Twitch diseñados para tu canal con Claude',
+  metaDesc:'Skill gratuita de Claude que crea un pack de overlays de OBS completo para tu canal de Twitch: escenas, alertas, chat, panel de control con hotkeys e instalación en un clic. Sin código.',
+  demoEy:'Demo en vivo', demoT:'Pruébalo sin instalar nada', demoL:'Este es un pack real generado por la skill. Pulsa los botones del panel y mira cómo reacciona el overlay, sin OBS.', demoBtn:'Abrir la demo a pantalla completa →',
+  nfT:'Esta página no existe', nfP:'Puede que el enlace esté mal o que la página se haya movido.', nfBtn:'Volver al inicio' },
+en: { metaTitle:'OverlayGenerator · OBS overlays for Twitch designed for your channel with Claude',
+  metaDesc:'Free Claude skill that builds a complete OBS overlay pack for your Twitch channel: scenes, alerts, chat, a control panel with hotkeys and one-click install. No code.',
+  demoEy:'Live demo', demoT:'Try it without installing anything', demoL:'This is a real pack made by the skill. Click the panel buttons and watch the overlay react, no OBS needed.', demoBtn:'Open the full-screen demo →',
+  nfT:'This page doesn’t exist', nfP:'The link may be wrong or the page may have moved.', nfBtn:'Back to home' },
+pt: { metaTitle:'OverlayGenerator · Overlays de OBS para Twitch feitos para o seu canal com Claude',
+  metaDesc:'Skill gratuita do Claude que cria um pack de overlays de OBS completo para o seu canal da Twitch: cenas, alertas, chat, painel de controle com atalhos e instalação em um clique. Sem código.',
+  demoEy:'Demo ao vivo', demoT:'Teste sem instalar nada', demoL:'Este é um pack real gerado pela skill. Clique nos botões do painel e veja o overlay reagir, sem OBS.', demoBtn:'Abrir a demo em tela cheia →',
+  nfT:'Esta página não existe', nfP:'O link pode estar errado ou a página foi movida.', nfBtn:'Voltar ao início' },
+fr: { metaTitle:'OverlayGenerator · Overlays OBS pour Twitch pensés pour ta chaîne avec Claude',
+  metaDesc:'Skill Claude gratuite qui crée un pack d’overlays OBS complet pour ta chaîne Twitch : scènes, alertes, chat, panneau de contrôle avec raccourcis et installation en un clic. Sans code.',
+  demoEy:'Démo en direct', demoT:'Essaie sans rien installer', demoL:'Voici un vrai pack créé par la skill. Clique sur les boutons du panneau et regarde l’overlay réagir, sans OBS.', demoBtn:'Ouvrir la démo en plein écran →',
+  nfT:'Cette page n’existe pas', nfP:'Le lien est peut-être erroné ou la page a été déplacée.', nfBtn:'Retour à l’accueil' },
+de: { metaTitle:'OverlayGenerator · OBS-Overlays für Twitch, gestaltet für deinen Kanal mit Claude',
+  metaDesc:'Kostenloser Claude-Skill, der ein komplettes OBS-Overlay-Paket für deinen Twitch-Kanal baut: Szenen, Alerts, Chat, Steuerpanel mit Hotkeys und Ein-Klick-Installation. Ohne Code.',
+  demoEy:'Live-Demo', demoT:'Ausprobieren, ohne etwas zu installieren', demoL:'Das ist ein echtes Paket, erstellt vom Skill. Klick die Panel-Buttons und sieh, wie das Overlay reagiert, ganz ohne OBS.', demoBtn:'Demo im Vollbild öffnen →',
+  nfT:'Diese Seite gibt es nicht', nfP:'Der Link ist vielleicht falsch oder die Seite wurde verschoben.', nfBtn:'Zur Startseite' },
+it: { metaTitle:'OverlayGenerator · Overlay OBS per Twitch pensati per il tuo canale con Claude',
+  metaDesc:'Skill gratuita di Claude che crea un pack di overlay OBS completo per il tuo canale Twitch: scene, alert, chat, pannello di controllo con hotkey e installazione in un clic. Senza codice.',
+  demoEy:'Demo dal vivo', demoT:'Provalo senza installare nulla', demoL:'Questo è un pack vero creato dalla skill. Clicca i pulsanti del pannello e guarda l’overlay reagire, senza OBS.', demoBtn:'Apri la demo a schermo intero →',
+  nfT:'Questa pagina non esiste', nfP:'Il link potrebbe essere errato o la pagina è stata spostata.', nfBtn:'Torna alla home' },
+ja: { metaTitle:'OverlayGenerator · Claudeであなたのチャンネル専用のTwitch向けOBSオーバーレイ',
+  metaDesc:'TwitchチャンネルのためのOBSオーバーレイ一式を作る無料のClaudeスキル。シーン、アラート、チャット、ホットキー付きコントロールパネル、ワンクリックインストール。コード不要。',
+  demoEy:'ライブデモ', demoT:'何もインストールせずに試す', demoL:'スキルで実際に作られたパックです。パネルのボタンを押すと、OBSなしでオーバーレイが反応します。', demoBtn:'デモを全画面で開く →',
+  nfT:'このページは存在しません', nfP:'リンクが間違っているか、ページが移動した可能性があります。', nfBtn:'トップへ戻る' },
+ko: { metaTitle:'OverlayGenerator · Claude로 내 채널에 맞춘 Twitch용 OBS 오버레이',
+  metaDesc:'Twitch 채널을 위한 OBS 오버레이 팩을 통째로 만들어 주는 무료 Claude 스킬: 장면, 알림, 채팅, 단축키 컨트롤 패널, 원클릭 설치. 코딩 불필요.',
+  demoEy:'라이브 데모', demoT:'설치 없이 바로 체험', demoL:'스킬이 실제로 만든 팩입니다. 패널 버튼을 눌러 OBS 없이 오버레이가 반응하는 걸 확인하세요.', demoBtn:'데모 전체 화면으로 열기 →',
+  nfT:'페이지를 찾을 수 없습니다', nfP:'링크가 잘못되었거나 페이지가 이동했을 수 있습니다.', nfBtn:'홈으로' },
+zh: { metaTitle:'OverlayGenerator · 用 Claude 为你的频道量身打造 Twitch OBS 叠加层',
+  metaDesc:'免费的 Claude 技能，为你的 Twitch 频道生成整套 OBS 叠加层：场景、提醒、聊天、带快捷键的控制面板和一键安装。无需代码。',
+  demoEy:'在线演示', demoT:'无需安装即可试用', demoL:'这是由技能生成的真实素材包。点击面板按钮，无需 OBS 就能看到叠加层的反应。', demoBtn:'全屏打开演示 →',
+  nfT:'页面不存在', nfP:'链接可能有误，或页面已被移动。', nfBtn:'返回首页' }
+};
+for (const l in EXTRA) Object.assign(I18N[l], EXTRA[l]);
+
+const LOCALES = { es:'es_ES', en:'en_US', pt:'pt_BR', fr:'fr_FR', de:'de_DE', it:'it_IT', ja:'ja_JP', ko:'ko_KR', zh:'zh_CN' };
+const HREFLANG = { es:'es', en:'en', pt:'pt-BR', fr:'fr', de:'de', it:'it', ja:'ja', ko:'ko', zh:'zh-Hans' };
+if (typeof module !== 'undefined') module.exports = { I18N, LOCALES, HREFLANG };
