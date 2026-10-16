@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OverlayGenerator</title>
+<meta name="description" content="Una skill de Claude que diseña un pack de overlays para OBS completo alrededor de tu canal.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#9146ff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0b14; --bg2:#15121f; --card:#1b1728; --line:#2d2740;
+  --text:#ece9f5; --muted:#a39cba; --accent:#9146ff; --accent2:#d97757; --ok:#3ecf8e;
+  --grad:linear-gradient(120deg,#9146ff 0%,#d97757 100%);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img{max-width:100%;display:block}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;line-height:1.15;margin:0}
+h2{font-size:clamp(28px,4vw,40px);margin-bottom:12px}
+.lead{color:var(--muted);font-size:18px;max-width:640px}
+section{padding:88px 0}
+.eyebrow{font:500 13px "JetBrains Mono",monospace;color:var(--accent2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+code,.mono{font-family:"JetBrains Mono",monospace;font-size:.92em}
+code{background:#241f35;padding:2px 6px;border-radius:5px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:10;background:rgba(13,11,20,.8);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+.logo{font:700 18px "Space Grotesk";display:flex;gap:8px;align-items:center;text-decoration:none}
+.logo span{width:22px;height:22px;border-radius:6px;background:var(--grad)}
+nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0;font-size:14px;color:var(--muted)}
+nav ul a{text-decoration:none}nav ul a:hover{color:var(--text)}
+@media(max-width:760px){nav ul{display:none}}
+
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:10px;font-weight:600;text-decoration:none;font-size:15px;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 8px 30px -8px rgba(145,70,255,.6)}
+.btn-ghost{border:1px solid var(--line);background:var(--card)}
+.btn-sm{padding:8px 14px;font-size:14px}
+
+/* hero */
+.hero{padding:80px 0 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-200px 0 auto;height:600px;background:radial-gradient(ellipse at center,rgba(145,70,255,.25),transparent 60%);pointer-events:none}
+.badge{display:inline-block;font:500 12px "JetBrains Mono";padding:5px 12px;border:1px solid var(--line);border-radius:99px;color:var(--muted);margin-bottom:22px;background:var(--bg2)}
+.hero h1{font-size:clamp(38px,7vw,72px);letter-spacing:-.02em;max-width:900px;margin:0 auto 20px}
+.hero h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .lead{margin:0 auto 32px}
+.ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-img{margin-top:56px;border-radius:16px;border:1px solid var(--line);overflow:hidden;box-shadow:0 30px 80px -20px rgba(0,0,0,.7)}
+
+/* chat demo */
+.chat{max-width:680px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;text-align:left;font:14px/1.7 "JetBrains Mono",monospace}
+.chat p{margin:0 0 10px}
+.chat .u{color:var(--accent2)}.chat .c{color:#b892ff}
+
+/* grid cards */
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.card .ic{font-size:26px;margin-bottom:10px}
+.card h3{font-size:18px;margin-bottom:6px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+
+/* gallery */
+.gallery{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:40px}
+.gallery figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.gallery figcaption{padding:14px 16px;font-size:14px;color:var(--muted)}
+.gallery figcaption b{color:var(--text)}
+
+/* start now */
+#start{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:6px;margin:32px 0 0;flex-wrap:wrap}
+.tab{background:transparent;border:1px solid var(--line);color:var(--muted);padding:9px 16px;border-radius:9px;font:600 14px Inter;cursor:pointer}
+.tab[aria-selected=true]{background:var(--card);color:var(--text);border-color:var(--accent)}
+.panel{display:none;margin-top:18px}
+.panel.on{display:block}
+.steps{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:12px}
+.steps li{counter-increment:s;position:relative;padding:18px 20px 18px 64px;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.steps li::before{content:counter(s);position:absolute;left:18px;top:16px;width:30px;height:30px;border-radius:8px;background:var(--grad);display:grid;place-items:center;font:700 15px "Space Grotesk"}
+.steps b{display:block;margin-bottom:2px}
+.steps p{margin:0;color:var(--muted);font-size:15px}
+.code{position:relative;margin-top:10px;background:#0a0810;border:1px solid var(--line);border-radius:10px;padding:14px 90px 14px 16px;font:13.5px "JetBrains Mono";overflow-x:auto;white-space:pre}
+.copy{position:absolute;right:8px;top:8px;background:var(--card);border:1px solid var(--line);color:var(--muted);border-radius:7px;padding:5px 10px;font:12px Inter;cursor:pointer}
+.copy:hover{color:var(--text)}
+.note{margin-top:16px;padding:14px 16px;border-left:3px solid var(--accent2);background:rgba(217,119,87,.08);border-radius:0 10px 10px 0;font-size:15px}
+.note.warn{border-color:#f5b84b;background:rgba(245,184,75,.08)}
+.req{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.req span{font-size:14px;padding:7px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card)}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:40px}
+.flow div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 14px;text-align:center;font-size:14px;color:var(--muted);position:relative}
+.flow div b{display:block;color:var(--text);font-size:15px;margin:6px 0 2px}
+.flow .e{font-size:26px}
+@media(max-width:800px){.flow{grid-template-columns:1fr 1fr}}
+
+/* prompts */
+.prompts{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:28px}
+.prompt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;font-style:italic}
+.prompt small{display:block;font-style:normal;color:var(--muted);margin-bottom:6px;font-size:13px}
+
+/* faq */
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-top:10px}
+summary{cursor:pointer;font-weight:600}
+details p,details ul{color:var(--muted);margin:10px 0 0;font-size:15px}
+
+.final{text-align:center}
+footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-size:13px;text-align:center}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="logo" href="#"><span></span>OverlayGenerator</a>
+  <ul>
+    <li><a href="#que">Qué es</a></li>
+    <li><a href="#ejemplos">Ejemplos</a></li>
+    <li><a href="#start">Empieza</a></li>
+    <li><a href="#obs">OBS</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a class="btn btn-ghost btn-sm" href="https://github.com/Ro0oman/OverlayGenerator-Claude-Skill" target="_blank" rel="noopener">★ GitHub</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="badge">v1 beta · OBS 28+ · Twitch · Skill de Claude</div>
+  <h1>Overlays de OBS diseñados para <em>tu canal</em>, no una plantilla con tu nombre</h1>
+  <p class="lead">Pega tu canal de Twitch. Claude estudia qué juegas, cómo hablas con tu chat y qué hace único tu stream, y te entrega un pack de overlays completo listo para OBS. Sin código.</p>
+  <div class="ctas">
+    <a class="btn btn-primary" href="#start">Empieza ahora →</a>
+    <a class="btn btn-ghost" href="https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases/latest" target="_blank" rel="noopener">Descargar skill</a>
+  </div>
+  <div class="hero-img"><img src="https://raw.githubusercontent.com/Ro0oman/OverlayGenerator-Claude-Skill/main/docs/assets/hero.jpg" alt="OverlayGenerator: overlays de OBS diseñados para tu canal"></div>
+</div></header>
+
+<section id="que" style="padding-top:40px"><div class="wrap">
+  <div class="chat">
+    <p><span class="u">Tú:</span> Hazme un pack de overlays. Mi canal es twitch.tv/tu_canal</p>
+    <p><span class="c">Claude:</span> He visto tus últimos directos: casi todo Elden Ring, runs no-hit, chat hispanohablante, cuentas las muertes a mano en el título…<br>Aquí tienes dos direcciones. ¿Cuál se siente más tuya?</p>
+  </div>
+
+  <div style="margin-top:80px">
+    <div class="eyebrow">Qué recibes</div>
+    <h2>Un pack completo, no piezas sueltas</h2>
+    <p class="lead">Eliges una dirección, Claude construye el pack y recibes un zip con todo listo para OBS.</p>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="ic">🎬</div><h3>Escenas</h3><p>Empezando, Vuelvo enseguida, Final y tus escenas principales: juego, charla, coding…</p></div>
+    <div class="card"><div class="ic">🔔</div><h3>Alertas</h3><p>Sub, resub, sub regalada, sub bomb, raid y bits, escritas con el idioma y el humor de tu canal.</p></div>
+    <div class="card"><div class="ic">💬</div><h3>Chat y objetivos</h3><p>Chat en pantalla, objetivo de subs y marco de cámara a juego con el resto.</p></div>
+    <div class="card"><div class="ic">🧩</div><h3>Piezas a medida</h3><p>Contador de muertes, tracker de jefes, agenda de temas, contador de días… lo que tu stream necesite.</p></div>
+    <div class="card"><div class="ic">🎛️</div><h3>Panel de control en OBS</h3><p>Botones, hotkeys y comandos de chat para tus mods que controlan todo en directo.</p></div>
+    <div class="card"><div class="ic">⚙️</div><h3>Instalar en OBS en un clic</h3><p>Crea escenas y fuentes por ti, ya posicionadas. Repetirlo es seguro: repara sin duplicar.</p></div>
+  </div>
+</div></section>
+
+<section id="ejemplos" style="background:var(--bg2);border-top:1px solid var(--line)"><div class="wrap">
+  <div class="eyebrow">No son plantillas</div>
+  <h2>Una misma sub, cinco canales distintos</h2>
+  <p class="lead">Cada pack nace de la idea detrás de tu canal, no de un menú de estilos.</p>
+  <div class="gallery">
+    <figure><img loading="lazy" src="https://raw.githubusercontent.com/Ro0oman/OverlayGenerator-Claude-Skill/main/docs/assets/alert-receipt.gif" alt=""><figcaption><b>Tienda 24h</b> · la alerta sale impresa como un ticket de caja</figcaption></figure>
+    <figure><img loading="lazy" src="https://raw.githubusercontent.com/Ro0oman/OverlayGenerator-Claude-Skill/main/docs/assets/alert-gameshow.gif" alt=""><figcaption><b>Concurso de TV</b> · luces de marquesina, confeti y premio</figcaption></figure>
+    <figure><img loading="lazy" src="https://raw.githubusercontent.com/Ro0oman/OverlayGenerator-Claude-Skill/main/docs/assets/alert-metro.gif" alt=""><figcaption><b>Línea de metro</b> · cada tema del directo es una estación</figcaption></figure>
+    <figure><img loading="lazy" src="https://raw.githubusercontent.com/Ro0oman/OverlayGenerator-Claude-Skill/main/docs/assets/alert-tar.gif" alt=""><figcaption><b>Peregrinaje</b> · el alquitrán se filtra por la piedra</figcaption></figure>
+    <figure><img loading="lazy" src="https://raw.githubusercontent.com/Ro0oman/OverlayGenerator-Claude-Skill/main/docs/assets/alert-nohit.gif" alt=""><figcaption><b>Run no-hit</b> · un banner fino que no estorba al combate</figcaption></figure>
+    <figure><img loading="lazy" src="https://raw.githubusercontent.com/Ro0oman/OverlayGenerator-Claude-Skill/main/docs/assets/panel-live.gif" alt=""><figcaption><b>Panel de control</b> · pulsa F9 o un mod escribe un comando</figcaption></figure>
+  </div>
+</div></section>
+
+<section id="start"><div class="wrap">
+  <div class="eyebrow">Start now</div>
+  <h2>Empieza en 3 minutos</h2>
+  <p class="lead">Instala la skill, pídele tu pack a Claude y conéctalo a OBS.</p>
+  <div class="req">
+    <span>✅ OBS Studio 28+</span>
+    <span>✅ Cuenta de Claude con <i>Code execution</i> activado</span>
+    <span>✅ Canal de Twitch</span>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-t="app">Claude app (web / escritorio)</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="code">Claude Code</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="plugin">Como plugin</button>
+  </div>
+
+  <div class="panel on" id="p-app">
+    <ol class="steps">
+      <li><b>Descarga la skill</b><p>Baja <code>overlay-generator.zip</code> de la <a href="https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases/latest" target="_blank" rel="noopener">última release</a>. <strong>No lo descomprimas.</strong></p></li>
+      <li><b>Activa la ejecución de código</b><p>En Claude: <b style="display:inline">Settings → Capabilities</b> y enciende <i>Code execution and file creation</i>.</p></li>
+      <li><b>Sube la skill</b><p><b style="display:inline">Customize → Skills</b>, pulsa <b style="display:inline">+</b> → <i>Create skill → Upload a skill</i>, elige el zip y asegúrate de que está activada.</p></li>
+    </ol>
+    <div class="note">En planes Team y Enterprise puede que un owner tenga que permitir las skills primero.</div>
+  </div>
+
+  <div class="panel" id="p-code">
+    <ol class="steps">
+      <li><b>Si ya la tienes en tu cuenta</b><p>Las skills activadas en tu cuenta de Claude se sincronizan solas con Claude Code. Compruébalo con <code>/skills</code>.</p></li>
+      <li><b>O instálala en local</b><p>Descomprime el zip en tu carpeta de skills:</p>
+        <div class="code">unzip overlay-generator.zip -d ~/.claude/skills/<button class="copy">Copiar</button></div></li>
+    </ol>
+  </div>
+
+  <div class="panel" id="p-plugin">
+    <ol class="steps">
+      <li><b>Instálala directamente desde el repositorio</b><p>Dentro de Claude Code, ejecuta:</p>
+        <div class="code">/plugin install overlay-generator --marketplace Ro0oman/OverlayGenerator-Claude-Skill<button class="copy">Copiar</button></div></li>
+    </ol>
+  </div>
+
+  <div style="margin-top:64px">
+    <div class="eyebrow">Cómo usar la skill</div>
+    <h3 style="font-size:26px;margin-bottom:8px">Pídele tu pack a Claude</h3>
+    <p class="lead">Abre un chat nuevo y escribe algo así:</p>
+  </div>
+  <div class="prompts">
+    <div class="prompt"><small>Con tu canal</small>“Hazme un pack de overlays para OBS. Mi canal es twitch.tv/tu_canal”</div>
+    <div class="prompt"><small>Sin canal</small>“Hago streams de Minecraft hardcore en francés, rollo chill. Quiero un contador de días y un objetivo de 10 subs.”</div>
+  </div>
+  <div class="flow">
+    <div><span class="e">🗣️</span><b>Tú</b>pegas tu canal o describes tu stream</div>
+    <div><span class="e">📸</span><b>Capturas</b>1–2 de tu stream (opcional, pero ayuda mucho)</div>
+    <div><span class="e">🔎</span><b>Preguntas</b>cámara o VTuber, objetivos, sponsors, temas a evitar</div>
+    <div><span class="e">🎨</span><b>2 direcciones</b>eliges una o pides cambios</div>
+    <div><span class="e">📦</span><b>Tu pack</b>zip + preview.html + guía</div>
+  </div>
+  <div class="note">💡 Antes de tocar OBS, haz doble clic en <code>preview.html</code> para ver todo el pack.</div>
+</div></section>
+
+<section id="obs"><div class="wrap">
+  <div class="eyebrow">Configura OBS</div>
+  <h2>Unos 5 minutos, y solo una vez</h2>
+  <p class="lead">El pack usa el WebSocket propio de OBS. Nada más que instalar: ni Python, ni servidor, ni cuentas.</p>
+  <ol class="steps" style="margin-top:32px">
+    <li><b>Descomprime el pack en una carpeta permanente</b><p>Por ejemplo <code>C:\Overlays\mi-pack</code>.</p></li>
+    <li><b>Activa el WebSocket</b><p><i>Herramientas → Ajustes del servidor WebSocket</i>, marca <i>Habilitar</i>, deja la autenticación activa y copia la contraseña con <i>Mostrar info de conexión</i>.</p></li>
+    <li><b>Añade el panel como dock</b><p><i>Docks → Docks de navegador personalizados…</i>, ponle nombre y en URL pega la ruta de <code>panel.html</code>, p. ej. <code>file:///C:/Overlays/mi-pack/panel.html</code>.</p></li>
+    <li><b>Conecta e instala</b><p>Pega la contraseña en el panel, pulsa <b style="display:inline">Connect</b> y luego <b style="display:inline">⚙ Install in OBS</b>. Escenas y fuentes se crean solas.</p></li>
+    <li><b>Opcional: hotkeys</b><p><i>Ajustes → Atajos</i>, busca las entradas <code>OVG ·</code> y asigna tecla a <i>Show</i>. Funciona también con Stream Deck.</p></li>
+    <li><b>Opcional: comandos de chat</b><p>Escribe tu canal en el panel y pulsa <i>Listen to chat</i>. Tus mods podrán usar <code>!death</code>, <code>!next</code>…</p></li>
+    <li><b>¡En directo!</b><p>Mantén el panel abierto mientras emites: es el cerebro del pack. Puedes minimizarlo, pero no cerrarlo.</p></li>
+  </ol>
+  <div class="note warn">⚠️ No descomprimas el pack en Descargas ni en una carpeta sincronizada con OneDrive/Dropbox: si la carpeta se mueve, los overlays se rompen.</div>
+  <div class="hero-img" style="margin-top:32px"><img loading="lazy" src="https://raw.githubusercontent.com/Ro0oman/OverlayGenerator-Claude-Skill/main/docs/assets/obs-dock.jpg" alt="Panel de control acoplado en OBS"></div>
+
+  <div style="margin-top:56px" class="card">
+    <h3 style="margin-bottom:6px">🔄 Actualizar tu pack</h3>
+    <p>Envía a Claude tu zip (o solo <code>pack.json</code>) y dile qué quieres: “añade un tracker de jefes”, “alertas más llamativas”. Descomprime el nuevo encima del viejo y, si hay piezas nuevas, pulsa <i>Install in OBS</i> otra vez. Tus contadores se conservan.</p>
+  </div>
+</div></section>
+
+<section id="faq" style="background:var(--bg2);border-top:1px solid var(--line)"><div class="wrap">
+  <div class="eyebrow">FAQ</div>
+  <h2>Preguntas frecuentes</h2>
+  <details><summary>El overlay sale en blanco o no reacciona</summary><ul><li>Comprueba que el panel dice <i>Connected to OBS</i>.</li><li>Si añadiste una fuente a mano, desmarca “Archivo local” y pega la dirección <code>file:///…</code> completa.</li><li>Clic derecho en la fuente → Actualizar.</li></ul></details>
+  <details><summary>Aparece “Panel closed” en el stream</summary><p>Se cerró el dock del panel. Ábrelo de nuevo desde <i>Docks</i> y el aviso desaparece en segundos.</p></details>
+  <details><summary>Una hotkey no funciona dentro de un juego</summary><p>Algunos juegos en pantalla completa exclusiva o con anti-cheat se tragan las teclas. Usa “Ventana sin bordes”, el comando de chat o un Stream Deck.</p></details>
+  <details><summary>¿Soporta follows, donaciones o puntos de canal?</summary><p>Aún no. El pack lee el chat de forma anónima (subs, resubs, regalos, raids, bits). Para lo demás, la guía explica cómo mantener esas alertas en StreamElements o Streamlabs con el mismo estilo.</p></details>
+  <details><summary>¿Funciona con YouTube o Kick?</summary><p>Escenas, panel y piezas funcionan en cualquier OBS. Alertas y chat son solo Twitch en la v1; YouTube y Kick están en el roadmap.</p></details>
+  <details><summary>¿Y mi privacidad?</summary><p>Sin cuentas, sin servidores, sin tracking. Todo corre en tu OBS, en tu ordenador.</p></details>
+</div></section>
+
+<section class="final"><div class="wrap">
+  <h2>Tu canal merece algo más que una plantilla</h2>
+  <p class="lead" style="margin:0 auto 28px">Descarga la skill y ten tu pack listo antes del próximo directo.</p>
+  <div class="ctas">
+    <a class="btn btn-primary" href="https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases/latest" target="_blank" rel="noopener">Descargar overlay-generator.zip</a>
+    <a class="btn btn-ghost" href="https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/issues" target="_blank" rel="noopener">Reportar un bug</a>
+  </div>
+</div></section>
+
+<footer>Hecho por <a href="https://github.com/Ro0oman">Ro0oman</a> con Claude. No afiliado con OBS Project, Twitch ni Anthropic.</footer>
+
+<script>
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',x===t));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+t.dataset.t));
+}));
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const txt=b.parentElement.firstChild.textContent.trim();
+  navigator.clipboard.writeText(txt).then(()=>{b.textContent='¡Copiado!';setTimeout(()=>b.textContent='Copiar',1500)});
+}));
+</script>
+</body>
+</html>
