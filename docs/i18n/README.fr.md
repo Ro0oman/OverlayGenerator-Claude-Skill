@@ -14,6 +14,8 @@
 ![Claude](https://img.shields.io/badge/Claude-skill-D97757?logo=claude&logoColor=white)
 ![Sans code](https://img.shields.io/badge/code-aucun-2ea44f)
 
+[![Website](https://img.shields.io/badge/🌐_website-overlays.romandev.app-9146ff?style=for-the-badge)](https://overlays.romandev.app/fr/) [![Live demo](https://img.shields.io/badge/▶_live_demo-try_it-D97757?style=for-the-badge)](https://overlays.romandev.app/demo/)
+
 [Ce que vous obtenez](#-ce-que-vous-obtenez) · [Exemples](#-pas-de-modèles) · [Alertes](#-les-alertes-en-action) · [Panneau](#️-le-panneau-de-contrôle) · [Installer](#-installer-la-skill) · [Configurer OBS](#️-configurer-obs-étape-par-étape) · [FAQ](#-faq-et-dépannage) · [Traduire](#-traductions)
 
 </div>
