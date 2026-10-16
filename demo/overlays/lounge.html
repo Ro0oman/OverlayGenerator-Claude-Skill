@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MK-21 · Lounge</title>
+<link rel="stylesheet" href="board.css">
+<style>
+  /* Talk: the camera is the content. Departures board and passenger messages on the right. */
+  .cam.main { left: 40px; top: 40px; width: 1232px; height: 694px; }
+  .cam.main .gate b { font-size: 30px; }
+  .dep { left: 1320px; top: 40px; width: 560px; padding: 16px 18px 18px; }
+  .dep .rows { margin-top: 12px; }
+  .dep .rw { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; padding: 9px 0; border-top: 2px solid #1b1e24; }
+  .dep .rw .flaps { --fs: 28px; gap: 3px; }
+  .dep .st { font: 600 24px/1 'Oswald', sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--mute); }
+  .dep .rw.now .st { color: var(--go); }
+  .dep .rw.done .flaps i { color: #a3a8b2; }
+  .msgs { left: 1320px; top: 470px; width: 560px; height: 570px; padding: 16px 18px; display: flex; flex-direction: column; }
+  .msgs .list { flex: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 10px; margin-top: 10px; }
+  .msgs .m { font: 500 26px/1.25 'Barlow', sans-serif; color: var(--ink); background: #181b20; border-radius: 6px; padding: 8px 12px; }
+  .msgs .m b { display: block; font: 600 24px/1.2 'Oswald', sans-serif; letter-spacing: .05em; color: var(--sign); }
+  .msgs .m.mod b:after { content: '  · crew'; color: var(--go); }
+  .finfo { left: 40px; top: 832px; width: 640px; padding: 14px 18px; display: flex; gap: 26px; align-items: center; }
+  .finfo .flaps { --fs: 30px; }
+  .alert { left: 700px; top: 832px; width: 580px; }
+</style>
+</head>
+<body>
+  <div class="cam main" data-piece="camera">
+    <div class="gate"><span class="label">Lounge · Gate 21</span><b id="now">—</b></div>
+  </div>
+
+  <div class="board edge dep" data-piece="stops">
+    <span class="label">Today's stops</span>
+    <div class="rows" id="rows"></div>
+  </div>
+
+  <div class="board msgs" data-piece="chat">
+    <span class="label">Passenger messages</span>
+    <div class="list" id="chat"></div>
+  </div>
+
+  <div class="board finfo" data-piece="flight info">
+    <span class="label">Fuel</span><span class="flaps sign" id="fuel"></span>
+    <span class="label">Seats</span><span class="flaps" id="seats"></span>
+  </div>
+
+  <div class="board edge alert" id="alert" data-piece="alert">
+    <div class="head"><span class="label">Boarding pass</span><span class="label dim kind">Gate S</span></div>
+    <div class="row"><span class="flaps" data-len="14" style="--fs:40px"></span></div>
+    <div class="info"><span class="what"></span><span class="plus"></span></div>
+  </div>
+
+<script src="../engine/pack.js"></script>
+<script src="../engine/core.js"></script>
+<script src="../engine/obs-link.js"></script>
+<script src="../engine/twitch.js"></script>
+<script src="../engine/ovg.js" data-page="lounge"></script>
+<script src="board.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  Board.alertBoard($('alert'));
+  let S = {};
+  const STATUS = i => i < S.stop ? 'Departed' : i === S.stop ? 'Now' : 'On time';
+  OVG.onState(s => {
+    S = s;
+    $('now').textContent = (s.stops[s.stop] || '').toUpperCase();
+    const rows = $('rows');
+    while (rows.children.length < s.stops.length) { const r = document.createElement('div'); r.className = 'rw'; r.innerHTML = '<span class="flaps"></span><span class="st"></span>'; rows.appendChild(r); }
+    while (rows.children.length > s.stops.length) rows.lastChild.remove();
+    s.stops.forEach((t, i) => {
+      const r = rows.children[i];
+      r.className = 'rw ' + (i < s.stop ? 'done' : i === s.stop ? 'now' : '');
+      Board.flap(r.querySelector('.flaps'), t, 16);
+      r.querySelector('.st').textContent = STATUS(i);
+    });
+    Board.flap($('fuel'), OVG.fmt(OVG.timer(s.fuel)).padStart(7, ' '), 7);
+    Board.flap($('seats'), s.seats + '/' + s.seatsTarget, 5);
+  });
+  setInterval(() => Board.flap($('fuel'), OVG.fmt(OVG.timer(S.fuel)).padStart(7, ' '), 7, true), 1000);
+  OVG.onChat(m => {
+    const el = document.createElement('div');
+    el.className = 'm' + (m.role && (m.role.mod || m.role.broadcaster) ? ' mod' : '');
+    const b = document.createElement('b'); b.textContent = m.name;
+    el.appendChild(b); el.appendChild(document.createTextNode(m.text));
+    const list = $('chat'); list.appendChild(el);
+    while (list.children.length > 7) list.firstChild.remove();
+  });
+</script>
+</body>
+</html>

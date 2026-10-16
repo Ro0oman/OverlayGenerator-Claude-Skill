@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MK-21 · In flight</title>
+<link rel="stylesheet" href="board.css">
+<style>
+  /* Right column, top: camera as a gate monitor, flight strip under it. Clear of the game HUD. */
+  .cam.main { left: 1494px; top: 24px; width: 402px; height: 236px; }
+  .strip { left: 1494px; top: 318px; width: 402px; padding: 14px 16px 16px; }
+  .strip .r { display: flex; justify-content: space-between; align-items: center; }
+  .strip .r + .r { margin-top: 12px; }
+  .strip .flaps { --fs: 40px; }
+  .seats { display: flex; gap: 8px; }
+  .seats i { width: 30px; height: 34px; border-radius: 8px 8px 4px 4px; border: 3px solid #3b414b; background: transparent; }
+  .seats i.on { background: var(--sign); border-color: var(--sign); }
+  .strip .approach { display: none; margin-top: 12px; padding: 8px 10px; border-radius: 4px; background: #2a2208; }
+  .strip.approach-on .approach { display: block; }
+
+  /* turbulence: the strip shakes and the seatbelt sign lights up */
+  .strip.shake { animation: shake .6s ease-out 1; }
+  @keyframes shake { 15% { transform: translate(-8px, 2px); } 30% { transform: translate(7px, -2px); } 45% { transform: translate(-5px, 1px); } 60% { transform: translate(3px, 0); } 100% { transform: none; } }
+  .belt { position: absolute; left: 1494px; top: 572px; width: 402px; padding: 12px 16px; display: flex; align-items: center; gap: 14px; opacity: 0; }
+  .belt.on { opacity: 1; animation: belt 3.2s ease-out 1 forwards; }
+  @keyframes belt { 0%, 8%, 16% { opacity: 1; } 4%, 12% { opacity: .25; } 85% { opacity: 1; } 100% { opacity: 0; } }
+  .belt svg { width: 52px; height: 52px; flex: none; }
+  .belt b { font: 700 32px/1.05 'Oswald', sans-serif; letter-spacing: .06em; color: var(--stop); text-transform: uppercase; }
+
+  /* alert: top band, between the health bar and the camera, out of the action */
+  .alert { left: 640px; top: 24px; width: 820px; }
+</style>
+</head>
+<body>
+  <!-- HUD of the game (assumed for a generic action game; replace with the real one from a screenshot) -->
+  <div data-hud="health" data-hud-source="assumed" style="left:40px;top:28px;width:560px;height:120px"></div>
+  <div data-hud="skills" data-hud-source="assumed" style="left:40px;top:900px;width:620px;height:150px"></div>
+  <div data-hud="minimap" data-hud-source="assumed" style="left:1620px;top:780px;width:270px;height:270px"></div>
+  <div data-hud="boss bar" data-hud-source="assumed" style="left:560px;top:960px;width:800px;height:70px"></div>
+
+  <div class="cam main" data-piece="camera">
+    <div class="gate"><span class="label">Gate 21 · Captain</span><b id="flightNo">MK-21</b></div>
+  </div>
+
+  <div class="board edge strip" id="strip" data-piece="flight strip">
+    <div class="r"><span class="label">Turbulence</span><span class="flaps stop" id="turb"></span></div>
+    <div class="r"><span class="label">Fuel</span><span class="flaps sign" id="fuel"></span></div>
+    <div class="r"><span class="label">Seats</span><span class="seats" id="seats"></span></div>
+    <div class="approach"><span class="label">Final approach · alerts holding</span></div>
+  </div>
+
+  <div class="board belt" id="belt" data-piece="turbulence" data-event>
+    <svg viewBox="0 0 52 52" aria-hidden="true"><rect x="2" y="2" width="48" height="48" rx="8" fill="none" stroke="#ff5a4f" stroke-width="4"/><circle cx="26" cy="15" r="5" fill="#ff5a4f"/><path d="M17 24h18v6H29v12h-6V30h-6z" fill="#ff5a4f"/><path d="M12 33h28" stroke="#ff5a4f" stroke-width="4"/></svg>
+    <b>Turbulence · fasten seatbelts</b>
+  </div>
+
+  <div class="board edge alert" id="alert" data-piece="alert">
+    <div class="head"><span class="label">Boarding pass</span><span class="label dim kind">Gate S</span></div>
+    <div class="row"><span class="flaps" data-len="18" style="--fs:44px"></span></div>
+    <div class="info"><span class="what"></span><span class="plus"></span></div>
+  </div>
+
+<script src="../engine/pack.js"></script>
+<script src="../engine/core.js"></script>
+<script src="../engine/obs-link.js"></script>
+<script src="../engine/ovg.js" data-page="flight"></script>
+<script src="board.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  Board.alertBoard($('alert'));
+  let S = {};
+  OVG.onState(s => {
+    S = s;
+    $('flightNo').textContent = s.flight;
+    Board.flap($('turb'), String(s.turbulence).padStart(2, '0'), 2);
+    Board.flap($('fuel'), OVG.fmt(OVG.timer(s.fuel)).padStart(7, ' '), 7);
+    $('seats').innerHTML = Array.from({ length: s.seatsTarget }, (_, i) => '<i class="' + (i < s.seats ? 'on' : '') + '"></i>').join('');
+    $('strip').classList.toggle('approach-on', !!s.approach);
+  });
+  setInterval(() => Board.flap($('fuel'), OVG.fmt(OVG.timer(S.fuel)).padStart(7, ' '), 7, true), 1000);
+  OVG.onEvent(name => {
+    if (name !== 'turbulence') return;
+    const strip = $('strip'), belt = $('belt');
+    strip.classList.remove('shake'); void strip.offsetWidth; strip.classList.add('shake');
+    belt.classList.remove('on'); void belt.offsetWidth; belt.classList.add('on');
+  });
+</script>
+</body>
+</html>

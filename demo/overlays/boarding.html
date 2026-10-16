@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MK-21 · Boarding</title>
+<link rel="stylesheet" href="board.css">
+<style>
+  /* Starting soon: the whole screen is the departures board. */
+  .main { left: 120px; top: 110px; width: 1120px; padding: 26px 32px 30px; }
+  .main .top { display: flex; justify-content: space-between; align-items: baseline; }
+  .main h1 { font: 700 40px/1 'Oswald', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--sign); }
+  .main .clock { margin-top: 26px; display: flex; align-items: center; gap: 22px; }
+  .main .clock .flaps { --fs: 96px; gap: 6px; }
+  .main .to { margin-top: 30px; display: grid; grid-template-columns: 170px 1fr; row-gap: 14px; align-items: center; }
+  .main .to .flaps { --fs: 44px; }
+  .it { left: 120px; top: 700px; width: 1120px; padding: 18px 32px 22px; }
+  .it .rows { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 40px; margin-top: 12px; }
+  .it .rw { display: flex; align-items: center; gap: 14px; }
+  .it .rw .flaps { --fs: 30px; gap: 3px; }
+  .it .rw .n { font: 700 28px/1 'Oswald', sans-serif; color: var(--sign); width: 28px; }
+  .msgs { left: 1300px; top: 110px; width: 500px; height: 860px; padding: 18px 20px; display: flex; flex-direction: column; }
+  .msgs .list { flex: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 10px; margin-top: 10px; }
+  .msgs .m { font: 500 26px/1.25 'Barlow', sans-serif; background: #181b20; border-radius: 6px; padding: 8px 12px; }
+  .msgs .m b { display: block; font: 600 24px/1.2 'Oswald', sans-serif; letter-spacing: .05em; color: var(--sign); }
+  .alert { left: 120px; top: 880px; width: 1120px; }
+</style>
+</head>
+<body>
+  <div class="board edge main" data-piece="departures">
+    <div class="top"><h1>Departures</h1><span class="label go">Boarding</span></div>
+    <div class="clock"><span class="label dim">Take-off in</span><span class="flaps sign" id="clock"></span></div>
+    <div class="to">
+      <span class="label dim">Flight</span><span class="flaps" id="flight"></span>
+      <span class="label dim">First stop</span><span class="flaps" id="first"></span>
+    </div>
+  </div>
+
+  <div class="board it" data-piece="itinerary">
+    <span class="label">Itinerary</span>
+    <div class="rows" id="rows"></div>
+  </div>
+
+  <div class="board msgs" data-piece="chat">
+    <span class="label">Passengers checking in</span>
+    <div class="list" id="chat"></div>
+  </div>
+
+  <div class="board edge alert" id="alert" data-piece="alert">
+    <div class="head"><span class="label">Boarding pass</span><span class="label dim kind">Gate S</span></div>
+    <div class="row"><span class="flaps" data-len="24" style="--fs:40px"></span></div>
+    <div class="info"><span class="what"></span><span class="plus"></span></div>
+  </div>
+
+<script src="../engine/pack.js"></script>
+<script src="../engine/core.js"></script>
+<script src="../engine/obs-link.js"></script>
+<script src="../engine/twitch.js"></script>
+<script src="../engine/ovg.js" data-page="boarding"></script>
+<script src="board.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  Board.alertBoard($('alert'));
+  let S = {};
+  OVG.onState(s => {
+    S = s;
+    Board.flap($('clock'), OVG.fmt(OVG.timer(s.boardingIn)).padStart(5, ' '), 5);
+    Board.flap($('flight'), s.flight + ' · ' + OVG.PACK.channel, 22);
+    Board.flap($('first'), s.stops[0] || '', 22);
+    $('rows').innerHTML = '';
+    s.stops.forEach((t, i) => {
+      const r = document.createElement('div'); r.className = 'rw';
+      r.innerHTML = '<span class="n">' + (i + 1) + '</span><span class="flaps"></span>';
+      $('rows').appendChild(r); Board.flap(r.querySelector('.flaps'), t, 18, true);
+    });
+  });
+  setInterval(() => Board.flap($('clock'), OVG.fmt(OVG.timer(S.boardingIn)).padStart(5, ' '), 5, true), 1000);
+  OVG.onChat(m => {
+    const el = document.createElement('div'); el.className = 'm';
+    const b = document.createElement('b'); b.textContent = m.name;
+    el.appendChild(b); el.appendChild(document.createTextNode(m.text));
+    $('chat').appendChild(el); while ($('chat').children.length > 12) $('chat').firstChild.remove();
+  });
+</script>
+</body>
+</html>
