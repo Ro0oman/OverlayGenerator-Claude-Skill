@@ -40,7 +40,9 @@ One HTML page per scene, in `overlays/`. They are what OBS shows on top of the g
 
 - `html, body` are exactly **1920×1080**, `overflow: hidden`, **transparent background**. Pieces are absolutely positioned.
 - Every visible piece has `data-piece="<name>"`. The camera frame is `data-piece="camera"` (hole stays transparent: frame only); VTuber anchors add `data-kind="vtuber"`. Alerts are `data-piece="alert"`. Elements that only appear during an event also get `data-event`.
+- If the game or screen share does not fill the screen (the layout reserves columns for camera and pieces), mark its area with an invisible `<div data-zone="content" style="left:…;top:…;width:…;height:…">`. The screen budget then counts only what covers that area. Without it, the whole screen is the content.
 - HUD zones of the game (game scenes): `data-hud="<name>"` + `data-hud-source="screenshot"` or `"assumed"`. They are invisible in OBS and outlined with `?hud=1`.
+- Purely decorative text (unlit LED segments behind digits, texture letters) goes in an element with `aria-hidden="true"`: the checker skips it for size and contrast.
 - Fonts are bundled in `../fonts/` with `@font-face`. **No external URLs** of any kind (fonts, images, scripts).
 - No `eval`, no third-party libraries. Plain HTML/CSS/JS.
 - The page must look right with only the state: no hard-coded numbers or names in the markup.
@@ -54,6 +56,7 @@ One HTML page per scene, in `overlays/`. They are what OBS shows on top of the g
 | `OVG.onEvent(fn)` | `(name, state)` for the pack's events |
 | `OVG.onChat(fn)` | starts reading the channel's chat (needs twitch.js). `m.name`, `m.text`, `m.color`, `m.role.{broadcaster,mod,vip,sub}` |
 | `OVG.timer(t)` / `OVG.fmt(sec)` | seconds left of a state timer / "h:mm:ss" |
+| `OVG.meter(m)` / `OVG.num(v, decimals)` | current value of a meter / a number with the pack language's decimal mark ("2,65" in Spanish) |
 | `OVG.text(tpl, vars)` | fill `{key}` templates from the state |
 | `OVG.esc(str)` | HTML-escape |
 | `OVG.frozen` | true with `?freeze=1` (checker/screenshots): skip intro animations, show final frames |

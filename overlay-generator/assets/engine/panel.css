@@ -116,3 +116,8 @@ code{font:600 12.5px/1 Consolas,"JetBrains Mono",monospace;background:#121318;bo
 .flag{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);margin:-2px 0 10px}
 .flag i{width:9px;height:9px;border-radius:50%;background:var(--mute)}
 .flag.on{color:var(--txt);font-weight:600}.flag.on i{background:var(--acc);box-shadow:0 0 0 3px var(--acc-soft)}
+.meters{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin-bottom:10px}
+.mt{background:#121318;border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.mt span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);font-weight:700}
+.mt b{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
+.mt small{margin-left:4px;color:var(--dim);font-size:12px}

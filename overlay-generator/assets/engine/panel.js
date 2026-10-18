@@ -26,7 +26,7 @@
   const load = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k) || 'null'); return v == null ? d : v; } catch (e) { return d; } };
   const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* ignore */ } };
   let state = Object.assign(C.clone(PACK.state || {}), DEMO ? C.clone(PACK.demoState || {}) : load(SKEY, {}));
-  const startTimers = s => { Object.keys(s).forEach(k => { const v = s[k]; if (v && typeof v === 'object' && 'left' in v && v.running && !v.at) v.at = Date.now(); }); return s; };
+  const startTimers = s => { Object.keys(s).forEach(k => { const v = s[k]; if (v && typeof v === 'object' && ('left' in v || 'rate' in v) && v.running && !v.at) v.at = Date.now(); }); return s; };
   startTimers(state);
   const hadLocal = !DEMO && !!load(SKEY, null);
   let meta = Object.assign({ pw: '', channel: PACK.channel || '', alertsOn: {}, hold: true, volume: AS.volume, duration: AS.duration, credit: !!(PACK.credit && PACK.credit.enabled), lastKey: {}, savedAt: 0 }, DEMO ? {} : load(MKEY, {}));
@@ -259,7 +259,7 @@
   }
 
   function widget(w) {
-    const v = state[w.key];
+    const v = String(w.key || '').split('.').reduce((o, k) => (o == null ? undefined : o[k]), state);   // "distancia.running" reads a field
     switch (w.type) {
       case 'big': {
         const danger = w.danger && C.test(state, Object.assign({ key: w.key }, w.danger));
@@ -280,9 +280,15 @@
       }
       case 'text': return '<div class="row"><b class="grow">' + esc(v || '—') + '</b>' + (w.edit ? '<button class="btn inl" data-edit="' + w.key + '">' + t('edit') + '</button>' : '') + '</div>' + editor(w.key, 'text');
       case 'note': return '<div class="note">' + tx(w.text) + '</div>';
+      case 'meter': return '<div class="meters">' + (w.rows || [w]).map(r => '<div class="mt"><span>' + esc(r.label || '') + '</span><b data-meter="' + r.key + '" data-fmt="' + (r.format || '') + '" data-dec="' + (r.decimals || 0) + '" data-factor="' + (r.factor || 1) + '" data-field="' + (r.field || 'value') + '">' + meterText(r) + '</b><small>' + esc(r.unit || '') + '</small></div>').join('') + '</div>';
       case 'flag': return '<div class="flag ' + (v ? 'on' : '') + '"><i></i>' + esc(v ? w.on : w.off) + '</div>';
       default: return '';
     }
+  }
+  function meterText(r) {
+    const m = state[r.key] || {};
+    const v = (r.field === 'rate' ? Number(m.rate) || 0 : C.meterValue(m)) * (Number(r.factor) || 1);
+    return r.format === 'clock' ? C.fmt(v * 3600) : C.num(v, Number(r.decimals) || 0, PACK.lang);
   }
   function facts(rows) {
     return '<div class="facts">' + rows.map(r => '<span>' + esc(r[0]) + '</span><b>' + tx(r[1]) + (r[2] && C.test(state, r[2].if) ? '<span class="tag">' + esc(r[2].tag) + '</span>' : '') + '</b>').join('') + '</div>';
@@ -414,6 +420,7 @@
   /* ---------- timers, heartbeat ---------- */
   setInterval(() => {
     document.querySelectorAll('[data-timer]').forEach(el => { el.firstChild.textContent = C.fmt(C.timerLeft(state[el.dataset.timer])); });
+    document.querySelectorAll('[data-meter]').forEach(el => { const d = el.dataset; el.textContent = meterText({ key: d.meter, format: d.fmt, decimals: d.dec, factor: d.factor, field: d.field }); });
     if (current === 'live' && Math.random() < 0.05) renderPage('live');   // refresh "x min" counters now and then
   }, 1000);
   setInterval(() => { send({ type: 'beat' }); renderHeader(); }, 4000);

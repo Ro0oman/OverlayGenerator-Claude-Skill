@@ -43,6 +43,7 @@ OBS scene names become `<short> · <label>`; the browser source is `<short> · <
 Every value shown or changed lives here, with its starting value. Kinds:
 - numbers, booleans, strings, arrays (e.g. a list of topics);
 - **timers**: `{ "left": 10800, "running": true, "at": 0 }` (seconds left; the engine starts the clock).
+- **meters** count up on their own: `{ "value": 0, "rate": 3.2, "running": true, "at": 0 }` (value grows by `rate` per hour: km at a speed in km/h, or hours walked with rate 1). Derived numbers (steps = km × 1000 / stride) are computed in the overlay and the panel widget with `factor`.
 
 Use the same key everywhere the same thing is shown.
 
@@ -73,6 +74,9 @@ Use the same key everywhere the same thing is shown.
 | `reset` | key | back to the starting value |
 | `timer.add` / `timer.set` | key, value (s) | negative to subtract |
 | `timer.start` / `timer.stop` / `timer.toggle` | key | |
+| `meter.rate` | key, value (set) or by (add), min, max | change how fast a meter grows (e.g. speed) |
+| `meter.add` / `meter.set` | key, value | |
+| `meter.start` / `meter.stop` / `meter.toggle` | key | |
 | `event` | name | the overlays play this event (`OVG.onEvent`) |
 | `scene` | id | switch OBS to one of the pack's scenes |
 
@@ -107,6 +111,7 @@ Cards on the panel's **Live** tab, top to bottom. Each card:
 | `list` | key, index, since (stamp key, shows minutes), edit (edit the list, one per line) |
 | `text` | key, edit |
 | `flag` | key, on, off (texts for true/false) |
+| `meter` | rows: `[{key, label, unit, decimals, factor, field: "value"\|"rate", format: "clock"}]`; ticks every second |
 | `note` | text (template) |
 
 Templates: `{key}` (arrays join with " · ", timers format as h:mm:ss) and `{list@index}` (the current item).

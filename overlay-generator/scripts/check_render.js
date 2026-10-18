@@ -34,7 +34,10 @@ if (out) fs.mkdirSync(out, { recursive: true });
     const cams = all.filter(e => e.dataset.piece === 'camera');
     const pieces = all.filter(e => e.dataset.piece !== 'camera');
     const perm = pieces.filter(e => e.dataset.piece !== 'alert' && e.dataset.event === undefined);
-    const area = rs => rs.reduce((a, r) => a + r.width * r.height, 0) / 20736;
+    // If the page marks where the game / screen share goes (data-zone="content"), only what covers it counts.
+    const zones = [...document.querySelectorAll('[data-zone=content]')].map(R);
+    const clipArea = r => zones.length ? zones.reduce((a, z) => a + Math.max(0, Math.min(r.right, z.right) - Math.max(r.left, z.left)) * Math.max(0, Math.min(r.bottom, z.bottom) - Math.max(r.top, z.top)), 0) : r.width * r.height;
+    const area = rs => rs.reduce((a, r) => a + clipArea(r), 0) / 20736;
     const hud = [...document.querySelectorAll('[data-hud]')].map(e => ({ n: e.dataset.hud, r: R(e), src: e.dataset.hudSource }));
     const inter = (a, b) => Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
     const overlaps = []; all.forEach(p => hud.forEach(h => { if (inter(R(p), h.r) > 0) overlaps.push(p.dataset.piece + ' ↔ ' + h.n); }));
@@ -44,7 +47,7 @@ if (out) fs.mkdirSync(out, { recursive: true });
     pieces.forEach(p => {
       let maxFs = 0; const w = document.createTreeWalker(p, NodeFilter.SHOW_TEXT); let t;
       while ((t = w.nextNode())) {
-        if (!t.textContent.trim()) continue; const el = t.parentElement; if (!vis(el)) continue;
+        if (!t.textContent.trim()) continue; const el = t.parentElement; if (!vis(el) || el.closest('[aria-hidden=true]')) continue;   // decorative text is skipped
         const cs = getComputedStyle(el), fs = parseFloat(cs.fontSize);
         if (fs < min) { min = fs; minTxt = t.textContent.trim().slice(0, 30); }
         maxFs = Math.max(maxFs, fs);

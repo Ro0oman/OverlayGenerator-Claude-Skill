@@ -14,6 +14,9 @@
      { op:'timer.add', key, value }                   seconds; negative to subtract
      { op:'timer.set', key, value }
      { op:'timer.toggle' | 'timer.start' | 'timer.stop', key }
+     { op:'meter.rate', key, value | by, min, max }  meters count UP on their own: value grows by rate per hour
+     { op:'meter.add' | 'meter.set', key, value }      (distance at a speed, time walked, steps…)
+     { op:'meter.toggle' | 'meter.start' | 'meter.stop', key }
      { op:'event', name }                             tells the overlays to play an event (e.g. "hit")
      { op:'scene', id }                               switch OBS to one of the pack's scenes
    Any op can carry  times: number|"@var"|"$key"  and  per: n  → value × floor(times / per)
@@ -32,14 +35,16 @@
   }
 
   // "{name} · {months} months" → fills from vars. Arrays are joined with " · ", timers are formatted,
-  // and {stops@stop} picks item number state.stop from the list state.stops.
+  // {stops@stop} picks item number state.stop from the list state.stops, and {walk.rate} reads a field.
   function text(tpl, vars) {
     return String(tpl == null ? '' : tpl).replace(/\{([\w.]+)(?:@(\w+))?\}/g, (m, k, idx) => {
       let v = vars ? vars[k] : undefined;
+      if (v === undefined && k.indexOf('.') > 0) v = k.split('.').reduce((o, p) => (o == null ? undefined : o[p]), vars);
       if (idx !== undefined) v = Array.isArray(v) ? v[Number(vars[idx]) || 0] : undefined;   // {list@index}
       if (v == null) return '';
       if (Array.isArray(v)) return v.join(' · ');
       if (typeof v === 'object' && 'left' in v) return fmt(timerLeft(v));
+      if (typeof v === 'object' && 'rate' in v) return String(Math.round(meterValue(v) * 100) / 100);
       return String(v);
     });
   }
@@ -55,6 +60,19 @@
     return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(s).padStart(2, '0');
   }
   function timerFreeze(t) { return { left: timerLeft(t), running: !!t.running, at: now() }; }
+
+  // Meters: { value, rate, running, at }. value grows by `rate` per hour while running.
+  function meterValue(m) {
+    if (!m || typeof m !== 'object') return 0;
+    return (Number(m.value) || 0) + (m.running && m.at ? (Number(m.rate) || 0) * (now() - m.at) / 3.6e6 : 0);
+  }
+  function meterFreeze(m) { m = m || {}; return { value: meterValue(m), rate: Number(m.rate) || 0, running: !!m.running, at: now() }; }
+  // Number with a fixed number of decimals and the language's decimal mark ("2,65" in es, "2.65" in en)
+  function num(v, decimals, lang) {
+    const d = decimals || 0;
+    try { return Number(v || 0).toLocaleString(lang || 'en', { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: d === 0 && Math.abs(v) >= 10000 }); }
+    catch (e) { return Number(v || 0).toFixed(d); }
+  }
 
   function test(state, cond) {
     if (!cond) return true;
@@ -98,6 +116,18 @@
           t.running = o.op === 'timer.toggle' ? !t.running : o.op === 'timer.start';
           S[k] = t; break;
         }
+        case 'meter.rate': {
+          const m = meterFreeze(S[k]);
+          const r = o.by !== undefined ? m.rate + Number(get(S, ctx, o.by)) * (o.times !== undefined ? Number(val) : 1) : Number(val);
+          m.rate = Math.round(Math.min(lim(o.max, Infinity), Math.max(lim(o.min, -Infinity), r)) * 1000) / 1000; S[k] = m; break;
+        }
+        case 'meter.add': { const m = meterFreeze(S[k]); m.value = Math.max(0, m.value + Number(val)); S[k] = m; break; }
+        case 'meter.set': { const m = meterFreeze(S[k]); m.value = Math.max(0, Number(val)); S[k] = m; break; }
+        case 'meter.toggle': case 'meter.start': case 'meter.stop': {
+          const m = meterFreeze(S[k]);
+          m.running = o.op === 'meter.toggle' ? !m.running : o.op === 'meter.start';
+          S[k] = m; break;
+        }
         case 'event': out.events.push(o.name); return;
         case 'scene': out.scene = o.id; return;
         default: console.warn('OVG: unknown op', o.op); return;
@@ -118,5 +148,5 @@
   const ALERT_TYPES = ['sub', 'resub', 'gift', 'bomb', 'raid', 'bits'];
   const SAMPLE = { name: 'marta_dev', months: 7, to: 'nightowl', count: 5, amount: 500, viewers: 42 };
 
-  window.OVGCore = { apply, text, fmt, timerLeft, timerFreeze, buildAlert, test, clone, ALERT_TYPES, SAMPLE };
+  window.OVGCore = { apply, text, fmt, timerLeft, timerFreeze, meterValue, meterFreeze, num, buildAlert, test, clone, ALERT_TYPES, SAMPLE };
 })();

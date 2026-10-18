@@ -19,9 +19,11 @@ ALERT_TYPES = ['sub', 'resub', 'gift', 'bomb', 'raid', 'bits']
 REQUIRED_ALERTS = ['sub', 'resub', 'gift', 'bomb']           # the four copy variants are mandatory
 PERMS = {'me', 'mods', 'vip', 'subs', 'all'}
 OPS = {'add', 'set', 'toggle', 'push', 'pop', 'next', 'prev', 'stamp', 'reset',
-       'timer.add', 'timer.set', 'timer.toggle', 'timer.start', 'timer.stop', 'event', 'scene'}
+       'timer.add', 'timer.set', 'timer.toggle', 'timer.start', 'timer.stop', 'event', 'scene',
+       'meter.rate', 'meter.add', 'meter.set', 'meter.toggle', 'meter.start', 'meter.stop'}
+METER_OPS = {'meter.rate', 'meter.add', 'meter.set', 'meter.toggle', 'meter.start', 'meter.stop'}
 TIMER_OPS = {'timer.add', 'timer.set', 'timer.toggle', 'timer.start', 'timer.stop'}
-WIDGETS = {'big', 'facts', 'timer', 'progress', 'list', 'text', 'note', 'flag'}
+WIDGETS = {'big', 'facts', 'timer', 'progress', 'list', 'text', 'note', 'flag', 'meter'}
 EVENT_VARS = {'name', 'months', 'to', 'count', 'amount', 'viewers', 'plan', 'text', 'args', 'type'}
 ENGINE_ORDER = ['pack.js', 'core.js', 'obs-link.js', 'ovg.js']
 SLUG = re.compile(r'^[a-z0-9][a-z0-9-]{1,40}$')
@@ -73,6 +75,8 @@ def check_ops(R, where, ops, state, pack, event_ctx=False):
         if k not in state: R.fail('%s: state has no "%s"' % (w, k))
         elif op in TIMER_OPS and not (isinstance(state[k], dict) and 'left' in state[k]):
             R.fail('%s: "%s" is not a timer ({"left": seconds, "running": bool, "at": 0})' % (w, k))
+        elif op in METER_OPS and not (isinstance(state[k], dict) and 'rate' in state[k]):
+            R.fail('%s: "%s" is not a meter ({"value": 0, "rate": per hour, "running": bool, "at": 0})' % (w, k))
         if op in ('next', 'prev') and o.get('list') not in state: R.fail('%s: list "%s" not in state' % (w, o.get('list')))
         for ref_field in ('value', 'times', 'max', 'min'):
             v = o.get(ref_field)
@@ -172,11 +176,14 @@ def validate(folder):
         for wd in p.get('widgets', []):
             if wd.get('type') not in WIDGETS: R.fail('%s: unknown widget "%s"' % (w, wd.get('type'))); continue
             for k in ('key', 'index', 'since'):
-                if wd.get(k) and wd[k] not in state: R.fail('%s: %s "%s" not in state' % (w, k, wd[k]))
+                if wd.get(k) and str(wd[k]).split('.')[0] not in state: R.fail('%s: %s "%s" not in state' % (w, k, wd[k]))
+            if wd.get('type') == 'meter':
+                for r in wd.get('rows', [wd]):
+                    if not (isinstance(state.get(r.get('key')), dict) and 'rate' in state[r.get('key')]): R.fail('%s: meter "%s" is not a meter in state' % (w, r.get('key')))
             if wd.get('type') == 'progress' and isinstance(wd.get('max'), str) and wd['max'] not in state: R.fail('%s: max "%s" not in state' % (w, wd['max']))
-            for row in wd.get('facts', []) + wd.get('rows', []):
+            for row in [r for r in wd.get('facts', []) + wd.get('rows', []) if isinstance(r, (list, tuple))]:
                 for v in template_vars(row[1]):
-                    if v not in state: R.fail('%s: "{%s}" not in state' % (w, v))
+                    if v.split('.')[0] not in state: R.fail('%s: "{%s}" not in state' % (w, v))
     used = set(b for p in pack.get('panel', []) for b in p.get('buttons', []))
     orphan = [a for a in actions if a not in used and not actions[a].get('cmd') and not actions[a].get('key')]
     if orphan: R.warn('actions nobody can trigger (no button, command or hotkey): %s' % orphan)

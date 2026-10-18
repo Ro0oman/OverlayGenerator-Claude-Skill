@@ -25,7 +25,7 @@
   const fns = { state: [], alert: [], event: [], chat: [] };
   let state = Object.assign(C.clone(PACK.state || {}), DEMO ? C.clone(PACK.demoState || {}) : {});
   let creditOn = !!(PACK.credit && PACK.credit.enabled);
-  Object.keys(state).forEach(k => { const v = state[k]; if (v && typeof v === 'object' && 'left' in v && v.running && !v.at) v.at = Date.now(); });
+  Object.keys(state).forEach(k => { const v = state[k]; if (v && typeof v === 'object' && ('left' in v || 'rate' in v) && v.running && !v.at) v.at = Date.now(); });
   try { const c = JSON.parse(localStorage.getItem(KEY) || 'null'); if (c && !DEMO) state = Object.assign(state, c); } catch (e) { /* ignore */ }
   let link = null, lastBeat = Date.now(), started = false;
 
@@ -107,6 +107,8 @@
     },
     text: (tpl, vars) => C.text(tpl, Object.assign({}, state, vars || {})),
     timer: t => C.timerLeft(t),
+    meter: m => C.meterValue(m),
+    num: (v, d) => C.num(v, d, PACK.lang),
     fmt: s => C.fmt(s),
     esc: s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])),
     duration: () => ((PACK.alertSettings && PACK.alertSettings.duration) || 7),
