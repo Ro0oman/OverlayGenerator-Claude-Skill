@@ -13,15 +13,20 @@
 
   "scenes": [
     { "id": "boarding", "label": "Boarding", "icon": "🛫", "file": "overlays/boarding.html", "format": "talk",
-      "backdrop": "radial-gradient(circle at 30% 30%,#3a4a63,#121722)" },
+      "backdrop": "radial-gradient(circle at 30% 30%,#3a4a63,#121722)",
+      "sources": [{ "id": "departures", "label": "Departures", "pieces": ["departures"] }, { "id": "itinerary", "label": "Itinerary", "pieces": ["itinerary"] }, { "id": "chat", "label": "Chat", "pieces": ["chat"] }, { "id": "alerts", "label": "Alerts", "pieces": ["alert"] }] },
     { "id": "flight", "label": "In flight", "icon": "🎮", "file": "overlays/flight.html", "format": "game", "events": ["turbulence"],
-      "backdrop": "linear-gradient(160deg,#4b6b5a 0%,#2b3b46 55%,#1a1f2b 100%)" },
+      "backdrop": "linear-gradient(160deg,#4b6b5a 0%,#2b3b46 55%,#1a1f2b 100%)",
+      "sources": [{ "id": "camera", "label": "Camera frame", "pieces": ["camera"] }, { "id": "strip", "label": "Flight strip", "pieces": ["flight strip", "turbulence"] }, { "id": "alerts", "label": "Alerts", "pieces": ["alert"] }] },
     { "id": "lounge", "label": "Lounge", "icon": "💬", "file": "overlays/lounge.html", "format": "talk",
-      "backdrop": "radial-gradient(circle at 40% 45%,#6b5a4a,#1e1a17)" },
+      "backdrop": "radial-gradient(circle at 40% 45%,#6b5a4a,#1e1a17)",
+      "sources": [{ "id": "camera", "label": "Camera frame", "pieces": ["camera"] }, { "id": "info", "label": "Flight info", "pieces": ["flight info"] }, { "id": "stops", "label": "Stops", "pieces": ["stops"] }, { "id": "chat", "label": "Chat", "pieces": ["chat"] }, { "id": "alerts", "label": "Alerts", "pieces": ["alert"] }] },
     { "id": "delayed", "label": "Delayed", "icon": "⏸", "file": "overlays/delayed.html", "format": "talk",
-      "backdrop": "linear-gradient(135deg,#2a2d38,#14151a)" },
+      "backdrop": "linear-gradient(135deg,#2a2d38,#14151a)",
+      "sources": [{ "id": "board", "label": "Delayed board", "pieces": ["delayed"] }, { "id": "alerts", "label": "Alerts", "pieces": ["alert"] }] },
     { "id": "landed", "label": "Landed", "icon": "🛬", "file": "overlays/landed.html", "format": "talk", "alerts": false,
-      "backdrop": "radial-gradient(circle at 70% 30%,#5a4a6b,#16131c)" }
+      "backdrop": "radial-gradient(circle at 70% 30%,#5a4a6b,#16131c)",
+      "sources": [{ "id": "arrivals", "label": "Arrivals", "pieces": ["arrivals"] }, { "id": "manifest", "label": "Manifest", "pieces": ["manifest"] }, { "id": "thanks", "label": "Thanks", "pieces": ["thanks"] }] }
   ],
 
   "state": {
@@ -70,7 +75,9 @@
       "widgets": [ { "type": "big", "key": "turbulence", "danger": { "gt": 0 },
                      "facts": [ ["Flight", "{flight}"], ["Now", "{stops@stop}"] ] },
                    { "type": "flag", "key": "approach", "on": "Final approach · alerts on hold", "off": "Cruising · alerts play right away" } ],
-      "buttons": ["turbulence", "approach", "calm"] },
+      "buttons": ["turbulence", "approach", "calm"]
+      ,
+      "sources": [{ "id": "arrivals", "label": "Arrivals", "pieces": ["arrivals"] }, { "id": "manifest", "label": "Manifest", "pieces": ["manifest"] }, { "id": "thanks", "label": "Thanks", "pieces": ["thanks"] }] },
     { "title": "Fuel (subathon)", "meta": "sub +5:00 · 100 bits +1:00",
       "widgets": [ { "type": "timer", "key": "fuel", "suffix": " left", "max": 43200 } ],
       "buttons": ["refuel", "drain", "fuelpause"] },

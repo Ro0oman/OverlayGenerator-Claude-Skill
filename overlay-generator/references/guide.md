@@ -10,7 +10,7 @@ Use the menu names OBS shows in that language when you are sure of them; otherwi
 2. **Put the folder somewhere permanent.** Example path. Not Downloads, not inside the zip, not OneDrive/Dropbox.
 3. **Turn on the OBS WebSocket.** Tools → WebSocket Server Settings → Enable → Show Connect Info → copy the password.
 4. **Add the panel to OBS.** Docks → Custom Browser Docks → name + `file:///…/panel.html` → Apply.
-5. **Connect and install.** Setup tab → password → Connect → Install / repair. List the scenes it creates. Then: "add your camera and game **below** the overlay", with the exact camera size and position of each scene that has one.
+5. **Connect and install.** Setup tab → password → Connect → Install / repair. List the scenes it creates and, per scene, its sources (one per piece). Tell them they can **move and resize each source freely** (drag it, or Alt-drag to crop) and that Install / repair keeps their changes. Then: "add your camera and game **below** the overlay", with the exact camera size and position of each scene that has one.
 6. **Hotkeys** (if any): Settings → Hotkeys → entries starting with ⌨ → key on **Show**, Hide empty. Table key → what it does. The borderless-window tip.
 7. **Chat commands** (if any): Chat tab → channel → Listen. Table command → who → what.
 8. **Every stream**: the "new stream" action if the pack has one, **keep the panel open** (minimised is fine; if it closes the overlay says so), what counts by itself (subs add time…).

@@ -55,6 +55,48 @@ def template_vars(t):
     return [m[0] for m in re.findall(r'\{([\w.]+)(@\w+)?\}', str(t))]
 
 
+SRC_ID = re.compile(r'^[a-z0-9][a-z0-9-]{0,30}$')
+
+
+def check_sources(R, s, html):
+    """scenes[].sources: one OBS browser source per group of pieces, so the streamer can move and resize each one."""
+    sid, srcs = s.get('id', '?'), s.get('sources')
+    pieces = list(dict.fromkeys(re.findall(r'data-piece="([^"]+)"', html)))
+    if srcs is None:
+        if len(pieces) > 1:
+            R.warn('scene "%s": one full-screen OBS source for %d pieces. Add "sources" so the streamer can move and resize each piece' % (sid, len(pieces)))
+        return
+    where = 'scene "%s" sources' % sid
+    if not isinstance(srcs, list) or not srcs:
+        return R.fail(where + ': must be a non-empty list')
+    m = re.search(r'ovg\.js"[^>]*data-page="([^"]+)"', html)
+    page = m.group(1) if m else os.path.splitext(os.path.basename(s.get('file', '')))[0]
+    if page != sid:
+        R.fail('%s: data-page "%s" must be the scene id "%s" (each source finds its pieces through it)' % (s.get('file'), page, sid))
+    ids, owner = set(), {}
+    for x in srcs:
+        xid = x.get('id', '')
+        if not SRC_ID.match(xid): R.fail('%s: id "%s" must be lowercase letters, digits and dashes' % (where, xid))
+        if xid in ids: R.fail('%s: id "%s" is repeated' % (where, xid))
+        ids.add(xid)
+        if not x.get('label'): R.fail('%s: "%s" needs a label (its name in OBS)' % (where, xid))
+        elif len(x['label']) > 30: R.warn('%s: label of "%s" longer than 30 characters' % (where, xid))
+        ps = x.get('pieces')
+        if not isinstance(ps, list) or not ps:
+            R.fail('%s: "%s" needs a list of pieces' % (where, xid)); continue
+        for p in ps:
+            if p not in pieces: R.fail('%s: piece "%s" of "%s" is not a data-piece of %s' % (where, p, xid, s.get('file')))
+            elif p in owner: R.fail('%s: piece "%s" is in "%s" and "%s"' % (where, p, owner[p], xid))
+            else: owner[p] = xid
+        b = x.get('box')
+        if b is not None:
+            if not (isinstance(b, list) and len(b) == 4 and all(isinstance(v, (int, float)) for v in b)
+                    and b[2] > 0 and b[3] > 0 and b[0] >= 0 and b[1] >= 0 and b[0] + b[2] <= 1920 and b[1] + b[3] <= 1080):
+                R.fail('%s: box of "%s" must be [x, y, width, height] inside 1920×1080' % (where, xid))
+    lost = [p for p in pieces if p not in owner]
+    if lost: R.fail('%s: pieces in no source never show in OBS: %s' % (where, ', '.join(lost)))
+
+
 def check_ops(R, where, ops, state, pack, event_ctx=False):
     if not isinstance(ops, list):
         return R.fail('%s: "do"/"effects" must be a list of ops' % where)
@@ -131,6 +173,7 @@ def validate(folder):
         if s.get('format') == 'game' and 'data-hud-source="screenshot"' not in html:
             R.warn('%s: every HUD zone is assumed. Confirm with a screenshot of the stream' % s['file'])
         if not s.get('backdrop'): R.warn('scene "%s": no "backdrop" for the preview' % sid)
+        check_sources(R, s, html)
     R.ok('%d scenes, overlay files found' % len(ids))
 
     # ---- external resources, fonts ----

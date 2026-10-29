@@ -188,7 +188,16 @@
     }
   }
   function baseUrl() { return location.href.replace(/[?#].*$/, '').replace(/[^/]*$/, ''); }
-  function overlayUrl(file) { return baseUrl() + file + (meta.pw ? '?pw=' + encodeURIComponent(meta.pw) : ''); }
+  function overlayUrl(file, extra) {
+    const q = [meta.pw ? 'pw=' + encodeURIComponent(meta.pw) : '', extra || ''].filter(Boolean).join('&');
+    return baseUrl() + file + (q ? '?' + q : '');
+  }
+  // The OBS browser sources of a scene: one per entry of scene.sources (each at its own box), or one full-screen source.
+  function sceneSources(s) {
+    const scene = obsSceneName(s), FULL = [0, 0, 1920, 1080];
+    if (!(s.sources && s.sources.length)) return [{ name: scene + ' · overlay', label: s.label, extra: '', box: FULL, legacy: true }];
+    return s.sources.map(x => ({ name: scene + ' · ' + x.label, label: s.label + ' · ' + x.label, extra: 'src=' + encodeURIComponent(x.id), box: x.box || FULL }));
+  }
 
   async function install() {
     installLog = []; renderPage('setup');
@@ -202,18 +211,27 @@
     };
     try {
       for (const s of PACK.scenes || []) {
-        const scene = obsSceneName(s), input = scene + ' · overlay';
+        const scene = obsSceneName(s), srcs = sceneSources(s);
         await step(t('scene') + ' “' + scene + '”', 'CreateScene', { sceneName: scene }, [601]);
-        const settings = { url: overlayUrl(s.file), is_local_file: false, width: 1920, height: 1080, shutdown: false, restart_when_active: false, fps_custom: false };
-        const r = await step('overlay “' + s.label + '”', 'CreateInput', { sceneName: scene, inputName: input, inputKind: 'browser_source', inputSettings: settings, sceneItemEnabled: true }, [601]);
-        if (r.code === 601) await link.request('SetInputSettings', { inputName: input, inputSettings: settings });
-        const id = await link.request('GetSceneItemId', { sceneName: scene, sourceName: input });
-        if (!id.ok) await link.request('CreateSceneItem', { sceneName: scene, sourceName: input, sceneItemEnabled: true });
-        const list = await link.request('GetSceneItemList', { sceneName: scene });
-        const item = (list.data.sceneItems || []).find(i => i.sourceName === input);
-        if (item) {
+        // A pack that moved to one source per piece: the old full-screen source would duplicate everything.
+        if (!srcs[0].legacy) {
+          const old = scene + ' · overlay';
+          if ((await link.request('GetSceneItemId', { sceneName: scene, sourceName: old })).ok) await step('− “' + old + '”', 'RemoveInput', { inputName: old });
+        }
+        for (const src of srcs) {
+          const b = src.box;
+          const settings = { url: overlayUrl(s.file, src.extra), is_local_file: false, width: b[2], height: b[3], shutdown: false, restart_when_active: false, fps_custom: false };
+          const r = await step('overlay “' + src.label + '”', 'CreateInput', { sceneName: scene, inputName: src.name, inputKind: 'browser_source', inputSettings: settings, sceneItemEnabled: true }, [601]);
+          if (r.code === 601) await link.request('SetInputSettings', { inputName: src.name, inputSettings: settings });
+          const id = await link.request('GetSceneItemId', { sceneName: scene, sourceName: src.name });
+          const fresh = r.ok || !id.ok;
+          if (!id.ok) await link.request('CreateSceneItem', { sceneName: scene, sourceName: src.name, sceneItemEnabled: true });
+          const list = await link.request('GetSceneItemList', { sceneName: scene });
+          const item = (list.data.sceneItems || []).find(i => i.sourceName === src.name);
+          if (!item) continue;
           await link.request('SetSceneItemIndex', { sceneName: scene, sceneItemId: item.sceneItemId, sceneItemIndex: (list.data.sceneItems || []).length - 1 });
-          await link.request('SetSceneItemTransform', { sceneName: scene, sceneItemId: item.sceneItemId, sceneItemTransform: { positionX: 0, positionY: 0, scaleX: 1, scaleY: 1, rotation: 0, boundsType: 'OBS_BOUNDS_NONE' } });
+          // Place it where the design puts it, but only the first time: after that the streamer may have moved or scaled it.
+          if (fresh || src.legacy) await link.request('SetSceneItemTransform', { sceneName: scene, sceneItemId: item.sceneItemId, sceneItemTransform: { positionX: b[0], positionY: b[1], scaleX: 1, scaleY: 1, rotation: 0, boundsType: 'OBS_BOUNDS_NONE' } });
         }
       }
       const keys = hotkeyActions();

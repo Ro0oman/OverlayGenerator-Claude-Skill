@@ -52,6 +52,13 @@ async def handle_request(t, d):
             return False, 600, None, 'No source was found.'
         inputs[d['inputName']]['settings'].update(d['inputSettings'])
         return True, 100, None, ''
+    if t == 'RemoveInput':
+        if d['inputName'] not in inputs:
+            return False, 600, None, 'No source was found.'
+        del inputs[d['inputName']]
+        for items in scenes.values():
+            items[:] = [i for i in items if i['sourceName'] != d['inputName']]
+        return True, 100, None, ''
     if t == 'GetInputKindList':
         return True, 100, {'inputKinds': ['browser_source', 'color_source', 'color_source_v2', 'color_source_v3', 'image_source', 'text_gdiplus_v3']}, ''
     if t == 'GetSceneItemList':

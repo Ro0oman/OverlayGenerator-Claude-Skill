@@ -11,20 +11,37 @@ let pass=0,fail=0;const ok=(c,m)=>{console.log((c?'PASS ':'FAIL ')+m);c?pass++:f
  ok(await panel.evaluate(()=>document.querySelector('#pills').textContent.includes('wrong password')),'bad password is reported');
  await panel.fill('[data-field="__pw"]','secret1');await panel.click('[data-connect]');await sleep(2000);
  ok(await panel.evaluate(()=>document.querySelector('#pills').textContent.includes('connected')),'connects with the right password');
- await panel.click('[data-install]');await sleep(4000);
+ // an old pack version left one full-screen source: install must replace it with one source per piece
+ const pre=await ctx.newPage();await pre.goto('file://'+DIR+'/overlays/flight.html?pw=secret1');await sleep(800);
+ await pre.evaluate(()=>new Promise(res=>{const l=new ObsLink({password:'secret1',onStatus:async s=>{if(s.state==='connected'){await l.request('CreateScene',{sceneName:'MK-21 · In flight'});await l.request('CreateInput',{sceneName:'MK-21 · In flight',inputName:'MK-21 · In flight · overlay',inputKind:'browser_source',inputSettings:{}});res();}}});}));
+ await pre.close();
+ await panel.click('[data-install]');await sleep(5000);
  const ovp=await ctx.newPage();ovp.on('pageerror',e=>errs.push('overlay:'+e.message));
  await ovp.goto('file://'+DIR+'/overlays/flight.html?pw=secret1');await sleep(2500);
  const dump=await ovp.evaluate(()=>new Promise(res=>{const l=new ObsLink({password:'secret1',onStatus:async s=>{if(s.state==='connected'){const r=await l.request('MockDump',{});res(r.data);}}});}));
  const sc=Object.keys(dump.scenes);
  ok(sc.length===6 && sc.includes('MK-21 · In flight') && sc.includes('MK-21 · Controls'),'install creates 5 scenes + controls: '+sc.join(', '));
- const inp=dump.inputs['MK-21 · In flight · overlay'];
- ok(inp && inp.kind==='browser_source' && /overlays\/flight\.html\?pw=secret1$/.test(inp.settings.url) && inp.settings.shutdown===false,'browser source url+settings ok');
+ const inp=dump.inputs['MK-21 · In flight · Flight strip'];
+ ok(inp && inp.kind==='browser_source' && /overlays\/flight\.html\?pw=secret1&src=strip$/.test(inp.settings.url) && inp.settings.shutdown===false && inp.settings.width<1920,'one browser source per piece group, sized to its box: '+(inp&&inp.settings.width)+'×'+(inp&&inp.settings.height));
+ ok(dump.scenes['MK-21 · In flight'].map(i=>i.sourceName).join('|')==='MK-21 · In flight · Camera frame|MK-21 · In flight · Flight strip|MK-21 · In flight · Alerts','in flight: camera frame, flight strip and alerts, and the old full-screen source is gone');
+ const stripItem=dump.scenes['MK-21 · In flight'].find(i=>i.sourceName.endsWith('Flight strip'));
+ const box=JSON.parse(await ovp.evaluate(()=>JSON.stringify(PACK.scenes.find(s=>s.id==='flight').sources.find(x=>x.id==='strip').box)));
+ const tf=dump.transforms['MK-21 · In flight|'+stripItem.sceneItemId];
+ ok(tf && tf.positionX===box[0] && tf.positionY===box[1],'source placed at its box ('+box.join(',')+')');
+ // the streamer moves the strip: a second install must keep it there
+ await ovp.evaluate(id=>new Promise(res=>{const l=new ObsLink({password:'secret1',onStatus:async s=>{if(s.state==='connected'){await l.request('SetSceneItemTransform',{sceneName:'MK-21 · In flight',sceneItemId:id,sceneItemTransform:{positionX:77,positionY:88,scaleX:1.5,scaleY:1.5}});res();}}});}),stripItem.sceneItemId);
  ok(dump.scenes['MK-21 · Controls'].length===4 && dump.scenes['MK-21 · Controls'].every(i=>!i.sceneItemEnabled),'4 hidden hotkey sources');
  ok(dump.program==='MK-21 · In flight','switches to the game scene');
  // run install again: no duplicates
  await panel.click('[data-install]');await sleep(4000);
  const dump2=await ovp.evaluate(()=>new Promise(res=>{const l=new ObsLink({password:'secret1',onStatus:async s=>{if(s.state==='connected'){const r=await l.request('MockDump',{});res(r.data);}}});}));
- ok(Object.keys(dump2.scenes).length===6 && dump2.scenes['MK-21 · In flight'].length===1 && dump2.scenes['MK-21 · Controls'].length===4,'second install does not duplicate');
+ ok(Object.keys(dump2.scenes).length===6 && dump2.scenes['MK-21 · In flight'].length===3 && dump2.scenes['MK-21 · Controls'].length===4,'second install does not duplicate');
+ ok(dump2.transforms['MK-21 · In flight|'+stripItem.sceneItemId].positionX===77,'second install keeps where the streamer moved the source');
+ // a source page shows only its pieces, moved to its top-left corner
+ const sp=await ctx.newPage();await sp.setViewportSize({width:box[2],height:box[3]});
+ await sp.goto('file://'+DIR+'/overlays/flight.html?pw=secret1&src=strip');await sleep(1200);
+ ok(await sp.evaluate(b=>{const v=e=>getComputedStyle(e).display!=='none';const r=document.getElementById('strip').getBoundingClientRect();return v(document.getElementById('strip'))&&!v(document.getElementById('alert'))&&!v(document.querySelector('[data-piece=camera]'))&&r.left>=0&&r.right<=b[2]&&r.top>=0;},box),'?src=strip shows only the flight strip, inside its box');
+ await sp.close();
  // hotkey trick
  const item=dump2.scenes['MK-21 · Controls'].find(i=>i.sourceName.includes('+1 turbulence'));
  await ovp.evaluate(id=>new Promise(res=>{const l=new ObsLink({password:'secret1',onStatus:async s=>{if(s.state==='connected'){await l.request('SetSceneItemEnabled',{sceneName:'MK-21 · Controls',sceneItemId:id,sceneItemEnabled:true});res();}}});}),item.sceneItemId);
