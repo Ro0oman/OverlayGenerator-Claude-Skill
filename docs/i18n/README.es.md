@@ -47,7 +47,7 @@ Eliges una dirección, Claude monta el pack y te llevas un zip listo para OBS. S
 | 💬 **Chat y metas** | Chat en pantalla, meta de subs y marco de cámara a juego con el resto del pack |
 | 🧩 **Piezas hechas para tu formato** | Contador de muertes, jefes, agenda de temas, rótulos de noticiero, contador de días… lo que tu directo necesite de verdad |
 | 🎛️ **Panel de control dentro de OBS** | Botones, **atajos de teclado** y **comandos de chat para tus mods** para mover cada pieza en directo |
-| ⚙️ **Botón "Instalar en OBS"** | Crea las escenas y las fuentes por ti, ya colocadas |
+| ⚙️ **Botón "Instalar en OBS"** | Crea las escenas y las fuentes por ti, ya colocadas. Cada pieza (marco de cámara, contador, alertas, chat…) es su propia fuente, así que puedes mover y redimensionar cada una |
 | 👀 **Vista previa** | Doble clic en `vista-previa.html` y ves el pack entero antes de tocar OBS |
 | 📖 **Guía** | Una guía paso a paso, sencilla y en tu idioma |
 

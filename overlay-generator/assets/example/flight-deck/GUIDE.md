@@ -25,7 +25,7 @@ Not in Downloads, not inside the zip, not in OneDrive or Dropbox. OBS keeps poin
 ## 4. Connect and install
 
 In the panel, open **Setup**, paste the password, click **Connect**, then **⚙ Install / repair in OBS**.
-It creates 5 scenes (Boarding, In flight, Lounge, Delayed, Landed) with the overlay already placed.
+It creates 5 scenes (Boarding, In flight, Lounge, Delayed, Landed) with every piece already placed. Each piece is its own source (for example **In flight** has *Camera frame*, *Flight strip* and *Alerts*), so you can **drag and resize any of them** in OBS. Clicking Install / repair again keeps your changes.
 
 Then, in each scene, add your camera and your game **below** the overlay:
 

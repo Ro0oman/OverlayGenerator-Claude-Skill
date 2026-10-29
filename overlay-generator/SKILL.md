@@ -22,7 +22,7 @@ A complete worked example lives in `assets/example/flight-deck/` (an invented st
 
 ## How the pack works (so you can explain it)
 
-- Each scene is one HTML page (1920×1080, transparent) loaded in OBS as a browser source.
+- Each scene is one HTML page (1920×1080, transparent). In OBS it becomes **one browser source per group of pieces** (`scenes[].sources`: the camera frame, the counter with its events, the alerts, the chat…), each sized to its own box and placed where the design puts it, so the streamer can move and resize every piece on its own. The build measures the boxes.
 - `panel.html` is docked in OBS. It is the brain: it keeps the state, runs actions from buttons, hotkeys and chat commands, reads Twitch chat anonymously for subs/gifts/raids/bits, queues alerts and saves everything inside OBS.
 - Panel and overlays talk through the WebSocket server that OBS already has (obs-websocket v5). No Python, no server, no account.
 - "Install in OBS" (in the panel) creates every scene and source, already placed, and the hidden sources that make hotkeys work. It can be clicked again safely.
@@ -55,6 +55,7 @@ Before drawing, decide what each scene shows and where every number comes from:
 - The channel's own **event** (a death, a goal, a topic change…) and its own **pieces** (counters, timers, agendas…).
 - For each piece, the **actions** that change it and how the streamer triggers them: a panel button always; a **hotkey** if they play fullscreen; a **chat command** if they have mods (or for audience interaction). Choose by context: a souls player needs a death hotkey; a talk show needs "next topic" for a mod.
 - Alerts: sub, resub, gift and bomb always have their own copy; raid and bits if they make sense. Effects (subathon time, goal +1) go on the alert, not in the overlay.
+- **OBS sources**: group the pieces the streamer would move together (a counter with the events that pop next to it) and give everything else its own source: camera frame, alerts, chat, lists. Pieces far apart never share a source (its box would cover the screen).
 
 ### 4. Write pack.json
 Follow `references/pack-format.md`. Work in a fresh folder, e.g. `<workdir>/<pack-id>/`. Copy fonts in `fonts/` (free fonts only: `npm i @fontsource/<family>` and take the `latin` woff2 files; if npm is not reachable, use widely installed system fonts and say so).
@@ -68,7 +69,7 @@ python3 <skill>/scripts/build_pack.py <pack-folder> --out <out-dir>
 ```
 It validates the recipe, copies the engine, writes `panel.html` and `preview.html`, runs the render checks when Node + Playwright exist (`NODE_PATH=$(npm root -g)`), and zips everything. Fix every **FAIL**. Warnings are fixed or explained to the user.
 
-Then **open the screenshots** in `<out-dir>/<id>-checks/` and judge them as the channel's viewers would: is it readable in 3 seconds, does it cover the game, does it feel like *this* channel? If you can start an independent agent, ask it for a critique with only the screenshots and the concept (no context), and apply what makes sense.
+Each source's box is printed under `== source boxes`, and `src-<scene>-<source>.png` shows it alone. Then **open the screenshots** in `<out-dir>/<id>-checks/` and judge them as the channel's viewers would: is it readable in 3 seconds, does it cover the game, does it feel like *this* channel? If you can start an independent agent, ask it for a critique with only the screenshots and the concept (no context), and apply what makes sense.
 
 Without a browser in the environment, the static validator still runs; tell the user the visual checks were skipped and ask them to open `preview.html`.
 

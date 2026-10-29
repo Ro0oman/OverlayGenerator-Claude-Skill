@@ -33,10 +33,26 @@ Full working example: `assets/example/flight-deck/pack.json`.
   "format": "game",               // game | talk | code | screen  (sets the screen budget the checker applies)
   "events": ["turbulence"],       // events the checker should render in this scene
   "alerts": true,                 // false if the scene intentionally shows no alerts (e.g. ending)
-  "backdrop": "linear-gradient(…)"// preview background only; the overlay stays transparent
+  "backdrop": "linear-gradient(…)",// preview background only; the overlay stays transparent
+  "sources": [                    // one OBS browser source per group of pieces (recommended)
+    { "id": "camera", "label": "Camera frame", "pieces": ["camera"] },
+    { "id": "strip",  "label": "Flight strip", "pieces": ["flight strip", "turbulence"] },
+    { "id": "alerts", "label": "Alerts",       "pieces": ["alert"] }
+  ]
 }
 ```
-OBS scene names become `<short> · <label>`; the browser source is `<short> · <label> · overlay`.
+OBS scene names become `<short> · <label>`.
+
+### sources
+
+Each entry becomes its own browser source in that scene, named `<short> · <scene label> · <source label>`. It loads the same page with `?src=<id>`: only its `pieces` (the `data-piece` names) are shown, and its box is moved to the top-left corner. Install in OBS creates it with the size of its box, at the position the design gives it, so the streamer can **move and resize every piece on its own** without editing anything.
+
+- `id`: lowercase, digits, dashes; unique in the scene. `label`: its name in OBS (≤ 30 characters).
+- `pieces`: every `data-piece` of the page belongs to exactly one source (the validator fails otherwise). Group what moves together: a counter and the event that pops next to it. Never group pieces that are far apart: the box would cover the screen.
+- `box`: `[x, y, width, height]`. Leave it out: `build_pack.py` measures it (union of the pieces and their children in the plain scene, with every sample alert and every event, plus 24 px for shadows). Write it by hand only to reserve room for something that appears later. Without Playwright, sources without a box are full screen.
+- Content that grows must fit its box: use long sample names (≈ 20 characters) so the measure leaves room, and shrink or truncate names in the page.
+- Order: the first source also shows the engine's notices ("panel closed", credit).
+- Install / repair keeps the position and scale the streamer gave each source; it only updates the address and size. A pack without `sources` gets one full-screen source per scene (`<short> · <label> · overlay`); when a later version adds `sources`, Install / repair removes that old source.
 
 ## state
 

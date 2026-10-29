@@ -13,7 +13,8 @@ The user brings a zip made by this skill (or just its `pack.json`) and asks for 
 5. **If only pack.json came** (no overlay pages): you can't rebuild the pages. Ask for the zip; if they don't have it, rebuild the pages from the concept and say that the look may differ slightly.
 6. Tell the user how to apply it:
    - unzip the new pack **over** the old folder (same place),
-   - if there are new scenes or hotkeys: panel → Setup → **Install / repair in OBS**,
+   - if there are new scenes, sources or hotkeys: panel → Setup → **Install / repair in OBS** (it keeps where they moved each source; a pack that moves from one full-screen source to `sources` loses the old one),
+   - packs made before `scenes[].sources` existed: add them on the next update, so each piece becomes its own source,
    - their counters and settings stay.
 
 The engine itself is always copied fresh from the skill, so updates also bring engine fixes. The panel merges new state keys with the saved state on start.

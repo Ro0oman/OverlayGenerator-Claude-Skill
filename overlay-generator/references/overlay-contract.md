@@ -41,6 +41,8 @@ One HTML page per scene, in `overlays/`. They are what OBS shows on top of the g
 - `html, body` are exactly **1920×1080**, `overflow: hidden`, **transparent background**. Pieces are absolutely positioned.
 - Every visible piece has `data-piece="<name>"`. The camera frame is `data-piece="camera"` (hole stays transparent: frame only); VTuber anchors add `data-kind="vtuber"`. Alerts are `data-piece="alert"`. Elements that only appear during an event also get `data-event`.
 - If the game or screen share does not fill the screen (the layout reserves columns for camera and pieces), mark its area with an invisible `<div data-zone="content" style="left:…;top:…;width:…;height:…">`. The screen budget then counts only what covers that area. Without it, the whole screen is the content.
+- **Pieces are siblings**: never put a `data-piece` inside another one. With `scenes[].sources`, each source shows only its own pieces (`?src=<id>`), so a nested piece would vanish with its parent.
+- Pieces that grow (alert names, long lists) keep to their box: shrink the font or truncate instead of wrapping to new lines, or reserve the space with a fixed height.
 - HUD zones of the game (game scenes): `data-hud="<name>"` + `data-hud-source="screenshot"` or `"assumed"`. They are invisible in OBS and outlined with `?hud=1`.
 - Purely decorative text (unlit LED segments behind digits, texture letters) goes in an element with `aria-hidden="true"`: the checker skips it for size and contrast.
 - Fonts are bundled in `../fonts/` with `@font-face`. **No external URLs** of any kind (fonts, images, scripts).
@@ -74,10 +76,10 @@ The engine draws two things itself: the **"panel closed"** notice (top right) an
 
 ## URL parameters
 
-`pw` (OBS password, set by Install in OBS) · `demo=1` (preview, no OBS) · `freeze=1` (no animations) · `alert=<type>` (show a sample alert) · `event=<name>` (apply `events.<name>.state` and play it) · `noalert=1` · `hud=1` (outline HUD and pieces) · `state=<json>` (override state keys).
+`pw` (OBS password, set by Install in OBS) · `src=<id>` (only the pieces of that source, its box at 0,0; set by Install in OBS) · `demo=1` (preview, no OBS) · `freeze=1` (no animations) · `alert=<type>` (show a sample alert) · `event=<name>` (apply `events.<name>.state` and play it) · `noalert=1` · `hud=1` (outline HUD and pieces) · `state=<json>` (override state keys).
 
 ## Checks it must pass (check_render.js)
 
-Per scene: screen budget by format, camera width in talk scenes, no overlap with HUD zones, smallest text ≥ 24 px, contrast against the piece's own solid background, no text leaving its box, nothing off screen, no endless animations outside alerts, no JS errors. Per alert and event: not in the central area (480–1440 × 270–810).
+Per scene: screen budget by format, camera width in talk scenes, no overlap with HUD zones, smallest text ≥ 24 px, contrast against the piece's own solid background, no text leaving its box, nothing off screen, no endless animations outside alerts, no JS errors. Per alert and event: not in the central area (480–1440 × 270–810). Per source: its page at the size of its box shows every piece whole, with each alert and event (`src-<scene>-<source>.png`).
 
 Contrast is measured against the first solid background behind the text (or the lightest colour of a gradient). Give text a solid plate of its own.

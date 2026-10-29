@@ -47,7 +47,7 @@ You pick a direction, Claude builds the pack, and you get a zip with everything 
 | 💬 **Chat & goals** | On-screen chat, sub goal and camera frame that match the rest of the pack |
 | 🧩 **Pieces made for your format** | Death counter, boss tracker, topic agenda, news ticker, day counter… whatever your stream actually needs |
 | 🎛️ **Control panel inside OBS** | Buttons, **hotkeys** and **chat commands for your mods** to drive every piece live |
-| ⚙️ **"Install in OBS" button** | Creates the scenes and sources for you, already positioned |
+| ⚙️ **"Install in OBS" button** | Creates the scenes and sources for you, already positioned. Every piece (camera frame, counter, alerts, chat…) is its own source, so you can move and resize each one |
 | 👀 **Preview** | Double-click `preview.html` to see the whole pack before touching OBS |
 | 📖 **Guide** | A friendly step-by-step guide in your language |
 

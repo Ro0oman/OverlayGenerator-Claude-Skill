@@ -129,6 +129,32 @@ if (out) fs.mkdirSync(out, { recursive: true });
       await shot('event-' + ev + '-' + s.id);
     }
   }
+  // One OBS source per group of pieces: each source page (?src=) at its own size must show all its pieces inside it.
+  for (const s of PACK.scenes) {
+    for (const x of s.sources || []) {
+      const b = x.box || [0, 0, 1920, 1080];
+      await page.setViewportSize({ width: b[2], height: b[3] });
+      const variants = ['&noalert=1'].concat(s.alerts === false ? [] : Object.keys(PACK.alerts || {}).map(a => '&alert=' + a)).concat((s.events || []).map(e => '&noalert=1&event=' + e));
+      const out = [];
+      for (const v of variants) {
+        await page.goto('file://' + path.join(dir, s.file) + '?demo=1&freeze=1&src=' + encodeURIComponent(x.id) + v);
+        await page.evaluate(() => document.fonts.ready);
+        await page.waitForTimeout(300);
+        const bad = await page.evaluate(([w, h]) => {
+          const vis = e => { const st = getComputedStyle(e), r = e.getBoundingClientRect(); return st.display !== 'none' && st.visibility !== 'hidden' && parseFloat(st.opacity) > 0.05 && r.width > 0 && r.height > 0; };
+          return [...document.querySelectorAll('[data-piece]')].filter(vis).flatMap(p => [p, ...p.querySelectorAll('*')].filter(vis).filter(e => { const r = e.getBoundingClientRect(); return r.left < -2 || r.top < -2 || r.right > w + 2 || r.bottom > h + 2; }).map(() => p.dataset.piece));
+        }, [b[2], b[3]]);
+        bad.forEach(p => out.push(p + (v === '&noalert=1' ? '' : ' (' + v.split('&').pop() + ')')));
+        if (v === '&noalert=1') await shot('src-' + s.id + '-' + x.id);
+      }
+      console.log('\n== source "' + x.id + '" of "' + s.id + '" · ' + b[2] + '×' + b[3] + ' at ' + b[0] + ',' + b[1] + (x.box ? '' : ' (no box: full screen)'));
+      const u = [...new Set(out)];
+      console.log((u.length ? '  FAIL  ' : '  OK    ') + 'pieces cut by the source edge: ' + (u.join(', ') || 'none'));
+      if (u.length) fails++;
+    }
+  }
+  await page.setViewportSize({ width: 1920, height: 1080 });
+
   console.log('\nJS errors: ' + ([...new Set(errs)].join(' | ') || 'none'));
   if (errs.length) fails++;
   console.log(fails ? '\n' + fails + ' render checks FAIL · ' + warns + ' warnings' : '\nALL RENDER CHECKS PASS · ' + warns + ' warnings');
