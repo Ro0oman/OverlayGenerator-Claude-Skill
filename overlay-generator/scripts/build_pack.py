@@ -43,6 +43,17 @@ def panel_closed_text(lang):
     return m.group(1) if m else None
 
 
+def _inside(path, folder):
+    """True if path is folder itself or anything under it (both already resolved)."""
+    return os.path.commonpath([path, folder]) == folder
+
+
+def overlapping(src, dest):
+    """The build deletes dest before copying src into it: they must not be the same folder or nest."""
+    a, b = os.path.realpath(src), os.path.realpath(dest)
+    return _inside(a, b) or _inside(b, a)
+
+
 def build(src, out, render=True):
     src = os.path.abspath(src)
     rep, pack = validate(src)
@@ -52,6 +63,12 @@ def build(src, out, render=True):
         return None
     pid = pack['id']
     dest = os.path.join(out, pid)
+    # Never delete the source: with the default --out ".", a source folder named like the pack id IS the output.
+    for path in (dest, os.path.join(out, pid + '-checks')):
+        if overlapping(src, path):
+            print('\nBuild stopped: the output %s overlaps the pack source %s.\n'
+                  'Nothing was deleted. Pass --out with a folder outside the source, e.g. --out ../build' % (os.path.abspath(path), src))
+            return None
     if os.path.isdir(dest):
         shutil.rmtree(dest)
     shutil.copytree(src, dest, ignore=lambda d, names: [n for n in names if n in SKIP or n.endswith('.zip')])
