@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/styles.css?v={{BUILD}}">
 </head>
 <body>
 
@@ -51,8 +51,8 @@
   <h1>{{h1}}</h1>
   <p class="lead">{{lead}}</p>
   <div class="ctas">
-    <a class="btn btn-primary" href="#start">{{ctaStart}}</a>
-    <a class="btn btn-ghost" href="https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/releases/latest" target="_blank" rel="noopener">{{ctaDl}}</a>
+    <a class="btn btn-primary" href="#demo">{{ctaDemo}}</a>
+    <a class="btn btn-ghost" href="#crear">{{ctaStart}}</a>
   </div>
   <div class="stats" id="stats" hidden>
     <a href="https://github.com/Ro0oman/OverlayGenerator-Claude-Skill/stargazers" target="_blank" rel="noopener">★ <b id="st-stars">–</b></a>
@@ -100,13 +100,16 @@
     <a class="demo-poster" href="/demo/" target="_blank" rel="noopener"><img src="/media/demo.webp" width="1120" height="560" alt="{{demoT}}" loading="lazy"></a>
   </div>
   <div class="ctas" style="justify-content:flex-start;margin-top:18px">
+    <a class="btn btn-primary" href="#crear">{{ctaWant}}</a>
     <a class="btn btn-ghost" href="/demo/" target="_blank" rel="noopener">{{demoBtn}}</a>
   </div>
 </div></section>
 
 {{USECASES}}
 
-<section id="start" class="alt"><div class="wrap">
+{{GENERATOR}}
+
+<section id="start"><div class="wrap">
   <div class="eyebrow">{{stEy}}</div>
   <h2>{{stT}}</h2>
   <p class="lead">{{stL}}</p>
@@ -189,6 +192,8 @@
 
 {{INTEGRATIONS}}
 
+{{PRIVACY}}
+
 <section id="faq" class="alt"><div class="wrap">
   <div class="eyebrow">FAQ</div>
   <h2>{{faqT}}</h2>
@@ -213,6 +218,6 @@
 <footer>{{foot}}<nav class="foot-langs" aria-label="Languages">{{LANGLINKS}}</nav></footer>
 
 <script>window.OVG={copy:"{{copyJs}}",copied:"{{copiedJs}}"};</script>
-<script src="/app.js" defer></script>
+<script src="/app.js?v={{BUILD}}" defer></script>
 </body>
 </html>

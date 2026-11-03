@@ -39,7 +39,8 @@ document.querySelectorAll('video[data-src], .demo-frame').forEach(el => io.obser
   const api = 'https://api.github.com/repos/Ro0oman/OverlayGenerator-Claude-Skill';
   try {
     const [repo, rels] = await Promise.all([fetch(api).then(r => r.json()), fetch(api + '/releases').then(r => r.json())]);
-    if (typeof repo.stargazers_count !== 'number') return;
+    // Only show the counters once they help: low numbers cost more trust than they add.
+    if (typeof repo.stargazers_count !== 'number' || repo.stargazers_count < 50) return;
     const dl = Array.isArray(rels) ? rels.flatMap(r => r.assets || []).reduce((n, a) => n + a.download_count, 0) : 0;
     const fmt = new Intl.NumberFormat(document.documentElement.lang);
     document.getElementById('st-stars').textContent = fmt.format(repo.stargazers_count);
@@ -123,4 +124,40 @@ document.querySelectorAll('video[data-src], .demo-frame').forEach(el => io.obser
   }).observe(c);
   addEventListener('resize', resize);
   resize(); requestAnimationFrame(frame);
+})();
+
+// Prompt generator: builds the line to paste into Claude from the form.
+(() => {
+  const form = document.getElementById('gen');
+  if (!form || !window.GEN) return;
+  const G = window.GEN, P = G.p, out = document.getElementById('gen-out');
+  const fill = (tpl, v) => tpl.replace('{v}', v);
+  const cap = (x) => x.charAt(0).toUpperCase() + x.slice(1);
+  const list = (xs) => xs.length < 2 ? xs.join('') : xs.slice(0, -1).join(', ') + P.and + xs[xs.length - 1];
+  function build() {
+    const f = new FormData(form);
+    const game = (f.get('game') || '').trim(), rule = (f.get('rule') || '').trim();
+    const channel = (f.get('channel') || '').trim().replace(/^.*twitch\.tv\//i, '').replace(/^@/, '');
+    const parts = [P.open];
+    if (channel) parts.push(fill(P.channel, channel));
+    if (game) parts.push(fill(P.game, game) + (rule ? fill(P.rule, rule) : '') + '.');
+    else if (rule) parts.push(cap(rule) + '.');
+    const cam = f.get('cam');
+    if (cam !== null) parts.push(cap(G.cams[cam]) + '.');
+    const tone = f.get('tone');
+    if (tone !== null) parts.push(fill(P.tone, G.tones[tone]));
+    const pieces = f.getAll('pieces').map((i) => G.pieceList[i]);
+    if (pieces.length) parts.push(fill(P.pieces, list(pieces)));
+    out.value = parts.join(' ');
+  }
+  form.addEventListener('input', build);
+  form.addEventListener('change', build);
+  build();
+  document.getElementById('gen-copy').addEventListener('click', (e) => {
+    navigator.clipboard.writeText(out.value).then(() => {
+      e.target.textContent = G.copied;
+      setTimeout(() => (e.target.textContent = G.copy), 1500);
+    });
+    if (window.gtag) gtag('event', 'prompt_copied');
+  });
 })();

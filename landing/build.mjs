@@ -12,6 +12,7 @@ const require = createRequire(import.meta.url);
 const { I18N, LOCALES, HREFLANG } = require('./i18n.cjs');
 const { HUB, CASES, UC_LANGS } = require('./usecases.cjs');
 const { REAL_CASES } = require('./realcases.cjs');
+const { CONV } = require('./conversion.cjs');
 const out = path.resolve(process.argv[2] || path.join(here, 'dist'));
 const SITE = (process.env.SITE_URL || 'https://overlays.romandev.app').replace(/\/$/, '');
 const REPO = 'https://github.com/Ro0oman/OverlayGenerator-Claude-Skill';
@@ -19,6 +20,8 @@ const DEFAULT = 'en';
 const LANGS = Object.keys(I18N);
 const NAMES = { es:'Español', en:'English', pt:'Português', fr:'Français', de:'Deutsch', it:'Italiano', ja:'日本語', ko:'한국어', zh:'简体中文' };
 const today = new Date().toISOString().slice(0, 10);
+// Cache-busting token for styles.css and app.js (nginx caches them for a day).
+const BUILD = Date.now().toString(36);
 
 const urlPath = l => (l === DEFAULT ? '/' : `/${l}/`);
 const abs = l => SITE + urlPath(l);
@@ -98,6 +101,11 @@ function page(l) {
     LANGLINKS: LANGS.map(x => `<a href="${urlPath(x)}" hreflang="${HREFLANG[x]}" lang="${HREFLANG[x]}">${NAMES[x]}</a>`).join(''),
     USECASES: useCaseSection(l),
     INTEGRATIONS: integrationsSection(l),
+    BUILD,
+    GENERATOR: generatorSection(l),
+    PRIVACY: privacySection(l),
+    ctaDemo: CONV[l].ctaDemo,
+    ctaWant: CONV[l].ctaWant,
     GALLERY: GALLERY.map(([f, w, h, k]) => `<figure><video data-src="/media/${f}.mp4" poster="/media/${f}.webp" width="${w}" height="${h}" muted loop playsinline aria-label="${attr(text(d[k]))}"></video><figcaption>${d[k]}</figcaption></figure>`).join('\n    '),
   };
   const tpl = fs.readFileSync(path.join(here, 'template.html'), 'utf8');
@@ -180,7 +188,7 @@ ${altLinks}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/styles.css?v=${BUILD}">
 </head>
 <body>
 <nav><div class="wrap">
@@ -191,7 +199,7 @@ ${altLinks}
 ${body}
 </main>
 <footer>${I18N[l].foot}</footer>
-<script src="/app.js" defer></script>
+<script src="/app.js?v=${BUILD}" defer></script>
 </body>
 </html>`;
 }
@@ -294,6 +302,41 @@ function useCaseUrls() {
     for (const c of CASES) urls.push(entry(ucPath(l, c.slug), Object.fromEntries(UC_LANGS.map(x => [x, ucPath(x, c.slug)])), '0.8'));
   }
   return urls;
+}
+
+// ---- Prompt generator and privacy section (home pages) ----
+function generatorSection(l) {
+  const g = CONV[l].gen;
+  const opt = (name, list, type) => list.map((v, i) =>
+    `<label class="gen-chip"><input type="${type}" name="${name}" value="${i}"${type === 'radio' && i === 0 ? ' checked' : ''}><span>${v}</span></label>`).join('');
+  return `<section id="crear" class="alt"><div class="wrap">
+  <div class="eyebrow">${g.ey}</div>
+  <h2>${g.t}</h2>
+  <p class="lead">${g.l}</p>
+  <form class="gen" id="gen" onsubmit="return false">
+    <label class="gen-f"><span>${g.game}</span><input name="game" placeholder="${attr(g.gamePh)}"></label>
+    <label class="gen-f"><span>${g.rule}</span><input name="rule" placeholder="${attr(g.rulePh)}"></label>
+    <label class="gen-f"><span>${g.channel}</span><input name="channel" placeholder="twitch.tv/…" autocomplete="off"></label>
+    <div class="gen-f"><span>${g.cam}</span><div class="gen-chips">${opt('cam', g.cams, 'radio')}</div></div>
+    <div class="gen-f"><span>${g.tone}</span><div class="gen-chips">${opt('tone', g.tones, 'radio')}</div></div>
+    <div class="gen-f gen-wide"><span>${g.pieces}</span><div class="gen-chips">${opt('pieces', g.pieceList, 'checkbox')}</div></div>
+    <div class="gen-f gen-wide"><span>${g.out}</span><textarea id="gen-out" rows="4" readonly></textarea></div>
+    <div class="ctas gen-wide" style="justify-content:flex-start">
+      <button type="button" class="btn btn-primary" id="gen-copy">${g.copy}</button>
+      <a class="btn btn-ghost" href="#start">${g.next}</a>
+    </div>
+  </form>
+  <script>window.GEN=${JSON.stringify(g)};</script>
+</div></section>`;
+}
+
+function privacySection(l) {
+  const p = CONV[l].priv;
+  return `<section id="datos"><div class="wrap">
+  <div class="eyebrow">${p.ey}</div>
+  <h2>${p.t}</h2>
+  <div class="grid">${p.items.map(([t, d], i) => `<div class="card"><div class="ic" aria-hidden="true">${['👀', '💾', '🔌'][i]}</div><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+</div></section>`;
 }
 
 // ---- Integrations block on the home pages ----
@@ -409,7 +452,7 @@ function notFound() {
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>404 · OverlayGenerator</title><meta name="robots" content="noindex">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/styles.css">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/styles.css?v=${BUILD}">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head><body><main class="nf"><div class="wrap">
 <div class="big">404</div><h1 id="t" style="margin:12px 0">${e.t}</h1><p class="lead" id="p" style="margin:0 auto 28px">${e.p}</p>
