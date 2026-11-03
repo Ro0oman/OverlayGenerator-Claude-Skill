@@ -1,0 +1,94 @@
+/* Penitencia · aspecto común: tablilla de hierro, palotes de brasa, letras grabadas.
+   Solo se mueven los eventos y las alertas. */
+@font-face { font-family: 'Cinzel'; font-weight: 700; src: url(../fonts/cinzel-latin-700-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Cinzel'; font-weight: 800; src: url(../fonts/cinzel-latin-800-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Garamond'; font-weight: 500; src: url(../fonts/eb-garamond-latin-500-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Garamond'; font-weight: 600; src: url(../fonts/eb-garamond-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Cond'; font-weight: 600; src: url(../fonts/barlow-condensed-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Cond'; font-weight: 700; src: url(../fonts/barlow-condensed-latin-700-normal.woff2) format('woff2'); }
+
+:root {
+  --iron: #17130f;      /* la tablilla */
+  --iron2: #241d16;     /* el surco de los palotes */
+  --rim: #3a2f24;       /* borde de hierro */
+  --ember: #ff8a3d;     /* brasa: deuda, muerte */
+  --ember-hi: #ffb38a;
+  --bone: #e9e0cc;      /* texto */
+  --ash: #a89d8e;       /* etiquetas, lo ya pagado */
+  --blood: #2a0f0a;     /* placa de muerte */
+  --rust: #c2412d;
+}
+* { box-sizing: border-box; margin: 0; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; }
+body { font-family: 'Garamond', serif; color: var(--bone); }
+[data-hud] { position: absolute; }
+
+.plate { position: absolute; background: var(--iron); border: 2px solid var(--rim); border-radius: 4px 4px 18px 18px; box-shadow: 0 12px 30px rgba(0,0,0,.55); }
+.plate.ember { border-top: 6px solid var(--ember); }
+.title { font: 700 32px/1 'Cinzel', serif; letter-spacing: .14em; color: var(--ember); text-transform: uppercase; }
+.lab { font: 600 32px/1 'Cond', sans-serif; letter-spacing: .08em; color: var(--ash); text-transform: uppercase; }
+.num { font: 800 104px/.9 'Cinzel', serif; color: var(--ember); }
+.val { font: 600 36px/1 'Garamond', serif; color: var(--bone); }
+
+/* palotes: un grupo de 3 por serie que debes */
+.tally { display: flex; align-items: center; gap: 18px; padding: 12px 14px; min-height: 72px; background: var(--iron2); border-radius: 6px; }
+.tally .set { display: flex; gap: 6px; }
+.tally .set u { width: 8px; height: 46px; background: var(--ember); border-radius: 3px; box-shadow: 0 0 10px rgba(255,138,61,.55); }
+.tally .set.new u { animation: ignite 1.4s ease-out 1; }
+@keyframes ignite { 0% { background: #fff1d6; box-shadow: 0 0 26px #ffb38a; transform: scaleY(1.25); } 100% { } }
+.tally .more { font: 700 32px/1 'Cinzel', serif; color: var(--ember-hi); }
+
+/* eventos: placas que aparecen unos segundos */
+.ev { position: absolute; display: flex; align-items: center; gap: 18px; padding: 16px 22px; border-radius: 4px; opacity: 0; transform: translateX(30px); transition: opacity .35s, transform .35s; }
+.ev.on { opacity: 1; transform: none; }
+.ev b { font: 800 64px/1 'Cinzel', serif; }
+.ev p { font: 600 32px/1.15 'Garamond', serif; }
+.ev.death { background: var(--blood); border: 2px solid var(--rust); }
+.ev.death b { color: var(--ember-hi); }
+.ev.death p { color: var(--bone); }
+.ev.paid { background: #1d1c19; border: 2px solid #5d564c; }
+.ev.paid b { color: var(--bone); position: relative; }
+.ev.paid b:after { content: ''; position: absolute; left: -6px; right: -6px; top: 50%; height: 5px; background: var(--ash); transform: rotate(-14deg); }
+.ev.paid p { color: var(--bone); }
+
+/* alertas */
+.alert { position: absolute; padding: 16px 24px 20px; opacity: 0; transform: translateY(-14px); transition: opacity .4s, transform .4s; border-left: 8px solid var(--ember); }
+.alert.show { opacity: 1; transform: none; }
+.alert .kind { font: 700 26px/1 'Cinzel', serif; letter-spacing: .14em; color: var(--ember); text-transform: uppercase; }
+.alert .who { margin-top: 10px; font: 800 44px/1.05 'Cinzel', serif; color: var(--bone); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.alert .what { margin-top: 6px; font: 600 32px/1.15 'Garamond', serif; color: var(--bone); }
+
+/* contadores: etiqueta a la izquierda, número a la derecha */
+.stats { display: grid; gap: 10px; }
+.stats .s { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.stats .s span { font: 600 32px/1.1 'Garamond', serif; color: var(--ash); }
+.stats .s b { font: 700 38px/1 'Cinzel', serif; color: var(--bone); }
+
+/* !comandos: lista que aparece unos segundos */
+.cmds { position: absolute; padding: 16px 22px 18px; opacity: 0; transform: translateY(-10px); transition: opacity .35s, transform .35s; border-left: 8px solid var(--ash); }
+.cmds.on { opacity: 1; transform: none; }
+.cmds .list { margin-top: 12px; display: grid; gap: 12px; }
+.cmds .c { display: grid; gap: 2px; }
+.cmds .c .top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.cmds .c b { font: 700 32px/1.1 'Cinzel', serif; color: var(--ember); }
+.cmds .c em { font: 600 26px/1 'Cond', sans-serif; font-style: normal; letter-spacing: .08em; text-transform: uppercase; color: var(--ash); }
+.cmds .c span { font: 500 28px/1.15 'Garamond', serif; color: var(--bone); }
+
+/* !f: baldosas que suben y se apagan */
+.respetos { position: absolute; }
+.respetos i { position: absolute; bottom: 0; width: 56px; height: 56px; display: grid; place-items: center; font: 800 36px/1 'Cinzel', serif; font-style: normal; color: var(--ember); background: var(--iron); border: 2px solid var(--rim); border-radius: 6px; opacity: 0; }
+.respetos i.go { animation: rise 2.6s ease-out 1 forwards; }
+.respetos i.still { opacity: 1; }
+@keyframes rise { 0% { opacity: 0; transform: translateY(20px); } 15% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; transform: translateY(-60px); } }
+
+/* aviso fijo: nada de backseating */
+.aviso { position: absolute; padding: 12px 20px 14px; border-left: 8px solid var(--rust); }
+.aviso .t { font: 700 25px/1 'Cinzel', serif; letter-spacing: .05em; white-space: nowrap; color: var(--ember); text-transform: uppercase; }
+.aviso p { margin-top: 8px; font: 600 28px/1.15 'Garamond', serif; color: var(--bone); }
+
+/* logros */
+.logro { position: absolute; padding: 14px 22px 16px; border-left: 8px solid var(--ember); opacity: 0; transform: translateY(-10px); transition: opacity .35s, transform .35s; }
+.logro.on { opacity: 1; transform: none; }
+.logro .kind { font: 700 26px/1 'Cinzel', serif; letter-spacing: .14em; color: var(--ember); text-transform: uppercase; }
+.logro .name { margin-top: 8px; font: 800 40px/1.05 'Cinzel', serif; color: var(--bone); }
+.logro .what { margin-top: 4px; font: 600 30px/1.15 'Garamond', serif; color: var(--bone); }

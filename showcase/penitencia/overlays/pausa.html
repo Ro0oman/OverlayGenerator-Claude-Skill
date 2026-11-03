@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>DS1 · Pausa</title>
+<link rel="stylesheet" href="penitencia.css">
+<style>
+  .main { left: 140px; top: 160px; width: 1060px; padding: 40px 56px 44px; }
+  .main h1 { font: 800 80px/1 'Cinzel', serif; letter-spacing: .06em; color: var(--ember); }
+  .main .sub { margin-top: 14px; font: 500 44px/1.2 'Garamond', serif; }
+  .main .debt { display: flex; align-items: center; gap: 26px; margin-top: 46px; }
+  .main .debt .num { font-size: 140px; }
+  .main .debt i { font: 600 44px/1.1 'Garamond', serif; font-style: normal; }
+  .main .tally { margin-top: 24px; }
+  .main .tip { margin-top: 26px; font: 500 36px/1.2 'Garamond', serif; color: var(--ash); }
+  .ev { left: 1450px; top: 200px; width: 430px; }
+  .alert { left: 1450px; top: 830px; width: 430px; }
+  .cmds { left: 1450px; top: 360px; width: 430px; }
+  .logro { left: 1450px; top: 40px; width: 430px; }
+  .main .stats { margin-top: 26px; }
+</style>
+</head>
+<body>
+  <div class="plate ember main" data-piece="hoguera">
+    <h1>En la hoguera</h1>
+    <div class="sub">Vuelvo enseguida.</div>
+    <div class="debt"><span class="num" id="deuda"></span><i>flexiones<br>pendientes</i></div>
+    <div class="tally" id="tally"></div>
+    <div class="stats">
+      <div class="s"><span>Flexiones este directo</span><b id="hechasDirecto"></b></div>
+      <div class="s"><span>Flexiones en total</span><b id="hechas"></b></div>
+    </div>
+    <div class="tip" id="tip"></div>
+  </div>
+  <div class="ev paid" id="evPago" data-piece="pago" data-event><b id="evMenos"></b><p>Serie pagada.<br>Baja la deuda.</p></div>
+  <div class="plate logro" id="logro" data-piece="logro" data-event><div class="kind">Logro</div><div class="name"></div><div class="what"></div></div>
+  <div class="plate cmds" id="cmds" data-piece="comandos" data-event><div class="title">Comandos</div><div class="list"></div></div>
+  <div class="plate alert" id="alert" data-piece="alert"><div class="kind"></div><div class="who"></div><div class="what"></div></div>
+<script src="../engine/pack.js"></script>
+<script src="../engine/core.js"></script>
+<script src="../engine/obs-link.js"></script>
+<script src="../engine/ovg.js" data-page="pausa"></script>
+<script src="penitencia.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  Pen.alertBox($('alert'));
+  Pen.commands($('cmds'));
+  Pen.achievements($('logro'));
+  OVG.onState(s => {
+    $('deuda').textContent = s.deuda;
+    Pen.tally($('tally'), s.deuda, false, s.porMuerte);
+    $('evMenos').textContent = '−' + s.porMuerte;
+    $('hechasDirecto').textContent = s.hechasDirecto;
+    $('hechas').textContent = s.hechas;
+    $('tip').textContent = s.deuda > 0 ? 'Buen momento para pagarla.' : 'Nada que pagar. Por ahora.';
+  });
+  OVG.onEvent(name => { if (name === 'pago') Pen.flash($('evPago'), 3000); });
+</script>
+</body>
+</html>

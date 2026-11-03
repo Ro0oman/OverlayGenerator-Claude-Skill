@@ -129,3 +129,25 @@ section.alt{background:var(--bg2);border-top:1px solid var(--line)}
 .uc-media{margin:0;position:sticky;top:80px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#0a0810}
 .uc-media video{width:100%;height:auto;display:block}
 @media(max-width:860px){.uc-split{grid-template-columns:1fr}.uc-media{position:static}}
+
+.rc-feature{display:grid;grid-template-columns:220px 1fr;gap:22px;align-items:center;margin-top:28px;padding:16px;background:linear-gradient(120deg,rgba(255,138,61,.12),rgba(145,70,255,.10));border:1px solid rgba(255,138,61,.45);border-radius:18px;text-decoration:none;transition:transform .15s}
+.rc-feature:hover{transform:translateY(-2px)}
+.rc-feature video{width:220px;aspect-ratio:9/16;object-fit:cover;border-radius:12px;background:#0a0810}
+.rc-feature span{color:var(--muted);font-size:15px}
+.rc-feature em{display:block;font-style:normal;font:600 13px "JetBrains Mono",monospace;color:#ff8a3d;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.rc-feature b{display:block;color:var(--text);font:700 clamp(22px,3vw,30px)/1.15 "Space Grotesk";margin-bottom:8px}
+@media(max-width:640px){.rc-feature{grid-template-columns:1fr}.rc-feature video{width:100%;max-height:420px}}
+.rc-top{display:grid;grid-template-columns:360px 1fr;gap:36px;align-items:start}
+.rc-video{margin:0;position:sticky;top:80px}
+.rc-video video{width:100%;aspect-ratio:9/16;border-radius:16px;border:1px solid var(--line);background:#0a0810}
+.rc-video figcaption{color:var(--muted);font-size:14px;margin-top:8px;text-align:center}
+@media(max-width:860px){.rc-top{grid-template-columns:1fr}.rc-video{position:static;max-width:380px;margin:0 auto}}
+.rc-keys{border-collapse:collapse;margin-top:20px;font-size:16px}
+.rc-keys td{padding:10px 18px 10px 0;border-bottom:1px solid var(--line);color:var(--muted)}
+.rc-keys .key{font:600 15px "JetBrains Mono",monospace;color:var(--text);background:var(--card);border:1px solid var(--line);border-bottom-width:3px;border-radius:8px;padding:4px 10px}
+.rc-int{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));margin-top:28px}
+.rc-int ol{margin:10px 0 0;padding-left:20px;color:var(--muted);font-size:15px;display:grid;gap:10px}
+.rc-int b{color:var(--text)}
+
+.rc-logos{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.rc-logos span{font:600 15px Inter;padding:9px 16px;border:1px solid var(--line);border-radius:999px;background:var(--card)}

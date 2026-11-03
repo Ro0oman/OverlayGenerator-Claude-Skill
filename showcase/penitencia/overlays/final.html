@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>DS1 · Final</title>
+<link rel="stylesheet" href="penitencia.css">
+<style>
+  .main { left: 140px; top: 70px; width: 1100px; padding: 40px 56px 44px; }
+  .main h1 { font: 800 80px/1 'Cinzel', serif; letter-spacing: .06em; color: var(--ember); }
+  .main .rows { margin-top: 28px; display: grid; gap: 14px; }
+  .main .r { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 12px; border-bottom: 2px solid var(--rim); }
+  .main .r:last-child { border-bottom: 0; padding-bottom: 0; }
+  .main .r .lab { font-size: 40px; }
+  .main .r b { font: 800 64px/1 'Cinzel', serif; color: var(--bone); }
+  .main .r b.hot { color: var(--ember); display: block; text-align: right; }
+  .main .r small { display: block; text-align: right; font: 500 32px/1.2 'Garamond', serif; color: var(--ash); margin-top: 8px; }
+  .cmds { left: 1450px; top: 70px; width: 440px; }
+  .thanks { left: 140px; top: 860px; width: 1100px; padding: 24px 56px; font: 600 40px/1.25 'Garamond', serif; }
+  .thanks small { display: block; margin-top: 8px; font: 500 28px/1.3 'Garamond', serif; color: var(--ash); }
+</style>
+</head>
+<body>
+  <div class="plate ember main" data-piece="resumen">
+    <h1>Fin de la penitencia</h1>
+    <div class="rows">
+      <div class="r"><span class="lab">Muertes</span><b id="muertes"></b></div>
+      <div class="r"><span class="lab">Flexiones este directo</span><b id="hechasDirecto"></b></div>
+      <div class="r"><span class="lab">Flexiones en total</span><b id="hechas"></b></div>
+      <div class="r"><span class="lab">Deuda que queda</span><span><b id="deuda" class="hot"></b><small id="deudaNota"></small></span></div>
+    </div>
+  </div>
+  <div class="plate cmds" id="cmds" data-piece="comandos" data-event><div class="title">Comandos</div><div class="list"></div></div>
+  <div class="plate thanks" data-piece="gracias">Gracias por mirar. La próxima, más flexiones.<small id="credit"></small></div>
+<script src="../engine/pack.js"></script>
+<script src="../engine/core.js"></script>
+<script src="../engine/obs-link.js"></script>
+<script src="../engine/ovg.js" data-page="final"></script>
+<script src="penitencia.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  Pen.commands($('cmds'));
+  OVG.onState(s => {
+    $('muertes').textContent = s.muertes;
+    $('hechas').textContent = s.hechas;
+    $('hechasDirecto').textContent = s.hechasDirecto;
+    $('deuda').textContent = s.deuda;
+    $('deudaNota').textContent = s.deuda > 0 ? 'pasa al próximo directo' : '';
+    $('credit').textContent = OVG.creditOn ? 'Overlay hecho con OverlayGenerator' : '';
+  });
+</script>
+</body>
+</html>
