@@ -6,6 +6,7 @@ ARG UMAMI_ID=
 WORKDIR /src
 COPY landing ./landing
 COPY demo ./landing/static/demo
+COPY showcase ./landing/static/showcase
 RUN SITE_URL="$SITE_URL" UMAMI_SRC="$UMAMI_SRC" UMAMI_ID="$UMAMI_ID" node landing/build.mjs /site
 
 FROM nginx:1.27-alpine

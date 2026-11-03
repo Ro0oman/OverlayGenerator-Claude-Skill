@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>DS1 · Juego</title>
+<link rel="stylesheet" href="penitencia.css">
+<style>
+  /* Columna derecha: Dark Souls no tiene nada arriba a la derecha. Todo queda fuera del centro y del HUD. */
+  .tab { left: 1440px; top: 36px; width: 450px; padding: 16px 24px 20px; }
+  .tab .debt { display: flex; align-items: center; gap: 16px; margin-top: 10px; }
+  .tab .debt i { font: 600 34px/1.05 'Garamond', serif; font-style: normal; color: var(--bone); }
+  .tab .tally { margin: 14px 0 14px; }
+  .tab .foot { display: flex; justify-content: space-between; align-items: baseline; }
+  .tab .foot .val { margin-left: 8px; }
+  .tab.flare { animation: flare 1.2s ease-out 1; }
+  @keyframes flare { 0% { border-top-color: #fff1d6; box-shadow: 0 0 40px rgba(255,138,61,.8); } 100% { } }
+  .ev { left: 1440px; top: 506px; width: 450px; }
+  .tab .quiet b { font: 600 32px/1 'Cond', sans-serif; letter-spacing: .04em; color: var(--ash); }
+  .respetos { left: 1440px; top: 622px; width: 450px; height: 60px; }
+  .alert { left: 1440px; top: 696px; width: 450px; }
+  .logro { left: 30px; top: 590px; width: 440px; }
+  /* !comandos: hueco libre a la izquierda, entre la barra de vida y los objetos */
+  .cmds { left: 30px; top: 210px; width: 440px; }
+  /* Aviso fijo: arriba, entre las barras de vida y la tablilla */
+  .aviso { left: 1030px; top: 36px; width: 390px; }
+</style>
+</head>
+<body>
+  <!-- HUD de Dark Souls (supuesto, sin captura): vida/aguante/humanidad, objetos, barra de jefe y almas -->
+  <div data-hud="vida y aguante" data-hud-source="assumed" style="left:30px;top:30px;width:980px;height:150px"></div>
+  <div data-hud="objetos y armas" data-hud-source="assumed" style="left:30px;top:740px;width:330px;height:310px"></div>
+  <div data-hud="barra de jefe" data-hud-source="assumed" style="left:380px;top:890px;width:1160px;height:110px"></div>
+  <div data-hud="almas" data-hud-source="assumed" style="left:1600px;top:960px;width:290px;height:80px"></div>
+
+  <div class="plate ember tab" id="tab" data-piece="penitencia">
+    <div class="title">Penitencia</div>
+    <div class="debt"><span class="num" id="deuda"></span><i>flexiones<br>que debes</i></div>
+    <div class="tally" id="tally"></div>
+    <div class="stats">
+      <div class="s"><span>Muertes</span><b id="muertes"></b></div>
+      <div class="s"><span>Flexiones este directo</span><b id="hechasDirecto"></b></div>
+      <div class="s"><span>Flexiones en total</span><b id="hechas"></b></div>
+      <div class="s quiet"><span>Sin morir</span><b id="since"></b></div>
+    </div>
+  </div>
+
+  <div class="ev death" id="evMuerte" data-piece="muerte" data-event><b id="evMas"></b><p>Has caído.<br>La deuda crece.</p></div>
+  <div class="ev paid" id="evPago" data-piece="pago" data-event><b id="evMenos"></b><p>Serie pagada.<br>Baja la deuda.</p></div>
+
+  <div class="respetos" id="respetos" data-piece="respetos" data-event></div>
+  <div class="plate logro" id="logro" data-piece="logro" data-event><div class="kind">Logro</div><div class="name"></div><div class="what"></div></div>
+  <div class="plate aviso" data-piece="aviso"><div class="t">Nada de backseating</div><p>Ni consejos ni spoilers,<br>o serán baneados.</p></div>
+  <div class="plate cmds" id="cmds" data-piece="comandos" data-event><div class="title">Comandos</div><div class="list"></div></div>
+  <div class="plate alert" id="alert" data-piece="alert"><div class="kind"></div><div class="who"></div><div class="what"></div></div>
+
+<script src="../engine/pack.js"></script>
+<script src="../engine/core.js"></script>
+<script src="../engine/obs-link.js"></script>
+<script src="../engine/ovg.js" data-page="juego"></script>
+<script src="penitencia.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  Pen.alertBox($('alert'));
+  Pen.commands($('cmds'));
+  Pen.respects($('respetos'));
+  Pen.achievements($('logro'));
+  Pen.sinceDeath($('since'));
+  let fresh = false;
+  OVG.onState(s => {
+    $('deuda').textContent = s.deuda;
+    $('muertes').textContent = s.muertes;
+    $('hechas').textContent = s.hechas;
+    $('hechasDirecto').textContent = s.hechasDirecto;
+    Pen.tally($('tally'), s.deuda, fresh, s.porMuerte); fresh = false;
+    $('evMas').textContent = '+' + s.porMuerte;
+    $('evMenos').textContent = '−' + s.porMuerte;
+  });
+  OVG.onEvent(name => {
+    if (name === 'muerte') {
+      fresh = true; Pen.tally($('tally'), OVG.state.deuda, true, OVG.state.porMuerte);
+      const t = $('tab'); t.classList.remove('flare'); void t.offsetWidth; t.classList.add('flare');
+      Pen.flash($('evMuerte'), 3500, [$('evPago')]);
+    }
+    if (name === 'pago') Pen.flash($('evPago'), 3000, [$('evMuerte')]);
+  });
+</script>
+</body>
+</html>

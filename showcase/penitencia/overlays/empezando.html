@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>DS1 · Empezando</title>
+<link rel="stylesheet" href="penitencia.css">
+<style>
+  .main { left: 140px; top: 150px; width: 1040px; padding: 40px 56px 44px; }
+  .main h1 { font: 800 96px/1 'Cinzel', serif; letter-spacing: .1em; color: var(--ember); }
+  .main .sub { margin-top: 14px; font: 500 44px/1.2 'Garamond', serif; color: var(--bone); }
+  .main .rule { display: flex; align-items: center; gap: 30px; margin-top: 44px; padding: 24px 28px; background: var(--iron2); border-radius: 6px; }
+  .main .rule .set u { height: 72px; width: 12px; }
+  .main .rule p { font: 600 52px/1.1 'Garamond', serif; }
+  .main .clock { display: flex; align-items: baseline; gap: 24px; margin-top: 44px; }
+  .main .clock b { font: 800 88px/1 'Cinzel', serif; color: var(--bone); }
+  .how { left: 1450px; top: 150px; width: 440px; padding: 30px 34px 34px; }
+  .how ol { list-style: none; padding: 0; margin-top: 22px; display: grid; gap: 22px; }
+  .how li { font: 600 36px/1.2 'Garamond', serif; }
+  .how li em { font-style: normal; color: var(--ember); font-family: 'Cinzel'; font-weight: 800; margin-right: 10px; }
+  /* alertas bajo la portada; la lista de comandos, bajo las reglas */
+  .alert { left: 140px; top: 790px; width: 620px; }
+  .cmds { left: 1450px; top: 620px; width: 440px; }
+</style>
+</head>
+<body>
+  <div class="plate ember main" data-piece="portada">
+    <h1>Penitencia</h1>
+    <div class="sub">Primera vez en Dark Souls</div>
+    <div class="rule"><span class="tally" style="padding:0;min-height:0;background:none"><span class="set" id="ruleSet"></span></span><p id="ruleTxt"></p></div>
+    <div class="clock"><span class="lab">Empieza en</span><b id="clock"></b></div>
+  </div>
+  <div class="plate how" data-piece="reglas">
+    <div class="title">Las reglas</div>
+    <ol>
+      <li><em id="rMas"></em>cada vez que muero</li>
+      <li><em id="rMenos"></em>por cada serie que pago</li>
+      <li>La deuda se ve todo el directo</li>
+      <li><em>Ban</em>por backseating</li>
+    </ol>
+  </div>
+  <div class="plate cmds" id="cmds" data-piece="comandos" data-event><div class="title">Comandos</div><div class="list"></div></div>
+  <div class="plate alert" id="alert" data-piece="alert"><div class="kind"></div><div class="who"></div><div class="what"></div></div>
+<script src="../engine/pack.js"></script>
+<script src="../engine/core.js"></script>
+<script src="../engine/obs-link.js"></script>
+<script src="../engine/ovg.js" data-page="empezando"></script>
+<script src="penitencia.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  Pen.alertBox($('alert'));
+  Pen.commands($('cmds'));
+  let S = {};
+  const draw = () => { const l = OVG.timer(S.empiezaEn); $('clock').textContent = l > 0 ? OVG.fmt(l) : 'ya'; };
+  const NUM = ['cero', 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'];
+  OVG.onState(s => {
+    S = s; draw();
+    const n = s.porMuerte;
+    $('ruleSet').innerHTML = '<u></u>'.repeat(Math.min(n, 10));
+    $('ruleTxt').textContent = 'Cada muerte, ' + (NUM[n] || n) + (n === 1 ? ' flexión.' : ' flexiones.');
+    $('rMas').textContent = '+' + n; $('rMenos').textContent = '−' + n;
+  });
+  setInterval(draw, 1000);
+</script>
+</body>
+</html>

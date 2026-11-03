@@ -11,6 +11,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 const { I18N, LOCALES, HREFLANG } = require('./i18n.cjs');
 const { HUB, CASES, UC_LANGS } = require('./usecases.cjs');
+const { REAL_CASES } = require('./realcases.cjs');
 const out = path.resolve(process.argv[2] || path.join(here, 'dist'));
 const SITE = (process.env.SITE_URL || 'https://overlays.romandev.app').replace(/\/$/, '');
 const REPO = 'https://github.com/Ro0oman/OverlayGenerator-Claude-Skill';
@@ -96,6 +97,7 @@ function page(l) {
     LANGOPTS: LANGS.map(x => `<option value="${x}" data-href="${urlPath(x)}"${x === l ? ' selected' : ''}>${x.toUpperCase()} · ${NAMES[x]}</option>`).join(''),
     LANGLINKS: LANGS.map(x => `<a href="${urlPath(x)}" hreflang="${HREFLANG[x]}" lang="${HREFLANG[x]}">${NAMES[x]}</a>`).join(''),
     USECASES: useCaseSection(l),
+    INTEGRATIONS: integrationsSection(l),
     GALLERY: GALLERY.map(([f, w, h, k]) => `<figure><video data-src="/media/${f}.mp4" poster="/media/${f}.webp" width="${w}" height="${h}" muted loop playsinline aria-label="${attr(text(d[k]))}"></video><figcaption>${d[k]}</figcaption></figure>`).join('\n    '),
   };
   const tpl = fs.readFileSync(path.join(here, 'template.html'), 'utf8');
@@ -127,11 +129,16 @@ function useCaseSection(l) {
   return `<section id="casos"><div class="wrap">
   <div class="eyebrow">${ey}</div>
   <h2>${title}</h2>
+  ${realCaseFeature(l)}
   <div class="uc-grid">
     ${useCaseCards(ucLang(l))}
   </div>
 </div></section>`;
 }
+
+// Same Google tag as template.html, so the generated pages are measured too.
+const GTAG = `<script async src="https://www.googletagmanager.com/gtag/js?id=G-3SL67W0LS6"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-3SL67W0LS6');</script>`;
 
 function shell(l, { title, desc, url, alts, ld, body }) {
   const h = HUB[l];
@@ -145,6 +152,7 @@ function shell(l, { title, desc, url, alts, ld, body }) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+${GTAG}
 <title>${attr(title)}</title>
 <meta name="description" content="${attr(desc)}">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -288,6 +296,113 @@ function useCaseUrls() {
   return urls;
 }
 
+// ---- Integrations block on the home pages ----
+const INT = {
+  es: ['Integraciones', 'Funciona con Stream Deck y Streamer.bot', 'Cada acción del panel se dispara con una tecla, con un comando de chat o mostrando su fuente de control en OBS. Así que un botón del Stream Deck o una acción de Streamer.bot (por ejemplo, una recompensa de puntos de canal) lo controlan sin plugins.', 'Ver cómo se configura en un caso real →'],
+  en: ['Integrations', 'Works with Stream Deck and Streamer.bot', 'Every panel action fires from a hotkey, a chat command or by showing its control source in OBS. So a Stream Deck button or a Streamer.bot action (a channel-points reward, say) drives it with no plugins.', 'See the setup on a real case →'],
+  pt: ['Integrações', 'Funciona com Stream Deck e Streamer.bot', 'Cada ação do painel dispara com um atalho, um comando de chat ou mostrando sua fonte de controle no OBS. Um botão do Stream Deck ou uma ação do Streamer.bot (como uma recompensa de pontos do canal) controla tudo sem plugins.', 'Veja a configuração num caso real →'],
+  fr: ['Intégrations', 'Fonctionne avec Stream Deck et Streamer.bot', 'Chaque action du panneau se déclenche par un raccourci, une commande de chat ou en affichant sa source de contrôle dans OBS. Un bouton Stream Deck ou une action Streamer.bot (une récompense de points de chaîne, par exemple) le pilote sans plugin.', 'Voir la configuration sur un cas réel →'],
+  de: ['Integrationen', 'Funktioniert mit Stream Deck und Streamer.bot', 'Jede Panel-Aktion löst per Hotkey, Chat-Befehl oder durch Einblenden ihrer Steuerquelle in OBS aus. Ein Stream-Deck-Button oder eine Streamer.bot-Aktion (etwa eine Kanalpunkte-Belohnung) steuert sie ohne Plugins.', 'Einrichtung an einem echten Fall ansehen →'],
+  it: ['Integrazioni', 'Funziona con Stream Deck e Streamer.bot', 'Ogni azione del pannello parte con un tasto, un comando in chat o mostrando la sua fonte di controllo in OBS. Un pulsante dello Stream Deck o un’azione di Streamer.bot (per esempio un premio dei punti canale) la controlla senza plugin.', 'Guarda la configurazione su un caso reale →'],
+  ja: ['連携', 'Stream Deck と Streamer.bot に対応', 'パネルの各アクションは、ホットキー、チャットコマンド、またはOBSの制御ソースを表示することで実行されます。Stream Deckのボタンや Streamer.bot のアクション（チャンネルポイント報酬など）からプラグインなしで操作できます。', '実例で設定を見る →'],
+  ko: ['연동', 'Stream Deck 및 Streamer.bot 지원', '패널의 각 동작은 단축키, 채팅 명령어, 또는 OBS에서 제어 소스를 표시하면 실행됩니다. Stream Deck 버튼이나 Streamer.bot 동작(예: 채널 포인트 보상)으로 플러그인 없이 제어할 수 있습니다.', '실제 사례에서 설정 보기 →'],
+  zh: ['集成', '支持 Stream Deck 和 Streamer.bot', '面板的每个操作都可以通过快捷键、聊天命令或在 OBS 中显示其控制来源来触发。因此 Stream Deck 按钮或 Streamer.bot 动作（例如频道积分奖励）无需插件即可控制。', '在真实案例中查看设置 →'],
+};
+
+function integrationsSection(l) {
+  const [ey, t, p, link] = INT[l];
+  return `<section id="integraciones"><div class="wrap">
+  <div class="eyebrow">${ey}</div>
+  <h2>${t}</h2>
+  <p class="lead">${p}</p>
+  <div class="rc-logos"><span>🎛️ Stream Deck</span><span>🤖 Streamer.bot</span><span>⌨️ Hotkeys</span><span>💬 !chat</span></div>
+  <div class="ctas" style="justify-content:flex-start;margin-top:22px"><a class="btn btn-ghost" href="${rcPath(ucLang(l), REAL_CASES[0].slug)}#integraciones">${link}</a></div>
+</div></section>`;
+}
+
+// ---- Real cases (packs used on real streams) ----
+const RC_FEATURE = {
+  es: 'Caso real', en: 'Real case', pt: 'Caso real', fr: 'Cas réel', de: 'Echter Fall', it: 'Caso reale', ja: '実際の使用例', ko: '실제 사례', zh: '真实案例',
+};
+const rcHub = l => (l === 'en' ? '/cases/' : `/${l}/cases/`);
+const rcPath = (l, slug) => rcHub(l) + slug + '/';
+
+function realCaseFeature(l) {
+  const L = ucLang(l);
+  return REAL_CASES.map(c => `<a class="rc-feature" href="${rcPath(L, c.slug)}">
+    <video src="${c.video}" poster="${c.poster}" muted loop playsinline autoplay preload="none"></video>
+    <span><em>● ${RC_FEATURE[l]}</em><b>${c[L].h1}</b>${c[L].badge}</span></a>`).join('\n  ');
+}
+
+function realCasePage(l, c) {
+  const d = c[l], url = rcPath(l, c.slug);
+  const bc = crumbs(l, [[d.crumb], [d.card]]);
+  const ld = { '@context': 'https://schema.org', '@graph': [
+    { '@type': 'WebPage', url: SITE + url, name: d.metaTitle, description: d.metaDesc, inLanguage: HREFLANG[l],
+      isPartOf: { '@id': SITE + '/#website' }, about: { '@id': SITE + '/#app' } },
+    bc.ld,
+    { '@type': 'VideoObject', name: text(d.h1), description: d.metaDesc, thumbnailUrl: SITE + c.poster, contentUrl: SITE + c.video, uploadDate: today },
+  ] };
+  const li = arr => arr.map(x => `<li>${x}</li>`).join('');
+  const body = `<header class="hero uc-hero"><div class="wrap">
+  ${bc.html}
+  <div class="eyebrow"><span style="color:#ff4f5e">●</span> ${d.badge}</div>
+  <h1>${d.h1}</h1>
+  <p class="lead">${d.lead}</p>
+</div></header>
+<section style="padding-top:10px"><div class="wrap rc-top">
+  <figure class="rc-video"><video src="${c.video}" poster="${c.poster}" controls playsinline preload="metadata"></video><figcaption>${d.videoT}</figcaption></figure>
+  <div>
+    <h2>${d.piecesT}</h2>
+    <div class="uc-pieces">${d.pieces.map(([t, p]) => `<div class="card"><h3>${t}</h3><p>${p}</p></div>`).join('')}</div>
+  </div>
+</div></section>
+<section class="alt" id="demo"><div class="wrap">
+  <h2>${d.demoT}</h2>
+  <p class="lead">${d.demoL}</p>
+  <div class="demo-frame">
+    <iframe data-src="${c.demo}" title="${attr(d.demoT)}" loading="lazy"></iframe>
+    <a class="demo-poster" href="${c.demo}" target="_blank" rel="noopener"><img src="${c.shot}" alt="${attr(d.demoT)}" loading="lazy"></a>
+  </div>
+  <div class="ctas" style="justify-content:flex-start;margin-top:18px"><a class="btn btn-ghost" href="${c.demo}" target="_blank" rel="noopener">${d.demoBtn}</a></div>
+</div></section>
+<section><div class="wrap">
+  <h2>${d.controlsT}</h2>
+  <table class="rc-keys">${d.controls.map(([k, v]) => `<tr><td><span class="key">${k}</span></td><td>${v}</td></tr>`).join('')}</table>
+</div></section>
+<section class="alt" id="integraciones"><div class="wrap">
+  <h2>${d.intT}</h2>
+  <p class="lead">${d.intL}</p>
+  <div class="rc-int">
+    <div class="card"><h3>🎛️ ${d.streamdeckT}</h3><ol>${li(d.streamdeck)}</ol></div>
+    <div class="card"><h3>🤖 ${d.streamerbotT}</h3><ol>${li(d.streamerbot)}</ol></div>
+  </div>
+  <div class="note">${d.intNote}</div>
+</div></section>
+<section><div class="wrap">
+  <h2>${d.ctaT}</h2>
+  <p class="lead">${d.ctaL}</p>
+  ${ctaBlock(l)}
+</div></section>`;
+  const alts = Object.fromEntries(UC_LANGS.map(x => [x, rcPath(x, c.slug)]));
+  return shell(l, { title: d.metaTitle, desc: d.metaDesc, url, alts, ld, body });
+}
+
+function writeRealCases() {
+  for (const l of UC_LANGS) for (const c of REAL_CASES) {
+    const dir = path.join(out, rcPath(l, c.slug));
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'), realCasePage(l, c));
+  }
+}
+
+function realCaseUrls() {
+  return UC_LANGS.flatMap(l => REAL_CASES.map(c => {
+    const alts = UC_LANGS.map(x => `    <xhtml:link rel="alternate" hreflang="${HREFLANG[x]}" href="${SITE + rcPath(x, c.slug)}"/>`).join('\n');
+    return `  <url>\n    <loc>${SITE + rcPath(l, c.slug)}</loc>\n    <lastmod>${today}</lastmod>\n    <priority>0.9</priority>\n${alts}\n    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE + rcPath('en', c.slug)}"/>\n  </url>`;
+  }));
+}
+
 function notFound() {
   const t = Object.fromEntries(LANGS.map(l => [l, { t: I18N[l].nfT, p: I18N[l].nfP, b: I18N[l].nfBtn, h: urlPath(l) }]));
   const e = t[DEFAULT];
@@ -310,6 +425,7 @@ function sitemap() {
     + `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${abs(DEFAULT)}"/>`;
   const urls = LANGS.map(l => `  <url>\n    <loc>${abs(l)}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${l === DEFAULT ? '1.0' : '0.9'}</priority>\n${alts}\n  </url>`);
   urls.push(...useCaseUrls());
+  urls.push(...realCaseUrls());
   urls.push(`  <url>\n    <loc>${SITE}/demo/</loc>\n    <lastmod>${today}</lastmod>\n    <priority>0.6</priority>\n  </url>`);
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join('\n')}\n</urlset>\n`;
 }
@@ -332,6 +448,7 @@ for (const l of LANGS) {
   fs.writeFileSync(path.join(dir, 'index.html'), page(l));
 }
 writeUseCases();
+writeRealCases();
 fs.writeFileSync(path.join(out, '404.html'), notFound());
 fs.writeFileSync(path.join(out, 'sitemap.xml'), sitemap());
 fs.writeFileSync(path.join(out, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
