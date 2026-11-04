@@ -67,7 +67,9 @@ Follow `references/overlay-contract.md`: engine scripts in order, `OVG.onState/o
 ```bash
 python3 <skill>/scripts/build_pack.py <pack-folder> --out <out-dir>
 ```
-It validates the recipe, copies the engine, writes `panel.html` and `preview.html`, runs the render checks when Node + Playwright exist (`NODE_PATH=$(npm root -g)`), and zips everything. Fix every **FAIL**. Warnings are fixed or explained to the user.
+It validates the recipe, copies the engine, writes `panel.html` and `preview.html`, measures every OBS source's box, runs the render checks when Node + Playwright exist (`NODE_PATH=$(npm root -g)`), and zips everything. Fix every **FAIL**. Warnings are fixed or explained to the user.
+
+Every change to a pack, even a small fix asked later, goes through this build. Never patch `engine/pack.js`, the engine or the boxes by hand: a hand edit skips the box measure (a new source would be 1920×1080, a moved piece would be cut off) and the checks.
 
 Each source's box is printed under `== source boxes`, and `src-<scene>-<source>.png` shows it alone. Then **open the screenshots** in `<out-dir>/<id>-checks/` and judge them as the channel's viewers would: is it readable in 3 seconds, does it cover the game, does it feel like *this* channel? If you can start an independent agent, ask it for a critique with only the screenshots and the concept (no context), and apply what makes sense.
 

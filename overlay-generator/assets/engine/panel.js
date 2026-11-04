@@ -196,7 +196,29 @@
   function sceneSources(s) {
     const scene = obsSceneName(s), FULL = [0, 0, 1920, 1080];
     if (!(s.sources && s.sources.length)) return [{ name: scene + ' · overlay', label: s.label, extra: '', box: FULL, legacy: true }];
-    return s.sources.map(x => ({ name: scene + ' · ' + x.label, label: s.label + ' · ' + x.label, extra: 'src=' + encodeURIComponent(x.id), box: x.box || FULL }));
+    // b= records the box this source was set up with, so a later Install knows how far its pieces moved inside it.
+    return s.sources.map(x => { const box = x.box || FULL; return { name: scene + ' · ' + x.label, label: s.label + ' · ' + x.label, extra: 'src=' + encodeURIComponent(x.id) + '&b=' + box.join(','), box, prev: x.prev }; });
+  }
+  // The box an existing source was set up with: from its URL (b=), a full-screen source, or the pack's record of the previous box.
+  function oldBox(settings, src) {
+    const m = /[?&]b=(-?\d+),(-?\d+),(\d+),(\d+)/.exec(settings.url || '');
+    if (m) return m.slice(1).map(Number);
+    const w = Number(settings.width), h = Number(settings.height);
+    if (w === 1920 && h === 1080) return [0, 0, 1920, 1080];
+    return Array.isArray(src.prev) && src.prev.length === 4 ? src.prev : null;
+  }
+  // When a source's box changes (a piece moved or grew), move and resize the scene item so its pieces stay exactly where
+  // the streamer put them on screen, at the scale they gave it. Returns null when it can't be kept (rotated or bounded).
+  function keepPlace(tr, old, b) {
+    if (tr.rotation || (tr.boundsType && tr.boundsType !== 'OBS_BOUNDS_NONE')) return null;
+    const al = tr.alignment == null ? 5 : tr.alignment;
+    const fx = al & 1 ? 0 : al & 2 ? 1 : 0.5, fy = al & 4 ? 0 : al & 8 ? 1 : 0.5;     // OBS alignment: left 1, right 2, top 4, bottom 8
+    const sx = tr.scaleX || 1, sy = tr.scaleY || 1;
+    const cL = tr.cropLeft || 0, cR = tr.cropRight || 0, cT = tr.cropTop || 0, cB = tr.cropBottom || 0;
+    // screen position of the old item's left/top edge, then of the page point that was at the box corner
+    const left = tr.positionX - fx * (old[2] - cL - cR) * sx + (b[0] - old[0] - cL) * sx;
+    const top = tr.positionY - fy * (old[3] - cT - cB) * sy + (b[1] - old[1] - cT) * sy;
+    return { positionX: left + fx * b[2] * sx, positionY: top + fy * b[3] * sy, cropLeft: 0, cropRight: 0, cropTop: 0, cropBottom: 0 };
   }
 
   async function install() {
@@ -222,7 +244,23 @@
           const b = src.box;
           const settings = { url: overlayUrl(s.file, src.extra), is_local_file: false, width: b[2], height: b[3], shutdown: false, restart_when_active: false, fps_custom: false };
           const r = await step('overlay “' + src.label + '”', 'CreateInput', { sceneName: scene, inputName: src.name, inputKind: 'browser_source', inputSettings: settings, sceneItemEnabled: true }, [601]);
-          if (r.code === 601) await link.request('SetInputSettings', { inputName: src.name, inputSettings: settings });
+          let move = null;
+          if (r.code === 601) {
+            // Read the old size and placement before changing it, so the pieces don't jump on screen.
+            const was = await link.request('GetInputSettings', { inputName: src.name });
+            const at = await link.request('GetSceneItemId', { sceneName: scene, sourceName: src.name });
+            const old = was.ok ? oldBox(was.data.inputSettings || {}, src) : null;
+            if (old && at.ok && old.join() !== b.join()) {
+              const tr = await link.request('GetSceneItemTransform', { sceneName: scene, sceneItemId: at.data.sceneItemId });
+              const to = tr.ok ? keepPlace(tr.data.sceneItemTransform || {}, old, b) : null;
+              move = { id: at.data.sceneItemId, to };
+            }
+            await link.request('SetInputSettings', { inputName: src.name, inputSettings: settings });
+          }
+          if (move) {
+            if (move.to) { await link.request('SetSceneItemTransform', { sceneName: scene, sceneItemId: move.id, sceneItemTransform: move.to }); note('dotl', src.label + ' · ' + t('resized')); }
+            else note('x', src.label + ' · ' + t('placeByHand'));
+          }
           const id = await link.request('GetSceneItemId', { sceneName: scene, sourceName: src.name });
           const fresh = r.ok || !id.ok;
           if (!id.ok) await link.request('CreateSceneItem', { sceneName: scene, sourceName: src.name, sceneItemEnabled: true });

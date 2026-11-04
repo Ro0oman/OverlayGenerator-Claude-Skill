@@ -14,7 +14,7 @@ Source folder (written by Claude):
 
 Output (<out>/<id>/ and <out>/<id>.zip):
     panel.html  preview.html  pack.json  GUIDE.md  overlays/  fonts/  engine/
-Scenes with "sources" get the box of each OBS source measured here (Node + Playwright), unless it is written by hand.
+Scenes with "sources" get the box of each OBS source measured here on every build (Node + Playwright), plus its optional "reserve".
 The id and file names never change between versions, so a new version can be unzipped over the old one.
 """
 import json, os, re, shutil, subprocess, sys, zipfile
@@ -68,30 +68,56 @@ def node_env():
     return dict(os.environ, NODE_PATH=root)
 
 
+def union(a, b):
+    if not a: return b
+    if not b: return a
+    l, t = min(a[0], b[0]), min(a[1], b[1])
+    return [l, t, max(a[0] + a[2], b[0] + b[2]) - l, max(a[1] + a[3], b[1] + b[3]) - t]
+
+
 def measure_sources(dest, pack, render=True):
-    """Fills the box of every scene source that has none, measuring the pages (Node + Playwright)."""
-    todo = [(s, x) for s in pack.get('scenes', []) for x in (s.get('sources') or []) if not x.get('box')]
+    """Measures the box of every scene source on every build (Node + Playwright).
+
+    A box from an earlier build is never trusted: an update that moves or grows a piece would leave its OBS source
+    clipping it. "reserve" (written by hand) is added to the measure to keep room for something that appears later.
+    When the box changes, the old one is kept as "prev": Install in OBS uses it to keep the source where the streamer
+    put it on screen (sources installed by engine 1.2+ also carry their box in the URL)."""
+    todo = [(s, x) for s in pack.get('scenes', []) for x in (s.get('sources') or [])]
     if not todo:
         return
     print('\n== source boxes')
-    if not render:
-        print('  WARN  --no-render: %d sources without "box" will be full screen (1920×1080) in OBS' % len(todo))
-        return
-    try:
-        r = subprocess.run(['node', os.path.join(HERE, 'measure_sources.js'), dest], env=node_env(), capture_output=True, text=True, timeout=600)
-        boxes = json.loads(r.stdout) if r.returncode == 0 else None
-    except (FileNotFoundError, subprocess.TimeoutExpired, ValueError):
-        boxes = None
+    boxes = None
+    if render:
+        try:
+            r = subprocess.run(['node', os.path.join(HERE, 'measure_sources.js'), dest], env=node_env(), capture_output=True, text=True, timeout=600)
+            boxes = json.loads(r.stdout) if r.returncode == 0 else None
+        except (FileNotFoundError, subprocess.TimeoutExpired, ValueError):
+            boxes = None
     if boxes is None:
-        print('  WARN  Playwright not available: %d sources without "box" will be full screen (1920×1080) in OBS' % len(todo))
+        why = '--no-render' if not render else 'Playwright not available'
+        stale = [x['id'] for _, x in todo if x.get('box')]
+        full = [x['id'] for _, x in todo if not x.get('box') and not x.get('reserve')]
+        if stale:
+            print('  WARN  %s: %d boxes kept from the last build without measuring; if a piece moved or grew, its source will cut it off: %s' % (why, len(stale), ', '.join(stale)))
+        if full:
+            print('  WARN  %s: %d sources without a box will be full screen (1920×1080) in OBS: %s' % (why, len(full), ', '.join(full)))
+        for _, x in todo:
+            if not x.get('box') and x.get('reserve'):
+                x['box'] = list(x['reserve'])
+        write_pack(dest, pack)
         return
     for s, x in todo:
-        b = boxes.get(s['id'], {}).get(x['id'])
-        if b:
-            x['box'] = b
-            print('  OK    %s · %s → %d×%d at %d,%d' % (s['id'], x['id'], b[2], b[3], b[0], b[1]))
-        else:
-            print('  WARN  %s · %s: its pieces were not found on the page; it will be full screen' % (s['id'], x['id']))
+        m = boxes.get(s['id'], {}).get(x['id'])
+        if not m and not x.get('reserve'):
+            print('  WARN  %s · %s: its pieces were not found on the page; it will be %s' % (s['id'], x['id'], 'left as before' if x.get('box') else 'full screen'))
+            continue
+        b = union(m, x.get('reserve'))
+        old = x.get('box')
+        if old and list(old) != b and not x.get('prev'):
+            x['prev'] = list(old)
+        x['box'] = b
+        moved = '' if not old or list(old) == b else '   (was %d×%d at %d,%d)' % (old[2], old[3], old[0], old[1])
+        print('  OK    %s · %s → %d×%d at %d,%d%s' % (s['id'], x['id'], b[2], b[3], b[0], b[1], moved))
     write_pack(dest, pack)
 
 
@@ -135,7 +161,7 @@ def build(src, out, render=True):
             html = html.replace('<html>', '<html lang="%s">' % pack.get('lang', 'en'), 1)
         open(os.path.join(dest, f), 'w', encoding='utf-8').write(html)
 
-    # measure where each OBS source goes (scenes[].sources without a hand-written box)
+    # measure where each OBS source goes (every scenes[].sources entry, every build)
     measure_sources(dest, pack, render)
 
     # optional render checks
