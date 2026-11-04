@@ -49,10 +49,12 @@ Each entry becomes its own browser source in that scene, named `<short> · <scen
 
 - `id`: lowercase, digits, dashes; unique in the scene. `label`: its name in OBS (≤ 30 characters).
 - `pieces`: every `data-piece` of the page belongs to exactly one source (the validator fails otherwise). Group what moves together: a counter and the event that pops next to it. Never group pieces that are far apart: the box would cover the screen.
-- `box`: `[x, y, width, height]`. Leave it out: `build_pack.py` measures it (union of the pieces and their children in the plain scene, with every sample alert and every event, plus 24 px for shadows). Write it by hand only to reserve room for something that appears later. Without Playwright, sources without a box are full screen.
-- Content that grows must fit its box: use long sample names (≈ 20 characters) so the measure leaves room, and shrink or truncate names in the page.
+- `box`: `[x, y, width, height]`. **Never write it by hand: `build_pack.py` measures it on every build** (union of the pieces and their children in the plain scene, with every sample alert and every event, plus 24 px for shadows) and overwrites the old one, so a piece that moves or grows never ends up cut off by its source. A new source therefore gets its own size too, not 1920×1080. Without Playwright the build can't measure: it warns, keeps the boxes of the last build and leaves new sources full screen, so build with Playwright.
+- `reserve` (optional, by hand): `[x, y, width, height]` of room to keep for something that appears later or grows past the samples (a number that can reach 3 digits, a list that fills up). The box is the union of the measure and `reserve`.
+- `prev`: written by the build when a box changes: the box before. Install / repair uses it to keep sources set up by an older engine where the streamer put them. Don't edit it.
+- Content that grows must fit its box: use long sample names (≈ 20 characters) and the largest numbers a counter will show in `demoState`, or a `reserve`, and shrink or truncate names in the page.
 - Order: the first source also shows the engine's notices ("panel closed", credit).
-- Install / repair keeps the position and scale the streamer gave each source; it only updates the address and size. A pack without `sources` gets one full-screen source per scene (`<short> · <label> · overlay`); when a later version adds `sources`, Install / repair removes that old source.
+- Install / repair keeps the position and scale the streamer gave each source; it only updates the address and size. When a source's box changes in a new version, it also moves the source by the same amount (at the streamer's scale), so its pieces stay exactly where they were on screen. Each source's address carries its box (`&b=x,y,w,h`) for this. A pack without `sources` gets one full-screen source per scene (`<short> · <label> · overlay`); when a later version adds `sources`, Install / repair removes that old source.
 
 ## state
 

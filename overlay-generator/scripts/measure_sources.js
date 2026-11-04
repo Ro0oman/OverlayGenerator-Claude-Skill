@@ -1,7 +1,8 @@
 // measure_sources.js · OverlayGenerator
-// Measures the box [x, y, width, height] of every scenes[].sources entry that has no hand-written "box":
-// the union of its pieces (and their children) in the plain scene, with every sample alert and every event,
-// plus a margin for shadows. Install in OBS creates each source with that size at that position.
+// Measures the box [x, y, width, height] of every scenes[].sources entry, on every build (a box from an earlier
+// build goes stale as soon as a piece moves or grows): the union of its pieces (and their children) in the plain
+// scene, with every sample alert and every event, plus a margin for shadows. build_pack.py adds the optional
+// "reserve" box. Install in OBS creates each source with that size at that position.
 //   NODE_PATH=$(npm root -g) node measure_sources.js <built-pack-folder>
 // Prints {"<scene>": {"<source>": [x, y, w, h]}} as JSON. Exit 3 if Playwright is not available.
 let chromium;
@@ -17,7 +18,7 @@ const MARGIN = 24;
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
   const out = {};
   for (const s of PACK.scenes || []) {
-    const todo = (s.sources || []).filter(x => !x.box);
+    const todo = s.sources || [];
     if (!todo.length) continue;
     const variants = ['&noalert=1']
       .concat(s.alerts === false ? [] : Object.keys(PACK.alerts || {}).map(a => '&alert=' + a))

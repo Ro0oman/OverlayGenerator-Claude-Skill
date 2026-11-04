@@ -97,9 +97,20 @@ async def handle_request(t, d):
         if not it: return False, 600, None, 'No scene item.'
         items.remove(it); items.insert(min(d['sceneItemIndex'], len(items)), it)
         return True, 100, None, ''
-    if t == 'SetSceneItemTransform':
-        transforms[(d['sceneName'], d['sceneItemId'])] = d['sceneItemTransform']
+    if t == 'SetSceneItemTransform':   # OBS merges the fields it gets into the current transform
+        transforms.setdefault((d['sceneName'], d['sceneItemId']), {}).update(d['sceneItemTransform'])
         return True, 100, None, ''
+    if t == 'GetSceneItemTransform':
+        if not any(i['sceneItemId'] == d['sceneItemId'] for i in scenes.get(d['sceneName'], [])):
+            return False, 600, None, 'No scene item.'
+        tf = {'positionX': 0, 'positionY': 0, 'scaleX': 1, 'scaleY': 1, 'rotation': 0, 'alignment': 5,
+              'boundsType': 'OBS_BOUNDS_NONE', 'cropLeft': 0, 'cropRight': 0, 'cropTop': 0, 'cropBottom': 0}
+        tf.update(transforms.get((d['sceneName'], d['sceneItemId']), {}))
+        return True, 100, {'sceneItemTransform': tf}, ''
+    if t == 'GetInputSettings':
+        if d['inputName'] not in inputs:
+            return False, 600, None, 'No source was found.'
+        return True, 100, {'inputSettings': inputs[d['inputName']]['settings'], 'inputKind': inputs[d['inputName']]['kind']}, ''
     if t == 'GetCurrentProgramScene':
         return True, 100, {'currentProgramSceneName': program['scene'], 'sceneName': program['scene']}, ''
     if t == 'SetCurrentProgramScene':

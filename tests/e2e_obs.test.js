@@ -22,7 +22,7 @@ let pass=0,fail=0;const ok=(c,m)=>{console.log((c?'PASS ':'FAIL ')+m);c?pass++:f
  const sc=Object.keys(dump.scenes);
  ok(sc.length===6 && sc.includes('MK-21 · In flight') && sc.includes('MK-21 · Controls'),'install creates 5 scenes + controls: '+sc.join(', '));
  const inp=dump.inputs['MK-21 · In flight · Flight strip'];
- ok(inp && inp.kind==='browser_source' && /overlays\/flight\.html\?pw=secret1&src=strip$/.test(inp.settings.url) && inp.settings.shutdown===false && inp.settings.width<1920,'one browser source per piece group, sized to its box: '+(inp&&inp.settings.width)+'×'+(inp&&inp.settings.height));
+ ok(inp && inp.kind==='browser_source' && /overlays\/flight\.html\?pw=secret1&src=strip&b=\d+,\d+,\d+,\d+$/.test(inp.settings.url) && inp.settings.shutdown===false && inp.settings.width<1920,'one browser source per piece group, sized to its box: '+(inp&&inp.settings.width)+'×'+(inp&&inp.settings.height));
  ok(dump.scenes['MK-21 · In flight'].map(i=>i.sourceName).join('|')==='MK-21 · In flight · Camera frame|MK-21 · In flight · Flight strip|MK-21 · In flight · Alerts','in flight: camera frame, flight strip and alerts, and the old full-screen source is gone');
  const stripItem=dump.scenes['MK-21 · In flight'].find(i=>i.sourceName.endsWith('Flight strip'));
  const box=JSON.parse(await ovp.evaluate(()=>JSON.stringify(PACK.scenes.find(s=>s.id==='flight').sources.find(x=>x.id==='strip').box)));
@@ -37,6 +37,22 @@ let pass=0,fail=0;const ok=(c,m)=>{console.log((c?'PASS ':'FAIL ')+m);c?pass++:f
  const dump2=await ovp.evaluate(()=>new Promise(res=>{const l=new ObsLink({password:'secret1',onStatus:async s=>{if(s.state==='connected'){const r=await l.request('MockDump',{});res(r.data);}}});}));
  ok(Object.keys(dump2.scenes).length===6 && dump2.scenes['MK-21 · In flight'].length===3 && dump2.scenes['MK-21 · Controls'].length===4,'second install does not duplicate');
  ok(dump2.transforms['MK-21 · In flight|'+stripItem.sceneItemId].positionX===77,'second install keeps where the streamer moved the source');
+ // a new pack version moves the strip's box: install resizes the source and moves it so the strip stays where it was on screen
+ const obs=(fn,arg)=>ovp.evaluate(([f,a])=>new Promise(res=>{const l=new ObsLink({password:'secret1',onStatus:async s=>{if(s.state==='connected'){res(await (new Function('l','a','return ('+f+')(l,a)'))(l,a));}}});}),[fn.toString(),arg]);
+ const stripName='MK-21 · In flight · Flight strip';
+ const urlNow=dump2.inputs[stripName].settings.url;
+ await obs(async(l,a)=>{await l.request('SetInputSettings',{inputName:a.name,inputSettings:{url:a.url,width:a.b[2],height:a.b[3]}});},{name:stripName,url:urlNow.replace(/&b=[\d,]+$/,'&b='+[box[0]-100,box[1]-40,box[2],box[3]].join(',')),b:box});
+ await panel.click('[data-install]');await sleep(4000);
+ let d3=await obs(async l=>(await l.request('MockDump',{})).data);
+ let t3=d3.transforms['MK-21 · In flight|'+stripItem.sceneItemId];
+ ok(Math.abs(t3.positionX-(77+100*1.5))<0.01 && Math.abs(t3.positionY-(88+40*1.5))<0.01 && t3.scaleX===1.5,'box moved inside the page: the source moves with it and keeps its scale ('+t3.positionX+','+t3.positionY+')');
+ ok(/&b=/.test(d3.inputs[stripName].settings.url) && d3.inputs[stripName].settings.width===box[2],'the source records its new box in the URL');
+ // a source left full screen by an older pack (no b=, 1920×1080): its pieces stay where they were too
+ await obs(async(l,a)=>{await l.request('SetInputSettings',{inputName:a.name,inputSettings:{url:a.url,width:1920,height:1080}});await l.request('SetSceneItemTransform',{sceneName:'MK-21 · In flight',sceneItemId:a.id,sceneItemTransform:{positionX:10,positionY:20,scaleX:1,scaleY:1}});},{name:stripName,url:urlNow.replace(/&b=[\d,]+$/,''),id:stripItem.sceneItemId});
+ await panel.click('[data-install]');await sleep(4000);
+ d3=await obs(async l=>(await l.request('MockDump',{})).data);
+ t3=d3.transforms['MK-21 · In flight|'+stripItem.sceneItemId];
+ ok(t3.positionX===10+box[0] && t3.positionY===20+box[1] && d3.inputs[stripName].settings.width===box[2],'full-screen source from an older pack: shrunk to its box, strip stays put ('+t3.positionX+','+t3.positionY+')');
  // a source page shows only its pieces, moved to its top-left corner
  const sp=await ctx.newPage();await sp.setViewportSize({width:box[2],height:box[3]});
  await sp.goto('file://'+DIR+'/overlays/flight.html?pw=secret1&src=strip');await sleep(1200);

@@ -88,11 +88,11 @@ def check_sources(R, s, html):
             if p not in pieces: R.fail('%s: piece "%s" of "%s" is not a data-piece of %s' % (where, p, xid, s.get('file')))
             elif p in owner: R.fail('%s: piece "%s" is in "%s" and "%s"' % (where, p, owner[p], xid))
             else: owner[p] = xid
-        b = x.get('box')
-        if b is not None:
-            if not (isinstance(b, list) and len(b) == 4 and all(isinstance(v, (int, float)) for v in b)
-                    and b[2] > 0 and b[3] > 0 and b[0] >= 0 and b[1] >= 0 and b[0] + b[2] <= 1920 and b[1] + b[3] <= 1080):
-                R.fail('%s: box of "%s" must be [x, y, width, height] inside 1920×1080' % (where, xid))
+        for f in ('box', 'reserve', 'prev'):   # box: measured by the build · reserve: room kept for later · prev: box before the last change
+            b = x.get(f)
+            if b is not None and not (isinstance(b, list) and len(b) == 4 and all(isinstance(v, (int, float)) for v in b)
+                                      and b[2] > 0 and b[3] > 0 and b[0] >= 0 and b[1] >= 0 and b[0] + b[2] <= 1920 and b[1] + b[3] <= 1080):
+                R.fail('%s: %s of "%s" must be [x, y, width, height] inside 1920×1080' % (where, f, xid))
     lost = [p for p in pieces if p not in owner]
     if lost: R.fail('%s: pieces in no source never show in OBS: %s' % (where, ', '.join(lost)))
 
