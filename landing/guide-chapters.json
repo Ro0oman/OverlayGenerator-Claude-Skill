@@ -1,0 +1,50 @@
+[
+ {
+  "key": "intro",
+  "at": 0.1
+ },
+ {
+  "key": "skill",
+  "at": 14.1
+ },
+ {
+  "key": "prompt",
+  "at": 32.3
+ },
+ {
+  "key": "pack",
+  "at": 47.3
+ },
+ {
+  "key": "unzip",
+  "at": 61.8
+ },
+ {
+  "key": "ws",
+  "at": 76.7
+ },
+ {
+  "key": "dock",
+  "at": 91.2
+ },
+ {
+  "key": "install",
+  "at": 106.5
+ },
+ {
+  "key": "hotkeys",
+  "at": 123.2
+ },
+ {
+  "key": "trans",
+  "at": 140.5
+ },
+ {
+  "key": "live",
+  "at": 157.3
+ },
+ {
+  "key": "outro",
+  "at": 167.4
+ }
+]

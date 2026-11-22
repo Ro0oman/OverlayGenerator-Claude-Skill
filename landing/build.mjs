@@ -13,6 +13,7 @@ const { I18N, LOCALES, HREFLANG } = require('./i18n.cjs');
 const { HUB, CASES, UC_LANGS } = require('./usecases.cjs');
 const { REAL_CASES } = require('./realcases.cjs');
 const { CONV } = require('./conversion.cjs');
+const { GUIDE } = require('./guide.cjs');
 const out = path.resolve(process.argv[2] || path.join(here, 'dist'));
 const SITE = (process.env.SITE_URL || 'https://overlays.romandev.app').replace(/\/$/, '');
 const REPO = 'https://github.com/Ro0oman/OverlayGenerator-Claude-Skill';
@@ -104,6 +105,7 @@ function page(l) {
     BUILD,
     GENERATOR: generatorSection(l),
     PRIVACY: privacySection(l),
+    GUIDE: guideSection(l),
     ctaDemo: CONV[l].ctaDemo,
     ctaWant: CONV[l].ctaWant,
     GALLERY: GALLERY.map(([f, w, h, k]) => `<figure><video data-src="/media/${f}.mp4" poster="/media/${f}.webp" width="${w}" height="${h}" muted loop playsinline aria-label="${attr(text(d[k]))}"></video><figcaption>${d[k]}</figcaption></figure>`).join('\n    '),
@@ -446,6 +448,86 @@ function realCaseUrls() {
   }));
 }
 
+// ---- Full guide (video + written steps) ----
+const guidePath = l => (l === 'es' ? '/es/guide/' : '/guide/');
+const gmmss = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const gAt = k => (GUIDE.chapters.find(c => c.key === k) || { at: 0 }).at;
+const gLang = l => (l === 'es' ? 'es' : 'en');
+
+function guideChapterList(l) {
+  const L = gLang(l);
+  const t = GUIDE.T[L];
+  const name = k => (k === 'intro' ? t.intro : GUIDE.STEPS[L][k][0]);
+  return `<ol class="g-chapters">${['intro', ...GUIDE.ORDER].map(k => `<li><button type="button" data-seek="${gAt(k)}"><span class="ts">${gmmss(gAt(k))}</span>${name(k)}</button></li>`).join('')}</ol>`;
+}
+
+function guideVideo(l) {
+  return `<figure class="g-video"><video id="guide-video" src="${GUIDE.video}" poster="${GUIDE.poster}" controls playsinline preload="none" width="1920" height="1080"></video><figcaption>${GUIDE.T[gLang(l)].videoT}</figcaption></figure>`;
+}
+
+function guideSection(l) {
+  const L = gLang(l);
+  const t = GUIDE.T[L];
+  return `<section id="guia" class="alt"><div class="wrap g-home">
+  <div class="eyebrow">${t.crumb}</div>
+  <h2>${t.h1}</h2>
+  <p class="lead">${t.lead}</p>
+  <div class="g-grid">${guideVideo(l)}<div><h3 style="margin:0 0 10px">${t.chaptersT}</h3>${guideChapterList(l)}
+  <a class="btn btn-ghost btn-sm" href="${guidePath(L)}" style="margin-top:14px">${t.stepsT} →</a></div></div>
+</div></section>`;
+}
+
+function guidePage(l) {
+  const t = GUIDE.T[l], S = GUIDE.STEPS[l], url = guidePath(l);
+  const bc = crumbs(l, [[t.crumb]]);
+  const steps = GUIDE.ORDER.map((k, i) => {
+    const [h, p, imgs] = S[k];
+    return `<article class="g-step" id="${k}"><div class="g-n">${i + 1}</div><div>
+      <h3>${h}</h3><p>${p}</p>
+      ${imgs ? `<div class="g-imgs">${imgs.map(m => `<img src="${GUIDE.img(m)}" alt="${attr(text(h))}" loading="lazy" width="1000">`).join('')}</div>` : ''}
+      <button type="button" class="btn btn-ghost btn-sm" data-seek="${gAt(k)}">▶ ${gmmss(gAt(k))}</button></div></article>`;
+  }).join('\n');
+  const ld = { '@context': 'https://schema.org', '@graph': [
+    { '@type': 'WebPage', url: SITE + url, name: t.metaTitle, description: t.metaDesc, inLanguage: HREFLANG[l], isPartOf: { '@id': SITE + '/#website' } },
+    bc.ld,
+    { '@type': 'VideoObject', name: text(t.h1), description: t.metaDesc, thumbnailUrl: SITE + GUIDE.poster, contentUrl: SITE + GUIDE.video, uploadDate: today,
+      hasPart: GUIDE.ORDER.map(k => ({ '@type': 'Clip', name: text(S[k][0]), startOffset: Math.round(gAt(k)), url: SITE + url + '#' + k })) },
+    { '@type': 'HowTo', name: text(t.h1), step: GUIDE.ORDER.map((k, i) => ({ '@type': 'HowToStep', position: i + 1, name: text(S[k][0]), text: text(S[k][1]), url: SITE + url + '#' + k })) },
+  ] };
+  const body = `<header class="hero uc-hero"><div class="wrap">
+  ${bc.html}
+  <h1>${t.h1}</h1>
+  <p class="lead">${t.lead}</p>
+</div></header>
+<section style="padding-top:10px"><div class="wrap g-top">
+  ${guideVideo(l)}
+  <div><h2 style="margin-top:0">${t.chaptersT}</h2>${guideChapterList(l)}</div>
+</div></section>
+<section class="alt"><div class="wrap">
+  <h2>${t.stepsT}</h2>
+  <div class="g-steps">${steps}</div>
+</div></section>
+<section><div class="wrap">
+  <h2>${t.cta}</h2><p class="lead">${t.ctaL}</p>
+  <div class="ctas" style="justify-content:flex-start;margin-top:20px"><a class="btn btn-primary" href="${urlPath(l)}#crear">${t.cta}</a><a class="btn btn-ghost" href="${REPO}/releases/latest" target="_blank" rel="noopener">${HUB[l].cta}</a></div>
+</div></section>`;
+  const alts = { es: guidePath('es'), en: guidePath('en') };
+  return shell(l, { title: t.metaTitle, desc: t.metaDesc, url, alts, ld, body });
+}
+
+function writeGuide() {
+  for (const l of ['es', 'en']) {
+    const dir = path.join(out, guidePath(l));
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'), guidePage(l));
+  }
+}
+
+function guideUrls() {
+  const alts = ['es', 'en'].map(x => `    <xhtml:link rel="alternate" hreflang="${HREFLANG[x]}" href="${SITE + guidePath(x)}"/>`).join('\n');
+  return ['es', 'en'].map(l => `  <url>\n    <loc>${SITE + guidePath(l)}</loc>\n    <lastmod>${today}</lastmod>\n    <priority>0.9</priority>\n${alts}\n    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE + guidePath('en')}"/>\n  </url>`);
+}
+
 function notFound() {
   const t = Object.fromEntries(LANGS.map(l => [l, { t: I18N[l].nfT, p: I18N[l].nfP, b: I18N[l].nfBtn, h: urlPath(l) }]));
   const e = t[DEFAULT];
@@ -469,6 +551,7 @@ function sitemap() {
   const urls = LANGS.map(l => `  <url>\n    <loc>${abs(l)}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${l === DEFAULT ? '1.0' : '0.9'}</priority>\n${alts}\n  </url>`);
   urls.push(...useCaseUrls());
   urls.push(...realCaseUrls());
+  urls.push(...guideUrls());
   urls.push(`  <url>\n    <loc>${SITE}/demo/</loc>\n    <lastmod>${today}</lastmod>\n    <priority>0.6</priority>\n  </url>`);
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join('\n')}\n</urlset>\n`;
 }
@@ -492,6 +575,7 @@ for (const l of LANGS) {
 }
 writeUseCases();
 writeRealCases();
+writeGuide();
 fs.writeFileSync(path.join(out, '404.html'), notFound());
 fs.writeFileSync(path.join(out, 'sitemap.xml'), sitemap());
 fs.writeFileSync(path.join(out, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
