@@ -161,3 +161,15 @@ document.querySelectorAll('video[data-src], .demo-frame').forEach(el => io.obser
     if (window.gtag) gtag('event', 'prompt_copied');
   });
 })();
+
+// Guide: chapter buttons seek the video.
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-seek]');
+  if (!b) return;
+  const v = document.getElementById('guide-video');
+  if (!v) return;
+  v.preload = 'auto';
+  v.currentTime = parseFloat(b.dataset.seek) || 0;
+  v.play().catch(() => {});
+  v.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
